@@ -26,6 +26,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Load cart from localStorage on mount (client-side only)
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
       try {
@@ -38,6 +40,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Save cart to localStorage whenever it changes (client-side only)
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 

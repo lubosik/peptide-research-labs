@@ -6,8 +6,6 @@ import Link from 'next/link';
 import StockImage from '@/components/images/StockImage';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 
-export const dynamic = 'force-dynamic';
-
 interface OrderData {
   orderId: string;
   items: Array<{

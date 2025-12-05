@@ -10,6 +10,9 @@ export default function AgeGateModal() {
   const router = useRouter();
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Check if user has already agreed in this session
     const sessionAgreed = sessionStorage.getItem('ageGateAgreed');
     if (sessionAgreed === 'true') {

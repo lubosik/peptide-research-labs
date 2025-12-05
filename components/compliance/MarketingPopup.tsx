@@ -9,6 +9,9 @@ export default function MarketingPopup() {
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
     // Check if popup has been dismissed in this session
     const dismissed = sessionStorage.getItem('marketingPopupDismissed');
     if (dismissed === 'true') {
