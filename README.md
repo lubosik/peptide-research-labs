@@ -1,75 +1,72 @@
 # Peptide Research Labs
 
-Full-stack website for research peptide e-commerce platform.
+Research peptides for laboratory use only. Advancing scientific discovery through high-purity biochemical reagents.
 
 ## Tech Stack
 
-- **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS
-- **Backend:** Node.js, Express
-- **Database:** MongoDB with Mongoose
+- **Framework:** Next.js 16 (App Router, SSR/SSG)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Backend:** Node.js with Express
+- **Database:** MongoDB (planned)
+
+## Features
+
+- Product catalog with detailed product pages
+- Shopping cart and checkout flow
+- Age verification and compliance disclaimers
+- Blog with research articles
+- SEO optimized with structured data
+- Responsive design
+- Dark theme with orange accent colors
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 18+
-- MongoDB (local or cloud instance)
-- npm or yarn
-
-### Installation
-
-1. Install dependencies:
 ```bash
+# Install dependencies
 npm install
-```
 
-2. Set up environment variables:
-```bash
-cp .env.example .env
-```
-
-3. Update `.env` with your MongoDB connection string and other configuration.
-
-### Development
-
-**Frontend (Next.js):**
-```bash
+# Run development server
 npm run dev
-```
-Runs on http://localhost:3000
 
-**Backend (Express):**
-```bash
-npm run dev:server
-```
-Runs on http://localhost:3001
-
-### Build
-
-```bash
+# Build for production
 npm run build
+
+# Start production server
 npm start
+```
+
+## Environment Variables
+
+Create a `.env.local` file with:
+
+```
+# Database (when implemented)
+MONGODB_URI=your_mongodb_connection_string
+
+# Payment Processing
+BAR2PAY_API_KEY=your_bar2pay_api_key
+BAR2PAY_SANDBOX=true
+
+# Image APIs (optional)
+UNSPLASH_ACCESS_KEY=your_unsplash_key
+PEXELS_API_KEY=your_pexels_key
 ```
 
 ## Project Structure
 
 ```
-peptide-research-labs/
-├── app/              # Next.js App Router pages
-├── server/           # Express backend
-│   ├── models/       # MongoDB models
-│   ├── routes/       # API routes
-│   └── middleware/   # Express middleware
-├── lib/              # Shared utilities
-│   └── config/       # Configuration files
-└── public/           # Static assets
+/app              # Next.js app router pages
+/components       # React components
+/data            # Static data (products, articles)
+/lib             # Utilities and configurations
+/public          # Static assets
 ```
 
 ## Compliance
 
-This project adheres to research peptide industry compliance guidelines. See `lib/config/compliance-guidelines.md` for details.
+All products are sold strictly for Research Use Only (RUO). Not for human or veterinary use.
 
-## SEO Schema
+## License
 
-All structured data uses `schema.org/ResearchOrganization` type. See `lib/config/seo-schema-instructions.md` for implementation details.
-
+Proprietary - All rights reserved
