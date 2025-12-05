@@ -1,0 +1,21 @@
+# robots.txt for Peptide Research Labs
+# Research peptide supplier website
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /admin/
+
+# Allow important pages
+Allow: /shop
+Allow: /blog
+Allow: /products/
+Allow: /terms
+Allow: /privacy
+Allow: /shipping
+Allow: /faq
+
+# Sitemap
+Sitemap: https://peptideresearchlabs.com/sitemap.xml
+
