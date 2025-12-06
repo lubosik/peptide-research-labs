@@ -1,0 +1,141 @@
+{
+  "categories": [
+    {
+      "categoryName": "Beauty / Anti-Aging / Antioxidant",
+      "products": [
+        {"sku": "ET10", "name": "Epitalon", "specification": "10mg × 10 vials", "price": 35},
+        {"sku": "ET50", "name": "Epitalon", "specification": "50mg × 10 vials", "price": 162},
+        {"sku": "MS10", "name": "MOTS-C", "specification": "10mg × 10 vials", "price": 68},
+        {"sku": "MS40", "name": "MOTS-C", "specification": "40mg × 10 vials", "price": 225},
+        {"sku": "NJ100", "name": "NAD+", "specification": "100mg × 10 vials", "price": 45},
+        {"sku": "NJ500", "name": "NAD+", "specification": "500mg × 10 vials", "price": 90},
+        {"sku": "NJ1000", "name": "NAD+", "specification": "1000mg × 10 vials", "price": 169},
+        {"sku": "CBL60", "name": "Cerebrolysin", "specification": "60ml × 10 vials", "price": 160},
+        {"sku": "GTT600", "name": "Glutathione", "specification": "600mg × 10 vials", "price": 60},
+        {"sku": "GTT1500", "name": "Glutathione", "specification": "1500mg × 10 vials", "price": 159},
+        {"sku": "F410", "name": "FOXO4", "specification": "10mg × 10 vials", "price": 360}
+      ]
+    },
+    {
+      "categoryName": "Weight Loss / Blood Sugar Control / Metabolic Regulation",
+      "products": [
+        {"sku": "CGL5", "name": "Cagrilintide", "specification": "5mg × 10 vials", "price": 117},
+        {"sku": "CGL10", "name": "Cagrilintide", "specification": "10mg × 10 vials", "price": 227},
+        {"sku": "CS10", "name": "Cagrilintide 5mg + Semaglutide", "specification": "10mg × 10 vials", "price": 189},
+        {"sku": "RT5", "name": "Retatrutide", "specification": "5mg × 10 vials", "price": 91},
+        {"sku": "RT10", "name": "Retatrutide", "specification": "10mg × 10 vials", "price": 130},
+        {"sku": "RT20", "name": "Retatrutide", "specification": "20mg × 10 vials", "price": 207},
+        {"sku": "RT30", "name": "Retatrutide", "specification": "30mg × 10 vials", "price": 270},
+        {"sku": "SM5", "name": "Semaglutide", "specification": "5mg × 10 vials", "price": 42},
+        {"sku": "SM10", "name": "Semaglutide", "specification": "10mg × 10 vials", "price": 60},
+        {"sku": "SM15", "name": "Semaglutide", "specification": "15mg × 10 vials", "price": 81},
+        {"sku": "SM20", "name": "Semaglutide", "specification": "20mg × 10 vials", "price": 90},
+        {"sku": "TR5", "name": "Tirzepatide", "specification": "5mg × 10 vials", "price": 49},
+        {"sku": "TR10", "name": "Tirzepatide", "specification": "10mg × 10 vials", "price": 67},
+        {"sku": "TR15", "name": "Tirzepatide", "specification": "15mg × 10 vials", "price": 83},
+        {"sku": "TR20", "name": "Tirzepatide", "specification": "20mg × 10 vials", "price": 110},
+        {"sku": "TR30", "name": "Tirzepatide", "specification": "30mg × 10 vials", "price": 155},
+        {"sku": "TR60", "name": "Tirzepatide", "specification": "60mg × 10 vials", "price": 232},
+        {"sku": "MDT10", "name": "Mazdutide", "specification": "10mg × 10 vials", "price": 195},
+        {"sku": "5AD", "name": "AOD9604", "specification": "5mg × 10 vials", "price": 101},
+        {"sku": "10AD", "name": "AOD9604", "specification": "10mg × 10 vials", "price": 185},
+        {"sku": "AP5", "name": "Adipotide", "specification": "5mg × 10 vials", "price": 140},
+        {"sku": "LC216", "name": "Lipo-c", "specification": "10ml × 10 vials", "price": 80},
+        {"sku": "LC600", "name": "L-carnitine", "specification": "600mg 10ml × 10 vials", "price": 40},
+        {"sku": "LC1200", "name": "L-carnitine", "specification": "1200mg 10ml × 10 vials", "price": 50},
+        {"sku": "SUR10", "name": "Survodutide", "specification": "10mg × 10 vials", "price": 296}
+      ]
+    },
+    {
+      "categoryName": "Repair / Healing / Anti-inflammatory",
+      "products": [
+        {"sku": "BC5", "name": "BPC-157", "specification": "5mg × 10 vials", "price": 48},
+        {"sku": "BC10", "name": "BPC-157", "specification": "10mg × 10 vials", "price": 70},
+        {"sku": "BB10", "name": "BPC 5mg + TB 5mg", "specification": "10mg × 10 vials", "price": 117},
+        {"sku": "BB20", "name": "BPC 10mg + TB 10mg", "specification": "20mg × 10 vials", "price": 196},
+        {"sku": "CU", "name": "GHK-Cu", "specification": "50mg × 10 vials", "price": 33},
+        {"sku": "CU100", "name": "GHK-Cu", "specification": "100mg × 10 vials", "price": 59},
+        {"sku": "TA5", "name": "Thymosin Alpha-1", "specification": "5mg × 10 vials", "price": 100},
+        {"sku": "TA10", "name": "Thymosin Alpha-1", "specification": "10mg × 10 vials", "price": 168},
+        {"sku": "BBG70", "name": "Glow (TB10mg + BPC-157 10mg + GHK 50mg)", "specification": "70mg × 10 vials", "price": 227},
+        {"sku": "KLOW", "name": "Klow (TB10mg + BPC-157 10mg + GHK 50mg + KPV 10mg)", "specification": "80mg × 10 vials", "price": 240},
+        {"sku": "KP10", "name": "KPV", "specification": "10mg × 10 vials", "price": 69},
+        {"sku": "TY10", "name": "Thymalin", "specification": "10mg × 10 vials", "price": 63},
+        {"sku": "RA10", "name": "ARA 290", "specification": "10mg × 10 vials", "price": 72},
+        {"sku": "375", "name": "LL37", "specification": "5mg × 10 vials", "price": 90},
+        {"sku": "BT5", "name": "TB-500 (Thymosin B4 Acetate)", "specification": "5mg × 10 vials", "price": 89},
+        {"sku": "BT10", "name": "TB-500 (Thymosin B4 Acetate)", "specification": "10mg × 10 vials", "price": 168}
+      ]
+    },
+    {
+      "categoryName": "Hormones / Growth Factors / Bodybuilding",
+      "products": [
+        {"sku": "CND5", "name": "CJC-1295 without DAC", "specification": "5mg × 10 vials", "price": 95},
+        {"sku": "CND10", "name": "CJC-1295 without DAC", "specification": "10mg × 10 vials", "price": 185},
+        {"sku": "CD5", "name": "CJC-1295 with DAC", "specification": "5mg × 10 vials", "price": 172},
+        {"sku": "CP10", "name": "CJC-1295 (without DAC) 5mg + IPA 5mg", "specification": "10mg × 10 vials", "price": 115},
+        {"sku": "IG01", "name": "IGF-1LR3", "specification": "0.1mg × 10 vials", "price": 45},
+        {"sku": "IG1", "name": "IGF-1LR3", "specification": "1mg × 10 vials", "price": 220},
+        {"sku": "TSM5", "name": "Tesamorelin", "specification": "5mg × 10 vials", "price": 112},
+        {"sku": "TSM10", "name": "Tesamorelin", "specification": "10mg × 10 vials", "price": 220},
+        {"sku": "G75", "name": "HMG", "specification": "75iu × 10 vials", "price": 62},
+        {"sku": "FM2", "name": "MGF", "specification": "2mg × 10 vials", "price": 62},
+        {"sku": "FMP2", "name": "PEG-MGF", "specification": "2mg × 10 vials", "price": 90},
+        {"sku": "G5K", "name": "HCG", "specification": "5000iu × 10 vials", "price": 88},
+        {"sku": "G10K", "name": "HCG", "specification": "10000iu × 10 vials", "price": 156},
+        {"sku": "IP5", "name": "Ipamorelin", "specification": "5mg × 10 vials", "price": 38},
+        {"sku": "IP10", "name": "Ipamorelin", "specification": "10mg × 10 vials", "price": 72},
+        {"sku": "HX5", "name": "Hexarelin Acetate", "specification": "5mg × 10 vials", "price": 87},
+        {"sku": "KS5", "name": "Kisspeptin-10", "specification": "5mg × 10 vials", "price": 60},
+        {"sku": "KS10", "name": "Kisspeptin-10", "specification": "10mg × 10 vials", "price": 117},
+        {"sku": "G25", "name": "GHRP-2 Acetate", "specification": "5mg × 10 vials", "price": 27},
+        {"sku": "G210", "name": "GHRP-2 Acetate", "specification": "10mg × 10 vials", "price": 54},
+        {"sku": "G65", "name": "GHRP-6 Acetate", "specification": "5mg × 10 vials", "price": 27},
+        {"sku": "G610", "name": "GHRP-6 Acetate", "specification": "10mg × 10 vials", "price": 54},
+        {"sku": "SMO5", "name": "Sermorelin", "specification": "5mg × 10 vials", "price": 70},
+        {"sku": "SMO10", "name": "Sermorelin", "specification": "10mg × 10 vials", "price": 142},
+        {"sku": "GND2", "name": "Gonadorelin", "specification": "2mg × 10 vials", "price": 36},
+        {"sku": "GND2", "name": "Gonadorelin Acetate", "specification": "2mg × 10 vials", "price": 32},
+        {"sku": "OT5", "name": "Oxytocin Acetate", "specification": "5mg × 10 vials", "price": 62},
+        {"sku": "H10", "name": "HGH", "specification": "10iu × 10 vials", "price": 49},
+        {"sku": "H15", "name": "HGH", "specification": "15iu × 10 vials", "price": 73}
+      ]
+    },
+    {
+      "categoryName": "Mental / Neurological / Sleep",
+      "products": [
+        {"sku": "MTN10", "name": "Melatonin", "specification": "10mg × 10 vials", "price": 180},
+        {"sku": "DS5", "name": "DSIP", "specification": "5mg × 10 vials", "price": 40},
+        {"sku": "XA5", "name": "Semax", "specification": "5mg × 10 vials", "price": 44},
+        {"sku": "XA10", "name": "Semax", "specification": "10mg × 10 vials", "price": 72},
+        {"sku": "SK5", "name": "Selank", "specification": "5mg × 10 vials", "price": 45},
+        {"sku": "SK10", "name": "Selank", "specification": "10mg × 10 vials", "price": 72},
+        {"sku": "VP10", "name": "VIP", "specification": "10mg × 10 vials", "price": 178},
+        {"sku": "DR5", "name": "Dermorphin", "specification": "5mg × 10 vials", "price": 36}
+      ]
+    },
+    {
+      "categoryName": "Sexual Health / Sexual Enhancement",
+      "products": [
+        {"sku": "P41", "name": "PT-141", "specification": "10mg × 10 vials", "price": 65},
+        {"sku": "MT1", "name": "Melanotan I", "specification": "10mg × 10 vials", "price": 62},
+        {"sku": "ML10", "name": "Melanotan II", "specification": "10mg × 10 vials", "price": 62}
+      ]
+    },
+    {
+      "categoryName": "Others",
+      "products": [
+        {"sku": "WA3", "name": "Bac Water", "specification": "3ml × 10 vials", "price": 10},
+        {"sku": "WA10", "name": "Bac Water", "specification": "10ml × 10 vials", "price": 11},
+        {"sku": "LB", "name": "Lemon Bottle", "specification": "10ml × 10 vials", "price": 89},
+        {"sku": "AA", "name": "ACETIC ACID", "specification": "10ml × 10 vials", "price": 22},
+        {"sku": "AR50", "name": "AICAR", "specification": "50mg × 10 vials", "price": 60},
+        {"sku": "NP810", "name": "Snap-8", "specification": "10mg × 10 vials", "price": 41},
+        {"sku": "5AM", "name": "5-amino-1mq", "specification": "10mg × 10 vials", "price": 158},
+        {"sku": "2S10", "name": "SS-31", "specification": "10mg × 10 vials", "price": 105},
+        {"sku": "2S50", "name": "SS-31", "specification": "50mg × 10 vials", "price": 410}
+      ]
+    }
+  ]
+}
+

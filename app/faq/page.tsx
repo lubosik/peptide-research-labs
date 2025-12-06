@@ -5,7 +5,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Frequently Asked Questions',
-  description: 'FAQ about research peptides, laboratory use, and Peptide Research Labs products.',
+  description: 'FAQ about research peptides, laboratory use, and Vici Peptides products.',
   path: '/faq',
 });
 
@@ -108,7 +108,7 @@ export default function FAQPage() {
                 What is the Purity of Your Products?
               </h2>
               <p className="text-text-gray leading-relaxed">
-                All products from Peptide Research Labs undergo rigorous third-party testing to verify
+                All products from Vici Peptides undergo rigorous third-party testing to verify
                 purity and identity. We work exclusively with FDA-registered API manufacturers and
                 maintain comprehensive batch tracking.
               </p>
@@ -153,7 +153,7 @@ export default function FAQPage() {
                 Are There Age Restrictions for Purchasing?
               </h2>
               <p className="text-text-gray leading-relaxed">
-                Yes. You must be 18 years or older to purchase products from Peptide Research Labs. By
+                Yes. You must be 18 years or older to purchase products from Vici Peptides. By
                 making a purchase, you confirm that you are of legal age and purchasing strictly for
                 legitimate laboratory research purposes.
               </p>

@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getArticleBySlug, articles } from '@/data/articles';
-import { products } from '@/data/products';
+import { products, getProductBySlug } from '@/data/products';
 import { Metadata } from 'next';
 import TableOfContents from '@/components/blog/TableOfContents';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 import { generateArticleSchema } from '@/lib/seo/structured-data';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+import { generatePeptideArticle } from '@/lib/blog/generate-peptide-article';
 
 interface ArticlePageProps {
   params: {
@@ -15,34 +16,76 @@ interface ArticlePageProps {
 }
 
 export async function generateStaticParams() {
-  return articles.map((article) => ({
+  const articleSlugs = articles.map((article) => ({
     slug: article.slug,
   }));
+  
+  // Add peptide article slugs (one per unique base name)
+  const peptideSlugs = Array.from(
+    new Set(products.map((p) => p.name.split('(')[0].trim()))
+  ).map((baseName) => {
+    const product = products.find((p) => p.name.startsWith(baseName));
+    return product ? { slug: product.slug } : null;
+  }).filter(Boolean) as { slug: string }[];
+  
+  return [...articleSlugs, ...peptideSlugs];
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  // Try regular article first
   const article = getArticleBySlug(params.slug);
-
-  if (!article) {
-    return {
-      title: 'Article Not Found',
-    };
+  
+  if (article) {
+    return generateSEOMetadata({
+      title: article.title,
+      description: article.description,
+      path: `/blog/${article.slug}`,
+      type: 'article',
+      publishedTime: article.publishedDate,
+      modifiedTime: article.publishedDate,
+    });
+  }
+  
+  // Try peptide article
+  const product = getProductBySlug(params.slug);
+  if (product) {
+    const peptideArticle = generatePeptideArticle(product);
+    return generateSEOMetadata({
+      title: peptideArticle.title,
+      description: peptideArticle.metaDescription,
+      path: `/blog/${peptideArticle.slug}`,
+      type: 'article',
+      publishedTime: peptideArticle.publishedDate,
+      modifiedTime: peptideArticle.publishedDate,
+    });
   }
 
-  return generateSEOMetadata({
-    title: article.title,
-    description: article.description,
-    path: `/blog/${article.slug}`,
-    type: 'article',
-    publishedTime: article.publishedDate,
-    modifiedTime: article.publishedDate,
-  });
+  return {
+    title: 'Article Not Found',
+  };
 }
 
 export default function ArticlePage({ params }: ArticlePageProps) {
+  // Try regular article first
   const article = getArticleBySlug(params.slug);
+  let isPeptideArticle = false;
+  let peptideArticle = null;
+  let relatedProduct = null;
 
+  // If not found, try peptide article
   if (!article) {
+    const product = getProductBySlug(params.slug);
+    if (product) {
+      peptideArticle = generatePeptideArticle(product);
+      relatedProduct = product;
+      isPeptideArticle = true;
+    } else {
+      notFound();
+    }
+  }
+
+  // Ensure we have either article or peptideArticle
+  if (!article && !peptideArticle) {
     notFound();
   }
 
@@ -55,34 +98,66 @@ export default function ArticlePage({ params }: ArticlePageProps) {
     });
   };
 
-  const articleSchema = generateArticleSchema(article);
+  // Use peptide article if available, otherwise use regular article (guaranteed to exist at this point)
+  const displayArticle = (isPeptideArticle && peptideArticle) ? {
+    id: peptideArticle.id,
+    slug: peptideArticle.slug,
+    title: peptideArticle.title,
+    subheadline: peptideArticle.metaDescription,
+    description: peptideArticle.metaDescription,
+    thumbnail: '',
+    headerImage: '',
+    category: peptideArticle.category,
+    author: peptideArticle.author,
+    publishedDate: peptideArticle.publishedDate,
+    readTime: peptideArticle.readTime,
+    content: [
+      peptideArticle.content.introduction,
+      peptideArticle.content.chemicalBackground,
+      peptideArticle.content.laboratoryStudySummary,
+      peptideArticle.content.handlingAndStorage,
+      peptideArticle.content.conclusion,
+    ],
+    tableOfContents: [
+      { id: 'introduction', title: 'Introduction', level: 2 },
+      { id: 'chemical-background', title: 'Chemical Background', level: 2 },
+      { id: 'laboratory-study', title: 'Laboratory Study Summary', level: 2 },
+      { id: 'handling-storage', title: 'Handling and Storage Guidelines', level: 2 },
+      { id: 'conclusion', title: 'Conclusion', level: 2 },
+    ],
+  } : (article as NonNullable<typeof article>);
+
+  // Generate schema for regular article format
+  const articleSchema = article ? generateArticleSchema(displayArticle as typeof article) : null;
 
   return (
-    <div className="bg-neutral-light min-h-screen">
+    <div className="bg-primary-black min-h-screen">
       {/* Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
-      />
+      {articleSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        />
+      )}
       {/* Breadcrumbs */}
-      <section className="bg-white border-b border-gray-200 py-4">
+      <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-4">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <nav className="text-sm">
-              <ol className="flex items-center space-x-2 text-text-gray">
+              <ol className="flex items-center space-x-2 text-pure-white">
                 <li>
-                  <Link href="/" className="hover:text-primary transition-colors">
+                  <Link href="/" className="hover:text-luxury-gold transition-colors">
                     Home
                   </Link>
                 </li>
-                <li>/</li>
+                <li className="text-luxury-gold">/</li>
                 <li>
-                  <Link href="/blog" className="hover:text-primary transition-colors">
+                  <Link href="/blog" className="hover:text-luxury-gold transition-colors">
                     Blog
                   </Link>
                 </li>
-                <li>/</li>
-                <li className="text-accent-gray font-medium line-clamp-1">{article.title}</li>
+                <li className="text-luxury-gold">/</li>
+                <li className="text-accent-gold-light font-medium line-clamp-1">{displayArticle.title}</li>
               </ol>
             </nav>
           </div>
@@ -90,11 +165,11 @@ export default function ArticlePage({ params }: ArticlePageProps) {
       </section>
 
       {/* Header Image */}
-      <section className="relative w-full h-64 md:h-96 bg-gradient-to-br from-gray-100 to-gray-200">
+      <section className="relative w-full h-64 md:h-96 bg-gradient-to-br from-primary-black to-secondary-charcoal">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center p-8">
             <svg
-              className="w-32 h-32 md:w-48 md:h-48 mx-auto text-accent-gray opacity-30"
+              className="w-32 h-32 md:w-48 md:h-48 mx-auto text-luxury-gold opacity-40"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -106,7 +181,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
               />
             </svg>
-            <p className="text-sm text-text-gray mt-4 opacity-50">
+            <p className="text-sm text-neutral-gray mt-4 opacity-50">
               Article Header Image
             </p>
           </div>
@@ -114,78 +189,92 @@ export default function ArticlePage({ params }: ArticlePageProps) {
       </section>
 
       {/* Article Content */}
-      <section className="py-12 md:py-16">
+      <section className="py-12 md:py-16 bg-primary-black">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
               {/* Main Content (70%) */}
               <div className="lg:col-span-3">
-                <article className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 md:p-12">
+                <article className="bg-secondary-charcoal rounded-lg border border-luxury-gold/20 shadow-xl p-8 md:p-12" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(212, 175, 55, 0.2)' }}>
                   {/* Article Header */}
                   <header className="mb-8">
                     <div className="mb-4">
-                      <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full">
-                        {article.category}
+                      <span className="inline-block bg-luxury-gold/20 text-luxury-gold text-sm font-semibold px-4 py-2 rounded-full">
+                        {displayArticle.category}
                       </span>
                     </div>
-                    <h1 className="text-heading text-3xl md:text-4xl font-bold text-accent-gray mb-4">
-                      {article.title}
+                    <h1 className="text-heading text-3xl md:text-4xl font-bold text-accent-gold-light mb-4">
+                      {displayArticle.title}
                     </h1>
-                    <p className="text-xl text-text-gray mb-6 leading-relaxed">
-                      {article.subheadline}
+                    <p className="text-xl text-pure-white mb-6 leading-relaxed">
+                      {displayArticle.subheadline}
                     </p>
-                    <div className="flex items-center space-x-6 text-sm text-text-gray border-b border-gray-200 pb-6">
+                    <div className="flex items-center space-x-6 text-sm text-neutral-gray border-b border-luxury-gold/20 pb-6">
                       <div>
-                        <span className="font-semibold">Author:</span> {article.author}
+                        <span className="font-semibold text-pure-white">Author:</span> {displayArticle.author}
                       </div>
                       <div>
-                        <span className="font-semibold">Published:</span> {formatDate(article.publishedDate)}
+                        <span className="font-semibold text-pure-white">Published:</span> {formatDate(displayArticle.publishedDate)}
                       </div>
                       <div>
-                        <span className="font-semibold">Read Time:</span> {article.readTime}
+                        <span className="font-semibold text-pure-white">Read Time:</span> {displayArticle.readTime}
                       </div>
                     </div>
                   </header>
 
                   {/* Article Body */}
                   <div className="prose prose-lg max-w-none">
-                    {article.content.map((paragraph, index) => {
+                    {displayArticle.content.map((paragraph, index) => {
                       // Check if this paragraph should be a heading based on table of contents
-                      const tocItem = article.tableOfContents.find(
+                      const tocItem = displayArticle.tableOfContents.find(
                         (item, tocIndex) => tocIndex === index
                       );
 
                       if (tocItem) {
                         return (
                           <div key={index} id={tocItem.id} className="scroll-mt-24">
-                            <h2 className="text-heading text-2xl font-bold text-accent-gray mt-12 mb-6 first:mt-0">
+                            <h2 className="text-heading text-2xl font-bold text-accent-gold-light mt-12 mb-6 first:mt-0">
                               {tocItem.title}
                             </h2>
-                            <p className="text-text-gray leading-relaxed mb-6">
+                            <div className="text-pure-white leading-relaxed mb-6 whitespace-pre-line">
                               {paragraph}
-                            </p>
+                            </div>
                           </div>
                         );
                       }
 
                       return (
-                        <p key={index} className="text-text-gray leading-relaxed mb-6">
+                        <p key={index} className="text-pure-white leading-relaxed mb-6">
                           {paragraph}
                         </p>
                       );
                     })}
                   </div>
 
+                  {/* Peptide Article Disclaimer */}
+                  {isPeptideArticle && peptideArticle && (
+                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                      <div className="p-6 bg-red-900/30 border-l-4 border-red-500 rounded">
+                        <h3 className="text-heading text-lg font-semibold text-red-400 mb-2">
+                          Research Use Only Disclaimer
+                        </h3>
+                        <div className="text-sm text-red-300 whitespace-pre-line">
+                          {peptideArticle.disclaimer}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Research Reference Disclaimer */}
-                  <div className="mt-12 pt-8 border-t border-gray-200">
-                    <div className="p-6 bg-yellow-50 border-l-4 border-yellow-500 rounded">
-                      <h3 className="text-heading text-lg font-semibold text-yellow-800 mb-2">
+                  <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                    <div className="p-6 bg-luxury-gold/20 border-l-4 border-luxury-gold rounded">
+                      <h3 className="text-heading text-lg font-semibold text-accent-gold-light mb-2">
                         Research Reference Disclaimer
                       </h3>
-                      <p className="text-sm text-yellow-700">
+                      <p className="text-sm text-pure-white">
                         {getComplianceText('RESEARCH_REFERENCE_ONLY')}
                       </p>
-                      <p className="text-sm text-yellow-700 mt-2">
+                      <p className="text-sm text-pure-white mt-2">
                         The information presented in this article is for general research reference only
                         and is not medical, legal, or nutritional advice. All content is intended for
                         educational purposes in the context of laboratory research. Nothing in this
@@ -197,74 +286,80 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 </article>
 
                 {/* Related Articles */}
-                <div className="mt-12">
-                  <h2 className="text-heading text-2xl font-bold text-accent-gray mb-6">
-                    Related Articles
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {articles
-                      .filter((a) => a.id !== article.id)
-                      .slice(0, 2)
-                      .map((relatedArticle) => (
-                        <Link
-                          key={relatedArticle.id}
-                          href={`/blog/${relatedArticle.slug}`}
-                          className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow"
-                        >
-                          <h3 className="text-heading text-lg font-semibold text-accent-gray mb-2 hover:text-primary transition-colors">
-                            {relatedArticle.title}
-                          </h3>
-                          <p className="text-sm text-text-gray line-clamp-2">
-                            {relatedArticle.description}
-                          </p>
-                        </Link>
-                      ))}
+                {!isPeptideArticle && (
+                  <div className="mt-12">
+                    <h2 className="text-heading text-2xl font-bold text-accent-gold-light mb-6">
+                      Related Articles
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {articles
+                        .filter((a) => a.id !== displayArticle.id)
+                        .slice(0, 2)
+                        .map((relatedArticle) => (
+                          <Link
+                            key={relatedArticle.id}
+                            href={`/blog/${relatedArticle.slug}`}
+                            className="bg-secondary-charcoal rounded-lg border border-luxury-gold/20 p-6 hover:shadow-lg hover:shadow-golden-glow transition-all"
+                          >
+                            <h3 className="text-heading text-lg font-semibold text-accent-gold-light mb-2 hover:text-luxury-gold transition-colors">
+                              {relatedArticle.title}
+                            </h3>
+                            <p className="text-sm text-pure-white line-clamp-2">
+                              {relatedArticle.description}
+                            </p>
+                          </Link>
+                        ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Related Products Section */}
-                <div className="mt-12 pt-12 border-t border-gray-200">
-                  <h2 className="text-heading text-2xl font-bold text-accent-gray mb-6">
-                    Related Research Peptides
+                <div className="mt-12 pt-12 border-t border-luxury-gold/20">
+                  <h2 className="text-heading text-2xl font-bold text-accent-gold-light mb-6">
+                    {isPeptideArticle ? 'Related Research Peptides' : 'Related Research Peptides'}
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {products.slice(0, 4).map((product) => (
-                      <Link
-                        key={product.id}
-                        href={`/products/${product.slug}`}
-                        className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-lg transition-shadow"
-                      >
-                        <div className="relative w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg mb-3 flex items-center justify-center">
-                          <svg
-                            className="w-12 h-12 text-accent-gray opacity-30"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={1.5}
-                              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                            />
-                          </svg>
-                        </div>
-                        <h3 className="text-heading font-semibold text-accent-gray mb-2 hover:text-primary transition-colors">
-                          {product.name}
-                        </h3>
-                        <p className="text-sm text-text-gray line-clamp-2 mb-2">
-                          {product.shortDescription}
-                        </p>
-                        <p className="text-primary font-semibold">${product.price.toFixed(2)}</p>
-                      </Link>
-                    ))}
+                    {products
+                      .filter((p) => isPeptideArticle ? p.id !== relatedProduct?.id : true)
+                      .filter((p) => isPeptideArticle && relatedProduct ? p.category === relatedProduct.category : true)
+                      .slice(0, 4)
+                      .map((product) => (
+                        <Link
+                          key={product.id}
+                          href={`/products/${product.slug}`}
+                          className="bg-secondary-charcoal rounded-lg border border-luxury-gold/20 p-4 hover:shadow-lg hover:shadow-golden-glow transition-all"
+                        >
+                          <div className="relative w-full h-32 bg-gradient-to-br from-primary-black to-secondary-charcoal rounded-lg mb-3 flex items-center justify-center">
+                            <svg
+                              className="w-12 h-12 text-luxury-gold opacity-40"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                              />
+                            </svg>
+                          </div>
+                          <h3 className="text-heading font-semibold text-accent-gold-light mb-2 hover:text-luxury-gold transition-colors">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-pure-white line-clamp-2 mb-2">
+                            {product.shortDescription}
+                          </p>
+                          <p className="text-luxury-gold font-semibold">${product.price.toFixed(2)}</p>
+                        </Link>
+                      ))}
                   </div>
                 </div>
               </div>
 
               {/* Sidebar (30%) */}
               <div className="lg:col-span-1">
-                <TableOfContents items={article.tableOfContents} />
+                <TableOfContents items={displayArticle.tableOfContents} />
               </div>
             </div>
           </div>

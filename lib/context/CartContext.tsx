@@ -2,18 +2,22 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/data/products';
+import { Warehouse } from './WarehouseContext';
 
 export interface CartItem {
   product: Product;
   quantity: number;
   size?: string;
+  warehouse: Warehouse;
+  calculatedPrice: number; // basePrice * warehouseMultiplier
 }
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number, size?: string) => void;
+  addItem: (product: Product, quantity?: number, size?: string, warehouse?: Warehouse, calculatedPrice?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
+  updateWarehouse: (productId: string, size: string | undefined, newWarehouse: Warehouse) => void;
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
@@ -45,17 +49,35 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
-  const addItem = (product: Product, quantity: number = 1, size?: string) => {
+  const addItem = (
+    product: Product, 
+    quantity: number = 1, 
+    size?: string, 
+    warehouse: Warehouse = 'overseas',
+    calculatedPrice?: number
+  ) => {
+    // Calculate price if not provided
+    const finalPrice = calculatedPrice ?? product.price;
+    
     setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.product.id === product.id);
+      // Check if same product with same warehouse and size exists
+      const existingItem = prevItems.find(
+        (item) => 
+          item.product.id === product.id && 
+          item.warehouse === warehouse &&
+          item.size === size
+      );
+      
       if (existingItem) {
         return prevItems.map((item) =>
-          item.product.id === product.id
+          item.product.id === product.id && 
+          item.warehouse === warehouse &&
+          item.size === size
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
-      return [...prevItems, { product, quantity, size }];
+      return [...prevItems, { product, quantity, size, warehouse, calculatedPrice: finalPrice }];
     });
   };
 
@@ -75,12 +97,34 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const updateWarehouse = (productId: string, size: string | undefined, newWarehouse: Warehouse) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.product.id === productId && item.size === size) {
+          // Calculate new price based on warehouse
+          const basePrice = item.product.price;
+          const warehouseOption = item.product.warehouseOptions?.[newWarehouse];
+          const newPrice = warehouseOption
+            ? basePrice * warehouseOption.priceMultiplier
+            : basePrice;
+          
+          return {
+            ...item,
+            warehouse: newWarehouse,
+            calculatedPrice: newPrice,
+          };
+        }
+        return item;
+      })
+    );
+  };
+
   const clearCart = () => {
     setItems([]);
   };
 
   const getTotal = () => {
-    return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
+    return items.reduce((total, item) => total + item.calculatedPrice * item.quantity, 0);
   };
 
   const getItemCount = () => {
@@ -94,6 +138,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         addItem,
         removeItem,
         updateQuantity,
+        updateWarehouse,
         clearCart,
         getTotal,
         getItemCount,

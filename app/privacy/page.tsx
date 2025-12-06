@@ -4,7 +4,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Privacy Policy',
-  description: 'Privacy policy for Peptide Research Labs - How we collect and use your data.',
+  description: 'Privacy policy for Vici Peptides - How we collect and use your data.',
   path: '/privacy',
 });
 
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
             {/* Introduction */}
             <section>
               <p className="text-text-gray leading-relaxed">
-                Peptide Research Labs ("we," "our," or "us") is committed to protecting your privacy.
+                Vici Peptides ("we," "our," or "us") is committed to protecting your privacy.
                 This Privacy Policy explains how we collect, use, disclose, and safeguard your
                 information when you visit our website or make a purchase.
               </p>

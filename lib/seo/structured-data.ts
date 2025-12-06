@@ -96,11 +96,11 @@ export function generateOrganizationSchema(): OrganizationSchema {
   return {
     '@context': 'https://schema.org',
     '@type': 'ResearchOrganization',
-    name: 'Peptide Research Labs',
-    url: 'https://peptideresearchlabs.com',
-    logo: 'https://peptideresearchlabs.com/images/Peptide_Research_Labs_Logo-removebg-preview.png',
+    name: 'Vici Peptides',
+    url: 'https://vicipetides.com',
+    logo: 'https://vicipetides.com/images/vici-logo.png',
     description:
-      'Peptide Research Labs is a research organization providing high-purity biochemical reagents and laboratory supplies for scientific research. We supply research peptides, laboratory-grade compounds, and biochemical reagents exclusively for laboratory research purposes.',
+      'Vici Peptides is a research organization providing high-purity biochemical reagents and laboratory supplies for scientific research. We supply research peptides, laboratory-grade compounds, and biochemical reagents exclusively for laboratory research purposes.',
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'US',
@@ -124,10 +124,10 @@ export function generateProductSchema(product: Product): ProductSchema {
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    image: product.image || `https://peptideresearchlabs.com${product.image}`,
+    image: product.image || `https://vicipetides.com${product.image}`,
     brand: {
       '@type': 'Brand',
-      name: 'Peptide Research Labs',
+      name: 'Vici Peptides',
     },
     offers: {
       '@type': 'Offer',
@@ -136,7 +136,7 @@ export function generateProductSchema(product: Product): ProductSchema {
       availability: product.inStock
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      url: `https://peptideresearchlabs.com/products/${product.slug}`,
+      url: `https://vicipetides.com/products/${product.slug}`,
     },
   };
 }
@@ -151,7 +151,7 @@ export function generateArticleSchema(article: Article): ArticleSchema {
     headline: article.title,
     description: article.description,
     image: article.headerImage
-      ? `https://peptideresearchlabs.com${article.headerImage}`
+      ? `https://vicipetides.com${article.headerImage}`
       : undefined,
     author: {
       '@type': 'Person',
@@ -159,10 +159,10 @@ export function generateArticleSchema(article: Article): ArticleSchema {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Peptide Research Labs',
+      name: 'Vici Peptides',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://peptideresearchlabs.com/images/Peptide_Research_Labs_Logo-removebg-preview.png',
+        url: 'https://vicipetides.com/images/vici-logo.png',
       },
     },
     datePublished: article.publishedDate,
@@ -202,7 +202,7 @@ export function generateFAQSchema(): FAQSchema {
         acceptedAnswer: {
           '@type': 'Answer',
           text:
-            'Yes. You must be 18 years or older to purchase products from Peptide Research Labs. By making a purchase, you confirm that you are of legal age and purchasing strictly for legitimate laboratory research purposes.',
+            'Yes. You must be 18 years or older to purchase products from Vici Peptides. By making a purchase, you confirm that you are of legal age and purchasing strictly for legitimate laboratory research purposes.',
         },
       },
       {
@@ -211,7 +211,7 @@ export function generateFAQSchema(): FAQSchema {
         acceptedAnswer: {
           '@type': 'Answer',
           text:
-            'All products from Peptide Research Labs undergo rigorous third-party testing to verify purity and identity. We work exclusively with FDA-registered API manufacturers and maintain comprehensive batch tracking. Certificates of Analysis (CoA) are available for all products upon request.',
+            'All products from Vici Peptides undergo rigorous third-party testing to verify purity and identity. We work exclusively with FDA-registered API manufacturers and maintain comprehensive batch tracking. Certificates of Analysis (CoA) are available for all products upon request.',
         },
       },
       {
@@ -234,15 +234,15 @@ export function generateWebSiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Peptide Research Labs',
-    url: 'https://peptideresearchlabs.com',
+    name: 'Vici Peptides',
+    url: 'https://vicipetides.com',
     description:
       'Research peptides and biochemical reagents for laboratory use only. High-purity peptides for scientific research.',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://peptideresearchlabs.com/shop?search={search_term_string}',
+        urlTemplate: 'https://vicipetides.com/shop?search={search_term_string}',
       },
       'query-input': 'required name=search_term_string',
     },

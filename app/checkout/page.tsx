@@ -30,8 +30,19 @@ export default function CheckoutPage() {
 
   const ruoClause = getComplianceText('RUO_CLAUSE');
   const subtotal = getTotal();
-  const shipping = 15.00;
-  const total = subtotal + shipping;
+  
+  // Calculate shipping based on warehouse
+  const hasUSWarehouse = items.some(item => item.warehouse === 'us');
+  const hasOverseasWarehouse = items.some(item => item.warehouse === 'overseas');
+  
+  let shipping = 15.00; // Base shipping
+  let expeditedFee = 0;
+  
+  if (hasUSWarehouse) {
+    expeditedFee = 25.00; // Expedited U.S. Re-Test Handling fee
+  }
+  
+  const total = subtotal + shipping + expeditedFee;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -349,7 +360,7 @@ export default function CheckoutPage() {
                   {/* Order Items */}
                   <div className="space-y-4 mb-6">
                     {items.map((item) => (
-                      <div key={`${item.product.id}-${item.size || 'default'}`} className="flex gap-4">
+                      <div key={`${item.product.id}-${item.size || 'default'}-${item.warehouse}`} className="flex gap-4">
                         <div className="relative w-16 h-16 bg-slate-700 rounded overflow-hidden flex-shrink-0">
                           <StockImage
                             imageType="product-placeholder"
@@ -363,12 +374,19 @@ export default function CheckoutPage() {
                           {item.size && (
                             <p className="text-gray-400 text-xs">Size: {item.size}</p>
                           )}
+                          {item.warehouse && (
+                            <p className={`text-xs font-semibold mt-1 ${
+                              item.warehouse === 'us' ? 'text-blue-300' : 'text-green-300'
+                            }`}>
+                              {item.warehouse === 'us' ? '🇺🇸 U.S. Warehouse' : '🌍 Overseas Warehouse'}
+                            </p>
+                          )}
                           <p className="text-gray-400 text-xs">
-                            Qty: {item.quantity} × ${item.product.price.toFixed(2)}
+                            Qty: {item.quantity} × ${item.calculatedPrice.toFixed(2)}
                           </p>
                         </div>
                         <p className="text-primary font-semibold">
-                          ${(item.product.price * item.quantity).toFixed(2)}
+                          ${(item.calculatedPrice * item.quantity).toFixed(2)}
                         </p>
                       </div>
                     ))}
@@ -387,6 +405,19 @@ export default function CheckoutPage() {
                       <span className="text-gray-400">Shipping</span>
                       <span className="text-white">${shipping.toFixed(2)}</span>
                     </div>
+                    {expeditedFee > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">
+                          <span className="text-xs">Expedited U.S. Re-Test Handling</span>
+                        </span>
+                        <span className="text-white">${expeditedFee.toFixed(2)}</span>
+                      </div>
+                    )}
+                    {hasUSWarehouse && hasOverseasWarehouse && (
+                      <p className="text-xs text-gray-500 mt-2">
+                        * Items from both warehouses will be shipped separately
+                      </p>
+                    )}
                   </div>
 
                   <div className="border-t border-slate-700 my-6"></div>

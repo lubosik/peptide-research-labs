@@ -3,7 +3,7 @@ import { products } from '@/data/products';
 import { articles } from '@/data/articles';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://peptideresearchlabs.com';
+  const baseUrl = 'https://vicipetides.com';
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

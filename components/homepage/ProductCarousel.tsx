@@ -15,7 +15,7 @@ export default function ProductCarousel({ title, products }: ProductCarouselProp
     <div className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-heading text-3xl md:text-4xl font-bold text-white mb-8">
+          <h2 className="text-heading text-3xl md:text-4xl font-bold text-accent-gold-light mb-8">
             {title}
           </h2>
           <Swiper

@@ -24,7 +24,7 @@ export const COMPLIANCE_TEXT: Record<string, string> = {
   
   RUO_CLAUSE: `All products are sold strictly for Research Use Only (RUO). They are not intended for human consumption, medical use, veterinary use, or any diagnostic or therapeutic purposes. These products are not approved by the FDA.`,
   
-  LIABILITY_LIMITS: `Peptide Research Labs makes no warranties, express or implied, about the merchantability or fitness for a particular purpose of its products. The buyer assumes all risk and liability for the results obtained by the use of any product.`,
+  LIABILITY_LIMITS: `Vici Peptides makes no warranties, express or implied, about the merchantability or fitness for a particular purpose of its products. The buyer assumes all risk and liability for the results obtained by the use of any product.`,
   
   BUYER_RESPONSIBILITY: `The buyer is solely responsible for ensuring that the purchase and use of products comply with all applicable local, state, and federal laws and regulations. This includes import regulations, research licensing, and safe handling practices.`,
 };
@@ -56,4 +56,3 @@ export function hasCompliancePlaceholders(text: string): boolean {
     text.includes(`[${key}]`)
   );
 }
-

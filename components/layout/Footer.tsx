@@ -8,38 +8,38 @@ export default function Footer() {
   const complianceText = getComplianceText('COMPLIANCE_BANNER_TEXT');
 
   return (
-    <footer className="bg-accent-gray text-neutral-light mt-auto">
+    <footer className="bg-secondary-charcoal text-pure-white mt-auto border-t border-luxury-gold/20">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-heading text-lg font-semibold mb-4">Peptide Research Labs</h3>
-            <p className="text-sm text-gray-300 mb-4">
+            <h3 className="text-heading text-lg font-semibold mb-4 text-accent-gold-light">Vici Peptides</h3>
+            <p className="text-sm text-pure-white mb-4">
               Advancing scientific discovery through research peptides for laboratory use only.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-heading text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-heading text-lg font-semibold mb-4 text-accent-gold-light">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/shop" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/shop" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   Shop
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/blog" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/about" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   About
                 </Link>
               </li>
@@ -48,25 +48,25 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-heading text-lg font-semibold mb-4">Legal</h3>
+            <h3 className="text-heading text-lg font-semibold mb-4 text-accent-gold-light">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/terms" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/terms" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/privacy" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/shipping" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   Shipping Policy
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-gray-300 hover:text-primary transition-colors text-sm">
+                <Link href="/faq" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
                   FAQ
                 </Link>
               </li>
@@ -75,10 +75,10 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-heading text-lg font-semibold mb-4">Contact</h3>
-            <ul className="space-y-2 text-gray-300 text-sm">
+            <h3 className="text-heading text-lg font-semibold mb-4 text-accent-gold-light">Contact</h3>
+            <ul className="space-y-2 text-pure-white text-sm">
               <li>
-                <Link href="/contact" className="hover:text-primary transition-colors">
+                <Link href="/contact" className="hover:text-luxury-gold transition-colors">
                   Contact Us
                 </Link>
               </li>
@@ -87,15 +87,15 @@ export default function Footer() {
         </div>
 
         {/* Compliance Disclaimer */}
-        <div className="mt-8 pt-8 border-t border-gray-600">
-          <p className="text-sm text-gray-400 text-center">
+        <div className="mt-8 pt-8 border-t border-luxury-gold/20">
+          <p className="text-sm text-neutral-gray text-center">
             {complianceText}
           </p>
         </div>
 
         {/* Copyright */}
-        <div className="mt-6 text-center text-gray-400 text-sm">
-          <p>&copy; {currentYear} Peptide Research Labs. All rights reserved.</p>
+        <div className="mt-6 text-center text-neutral-gray text-sm">
+          <p>&copy; {currentYear} Vici Peptides. All rights reserved.</p>
         </div>
       </div>
     </footer>

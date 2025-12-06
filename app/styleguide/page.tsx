@@ -3,7 +3,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Style Guide',
-  description: 'Design system and style guide for Peptide Research Labs.',
+  description: 'Design system and style guide for Vici Peptides.',
   path: '/styleguide',
 });
 
@@ -16,7 +16,7 @@ export default function StyleGuidePage() {
             Style Guide
           </h1>
           <p className="text-lg text-text-gray mb-12">
-            Complete design system documentation for Peptide Research Labs
+            Complete design system documentation for Vici Peptides
           </p>
 
           {/* Color System */}

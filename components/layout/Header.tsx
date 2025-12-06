@@ -2,24 +2,42 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useCart } from '@/lib/context/CartContext';
+import { categories } from '@/data/categories';
+import SearchBar from '@/components/search/SearchBar';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const { getItemCount } = useCart();
   const itemCount = getItemCount();
+  const categoriesRef = useRef<HTMLDivElement>(null);
+
+  // Close categories dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
+        setIsCategoriesOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <header className="bg-primary-black border-b border-luxury-gold/20 sticky top-0 z-50 shadow-sm" style={{ boxShadow: '0 2px 8px rgba(212, 175, 55, 0.1)' }}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center flex-shrink-0">
             <div className="relative w-32 h-16 md:w-40 md:h-20">
               <Image
-                src="/images/Peptide_Research_Labs_Logo-removebg-preview.png"
-                alt="Peptide Research Labs"
+                src="/images/vici-logo.png"
+                alt="Vici Peptides"
                 fill
                 className="object-contain"
                 priority
@@ -29,33 +47,77 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="text-text-gray hover-primary font-medium">
+          <nav className="hidden md:flex items-center space-x-8 flex-1 max-w-2xl mx-8">
+            <Link href="/" className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200">
               Home
             </Link>
-            <Link href="/shop" className="text-text-gray hover-primary font-medium">
+            <Link href="/shop" className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200">
               Shop
             </Link>
-            <Link href="/categories" className="text-text-gray hover-primary font-medium">
-              Categories
-            </Link>
-            <Link href="/blog" className="text-text-gray hover-primary font-medium">
+            {/* Categories Dropdown */}
+            <div ref={categoriesRef} className="relative">
+              <button
+                onMouseEnter={() => setIsCategoriesOpen(true)}
+                onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                className="text-pure-white hover:text-accent-gold-light font-medium flex items-center gap-1 transition-colors duration-200"
+              >
+                Categories
+                <svg
+                  className={`w-4 h-4 transition-transform ${isCategoriesOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {isCategoriesOpen && (
+                <div
+                  onMouseEnter={() => setIsCategoriesOpen(true)}
+                  onMouseLeave={() => setIsCategoriesOpen(false)}
+                  className="absolute top-full left-0 mt-2 w-80 bg-primary-black border border-luxury-gold/30 rounded-lg shadow-xl z-50 py-4" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(212, 175, 55, 0.2)' }}
+                >
+                  <div className="grid grid-cols-1 gap-1">
+                    {categories.map((category) => (
+                      <Link
+                        key={category.slug}
+                        href={`/categories/${category.slug}`}
+                        className="px-4 py-2 text-pure-white hover:bg-luxury-gold/10 hover:text-accent-gold-light transition-colors block"
+                        onClick={() => setIsCategoriesOpen(false)}
+                      >
+                        <div className="font-medium">{category.name}</div>
+                        <div className="text-xs text-neutral-gray mt-1">{category.description}</div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <Link href="/blog" className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200">
               Blog
             </Link>
-            <Link href="/about" className="text-text-gray hover-primary font-medium">
+            <Link href="/about" className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200">
               About
             </Link>
-            <Link href="/contact" className="text-text-gray hover-primary font-medium">
+            <Link href="/contact" className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200">
               Contact
             </Link>
           </nav>
+
+          {/* Search Bar - Desktop */}
+          <div className="hidden md:block flex-1 max-w-md mx-4">
+            <SearchBar 
+              placeholder="Search products and articles..."
+              onResultClick={() => setIsMobileMenuOpen(false)}
+            />
+          </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
             {/* Cart Icon */}
             <Link
               href="/cart"
-              className="p-2 text-text-gray hover-primary relative"
+              className="p-2 text-pure-white hover:text-accent-gold-light relative transition-colors duration-200"
               aria-label="Shopping cart"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +129,7 @@ export default function Header() {
                 />
               </svg>
               {itemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute top-0 right-0 bg-luxury-gold text-primary-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
                   {itemCount > 9 ? '9+' : itemCount}
                 </span>
               )}
@@ -76,7 +138,7 @@ export default function Header() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-text-gray hover-primary"
+              className="md:hidden p-2 text-pure-white hover:text-accent-gold-light transition-colors duration-200"
               aria-label="Toggle menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,46 +164,59 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <nav className="md:hidden py-4 border-t border-gray-200">
+          <nav className="md:hidden py-4 border-t border-luxury-gold/20 bg-primary-black">
+            {/* Mobile Search Bar */}
+            <div className="mb-4 px-2">
+              <SearchBar 
+                placeholder="Search products and articles..."
+                onResultClick={() => setIsMobileMenuOpen(false)}
+              />
+            </div>
             <div className="flex flex-col space-y-4">
               <Link
                 href="/"
-                className="text-text-gray hover-primary font-medium"
+                className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
                 href="/shop"
-                className="text-text-gray hover-primary font-medium"
+                className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Shop
               </Link>
-              <Link
-                href="/categories"
-                className="text-text-gray hover-primary font-medium"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Categories
-              </Link>
+              <div className="space-y-2">
+                <div className="text-pure-white font-medium">Categories</div>
+                {categories.map((category) => (
+                  <Link
+                    key={category.slug}
+                    href={`/categories/${category.slug}`}
+                    className="block pl-4 text-text-gray hover-primary text-sm"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
               <Link
                 href="/blog"
-                className="text-text-gray hover-primary font-medium"
+                className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/about"
-                className="text-text-gray hover-primary font-medium"
+                className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 About
               </Link>
               <Link
                 href="/contact"
-                className="text-text-gray hover-primary font-medium"
+                className="text-pure-white hover:text-accent-gold-light font-medium transition-colors duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Contact

@@ -6,8 +6,8 @@
 
 import { Metadata } from 'next';
 
-const baseUrl = 'https://peptideresearchlabs.com';
-const siteName = 'Peptide Research Labs';
+const baseUrl = 'https://vicipetides.com';
+const siteName = 'Vici Peptides';
 
 export interface PageMetadataOptions {
   title: string;

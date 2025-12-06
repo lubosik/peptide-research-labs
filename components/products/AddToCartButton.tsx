@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useCart } from '@/lib/context/CartContext';
+import { useWarehouse } from '@/lib/context/WarehouseContext';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Product } from '@/data/products';
 
@@ -9,6 +10,7 @@ interface AddToCartButtonProps {
   product: Product;
   size?: string;
   quantity?: number;
+  warehousePrice?: number;
   className?: string;
 }
 
@@ -16,15 +18,18 @@ export default function AddToCartButton({
   product,
   size,
   quantity = 1,
+  warehousePrice,
   className = '',
 }: AddToCartButtonProps) {
   const { addItem } = useCart();
+  const { selectedWarehouse, getPrice } = useWarehouse();
   const { showToast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = () => {
     setIsAdding(true);
-    addItem(product, quantity, size);
+    const finalPrice = warehousePrice ?? getPrice(product);
+    addItem(product, quantity, size, selectedWarehouse, finalPrice);
     showToast(`${product.name} added to cart!`, 'success');
 
     // Brief delay for visual feedback

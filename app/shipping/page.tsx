@@ -4,7 +4,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Shipping Policy',
-  description: 'Shipping policy for Peptide Research Labs - RUO labeling, returns, and shipping information.',
+  description: 'Shipping policy for Vici Peptides - RUO labeling, returns, and shipping information.',
   path: '/shipping',
 });
 

@@ -4,7 +4,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Terms & Conditions',
-  description: 'Terms and conditions for Peptide Research Labs - Research use only products.',
+  description: 'Terms and conditions for Vici Peptides - Research use only products.',
   path: '/terms',
 });
 
@@ -22,7 +22,7 @@ export default function TermsPage() {
             <section>
               <p className="text-text-gray leading-relaxed">
                 Please read these Terms and Conditions carefully before using our website or purchasing
-                products from Peptide Research Labs. By accessing our website or making a purchase, you
+                products from Vici Peptides. By accessing our website or making a purchase, you
                 agree to be bound by these terms.
               </p>
             </section>
@@ -37,7 +37,7 @@ export default function TermsPage() {
                   [RUO_CLAUSE]
                 </p>
                 <p className="text-text-gray leading-relaxed">
-                  All products sold by Peptide Research Labs are for laboratory research purposes only.
+                  All products sold by Vici Peptides are for laboratory research purposes only.
                   They are not intended for human or animal use, and must not be used in drugs,
                   cosmetics, or any products intended for ingestion, injection, or topical application.
                 </p>
@@ -63,7 +63,7 @@ export default function TermsPage() {
                   any responsibility for misuse or mishandling. Use at your own risk.
                 </p>
                 <p className="text-text-gray leading-relaxed mt-4">
-                  Peptide Research Labs makes no representations or warranties, express or implied,
+                  Vici Peptides makes no representations or warranties, express or implied,
                   regarding the products sold on this website. All products are sold "as is" without
                   warranty of any kind, either express or implied, including but not limited to warranties
                   of merchantability, fitness for a particular purpose, or non-infringement.
@@ -127,7 +127,7 @@ export default function TermsPage() {
               </h2>
               <p className="text-text-gray leading-relaxed">
                 All content on this website, including text, graphics, logos, images, and software, is the
-                property of Peptide Research Labs and is protected by copyright and trademark laws. You
+                property of Vici Peptides and is protected by copyright and trademark laws. You
                 may not reproduce, distribute, or use any content without prior written permission.
               </p>
             </section>
@@ -150,7 +150,7 @@ export default function TermsPage() {
                 Changes to Terms
               </h2>
               <p className="text-text-gray leading-relaxed">
-                Peptide Research Labs reserves the right to modify these Terms and Conditions at any time.
+                Vici Peptides reserves the right to modify these Terms and Conditions at any time.
                 Changes will be effective immediately upon posting to this page. Your continued use of
                 the website after changes are posted constitutes acceptance of the modified terms.
               </p>

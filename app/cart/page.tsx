@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import StockImage from '@/components/images/StockImage';
 import { getComplianceText } from '@/lib/utils/compliance-text';
+import { Warehouse } from '@/lib/context/WarehouseContext';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotal, clearCart } = useCart();
+  const { items, removeItem, updateQuantity, updateWarehouse, getTotal, clearCart } = useCart();
   const router = useRouter();
   const ruoDisclaimer = getComplianceText('RUO_DISCLAIMER');
 
@@ -19,14 +20,14 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="bg-slate-950 min-h-screen text-gray-300">
+      <div className="bg-primary-black min-h-screen text-pure-white">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-heading text-4xl font-bold text-white mb-6">Your Cart is Empty</h1>
-            <p className="text-gray-400 mb-8">Add some research peptides to your cart to continue.</p>
+            <h1 className="text-heading text-4xl font-bold text-accent-gold-light mb-6">Your Cart is Empty</h1>
+            <p className="text-neutral-gray mb-8">Add some research peptides to your cart to continue.</p>
             <Link
               href="/shop"
-              className="inline-block bg-primary text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-dark transition-colors duration-200 shadow-lg hover:shadow-glow-md glow-on-hover"
+              className="inline-block bg-luxury-gold text-luxury-gold-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-colors duration-200 shadow-lg hover:shadow-golden-glow"
             >
               Browse Products
             </Link>
@@ -41,15 +42,15 @@ export default function CartPage() {
   const total = subtotal + shipping;
 
   return (
-    <div className="bg-slate-950 min-h-screen text-gray-300">
+    <div className="bg-primary-black min-h-screen text-pure-white">
       {/* Page Header */}
-      <section className="bg-slate-900 border-b border-slate-800 py-12">
+      <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-heading text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-4">
               Shopping Cart
             </h1>
-            <p className="text-lg text-gray-300">
+            <p className="text-lg text-pure-white">
               {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
             </p>
           </div>
@@ -63,14 +64,14 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column - Cart Items */}
               <div className="lg:col-span-2">
-                <div className="bg-slate-800 rounded-lg p-6 space-y-6">
+                <div className="bg-secondary-charcoal rounded-lg p-6 space-y-6">
                   {items.map((item) => (
                     <div
-                      key={`${item.product.id}-${item.size || 'default'}`}
-                      className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-slate-700 last:border-b-0 last:pb-0"
+                      key={`${item.product.id}-${item.size || 'default'}-${item.warehouse}`}
+                      className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-luxury-gold/20 last:border-b-0 last:pb-0"
                     >
                       {/* Product Image */}
-                      <div className="relative w-full sm:w-32 h-32 bg-slate-700 rounded-lg overflow-hidden flex-shrink-0">
+                      <div className="relative w-full sm:w-32 h-32 bg-primary-black rounded-lg overflow-hidden flex-shrink-0">
                         <StockImage
                           imageType="product-placeholder"
                           context={item.product.name}
@@ -86,17 +87,17 @@ export default function CartPage() {
                           <div>
                             <Link
                               href={`/products/${item.product.slug}`}
-                              className="text-heading text-xl font-bold text-white hover:text-primary transition-colors"
+                              className="text-heading text-xl font-bold text-pure-white hover:text-luxury-gold transition-colors"
                             >
                               {item.product.name}
                             </Link>
                             {item.size && (
-                              <p className="text-sm text-gray-400 mt-1">Size: {item.size}</p>
+                              <p className="text-sm text-neutral-gray mt-1">Size: {item.size}</p>
                             )}
                           </div>
                           <button
                             onClick={() => removeItem(item.product.id)}
-                            className="text-gray-400 hover:text-red-400 transition-colors"
+                            className="text-neutral-gray hover:text-red-400 transition-colors"
                             aria-label="Remove item"
                           >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,34 +111,80 @@ export default function CartPage() {
                           </button>
                         </div>
 
+                        {/* Warehouse Selector */}
+                        <div className="mt-3 mb-4">
+                          <label className="block text-sm font-semibold text-pure-white mb-2">
+                            Warehouse Selection
+                          </label>
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => updateWarehouse(item.product.id, item.size, 'overseas')}
+                              className={`flex-1 px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm ${
+                                item.warehouse === 'overseas'
+                                  ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white shadow-glow-sm'
+                                  : 'border-luxury-gold/30 bg-primary-black text-pure-white hover:border-luxury-gold/50'
+                              }`}
+                            >
+                              <div className="flex items-center justify-center gap-1">
+                                <span>🌍</span>
+                                <span className="font-semibold">Overseas</span>
+                              </div>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateWarehouse(item.product.id, item.size, 'us')}
+                              className={`flex-1 px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm ${
+                                item.warehouse === 'us'
+                                  ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white shadow-glow-sm'
+                                  : 'border-luxury-gold/30 bg-primary-black text-pure-white hover:border-luxury-gold/50'
+                              }`}
+                            >
+                              <div className="flex items-center justify-center gap-1">
+                                <span>🇺🇸</span>
+                                <span className="font-semibold">U.S.</span>
+                              </div>
+                            </button>
+                          </div>
+                          {item.product.warehouseOptions && (
+                            <p className="text-xs text-neutral-gray mt-2">
+                              {item.warehouse === 'us'
+                                ? item.product.warehouseOptions.us.description
+                                : item.product.warehouseOptions.overseas.description}
+                            </p>
+                          )}
+                        </div>
+
                         {/* Price and Quantity */}
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center space-x-4">
-                            <span className="text-sm text-gray-400">Quantity:</span>
+                            <span className="text-sm text-neutral-gray">Quantity:</span>
                             <div className="flex items-center space-x-2">
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                className="w-8 h-8 border border-gray-600 bg-slate-700 text-white rounded hover:bg-slate-600 transition-colors"
+                                className="w-8 h-8 border border-luxury-gold/30 bg-primary-black text-pure-white rounded hover:bg-secondary-charcoal transition-colors"
                               >
                                 -
                               </button>
-                              <span className="w-12 text-center text-white font-semibold">
+                              <span className="w-12 text-center text-pure-white font-semibold">
                                 {item.quantity}
                               </span>
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                className="w-8 h-8 border border-gray-600 bg-slate-700 text-white rounded hover:bg-slate-600 transition-colors"
+                                className="w-8 h-8 border border-luxury-gold/30 bg-primary-black text-pure-white rounded hover:bg-secondary-charcoal transition-colors"
                               >
                                 +
                               </button>
                             </div>
                           </div>
                           <div className="text-right">
-                            <p className="text-2xl font-bold text-primary">
-                              ${(item.product.price * item.quantity).toFixed(2)}
+                            <p className="text-2xl font-bold text-luxury-gold">
+                              ${(item.calculatedPrice * item.quantity).toFixed(2)}
                             </p>
-                            <p className="text-sm text-gray-400">
-                              ${item.product.price.toFixed(2)} each
+                            <p className="text-sm text-neutral-gray">
+                              ${item.calculatedPrice.toFixed(2)} each
+                              {item.warehouse === 'us' && ' (US)'}
+                              {item.warehouse === 'overseas' && ' (Overseas)'}
                             </p>
                           </div>
                         </div>
@@ -150,7 +197,7 @@ export default function CartPage() {
                 <div className="mt-6">
                   <Link
                     href="/shop"
-                    className="inline-flex items-center text-primary hover:text-primary-light transition-colors"
+                    className="inline-flex items-center text-luxury-gold hover:text-luxury-gold-light transition-colors"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -167,43 +214,43 @@ export default function CartPage() {
 
               {/* Right Column - Order Summary */}
               <div className="lg:col-span-1">
-                <div className="bg-slate-800 rounded-lg p-6 sticky top-24">
-                  <h2 className="text-heading text-2xl font-bold text-white mb-6">
+                <div className="bg-secondary-charcoal rounded-lg p-6 sticky top-24">
+                  <h2 className="text-heading text-2xl font-bold text-pure-white mb-6">
                     Order Summary
                   </h2>
 
                   {/* Subtotal */}
                   <div className="flex justify-between mb-4">
-                    <span className="text-gray-400">Subtotal</span>
-                    <span className="text-white font-semibold">${subtotal.toFixed(2)}</span>
+                    <span className="text-neutral-gray">Subtotal</span>
+                    <span className="text-pure-white font-semibold">${subtotal.toFixed(2)}</span>
                   </div>
 
                   {/* Shipping */}
                   <div className="flex justify-between mb-4">
-                    <span className="text-gray-400">Shipping</span>
-                    <span className="text-white font-semibold">${shipping.toFixed(2)}</span>
+                    <span className="text-neutral-gray">Shipping</span>
+                    <span className="text-pure-white font-semibold">${shipping.toFixed(2)}</span>
                   </div>
 
                   {/* Divider */}
-                  <div className="border-t border-slate-700 my-6"></div>
+                  <div className="border-t border-luxury-gold/20 my-6"></div>
 
                   {/* Total */}
                   <div className="flex justify-between mb-6">
-                    <span className="text-heading text-xl font-bold text-white">Total</span>
-                    <span className="text-heading text-xl font-bold text-primary">
+                    <span className="text-heading text-xl font-bold text-pure-white">Total</span>
+                    <span className="text-heading text-xl font-bold text-luxury-gold">
                       ${total.toFixed(2)}
                     </span>
                   </div>
 
                   {/* RUO Disclaimer */}
-                  <div className="mb-6 p-4 bg-secondary/10 border border-secondary/20 rounded text-xs text-gray-400">
+                  <div className="mb-6 p-4 bg-luxury-gold/10 border border-luxury-gold/20 rounded text-xs text-pure-white">
                     {ruoDisclaimer}
                   </div>
 
                   {/* Checkout Button */}
                   <button
                     onClick={handleCheckout}
-                    className="w-full bg-primary text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-primary-dark transition-all duration-300 shadow-lg hover:shadow-glow-md glow-on-hover gpu-accelerated"
+                    className="w-full bg-luxury-gold text-primary-black py-4 px-6 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-300 shadow-lg hover:shadow-golden-glow"
                   >
                     Proceed to Checkout
                   </button>
@@ -211,7 +258,7 @@ export default function CartPage() {
                   {/* Clear Cart */}
                   <button
                     onClick={clearCart}
-                    className="w-full mt-4 text-gray-400 hover:text-red-400 transition-colors text-sm"
+                    className="w-full mt-4 text-neutral-gray hover:text-red-400 transition-colors text-sm"
                   >
                     Clear Cart
                   </button>

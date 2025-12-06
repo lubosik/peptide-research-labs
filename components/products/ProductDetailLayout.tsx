@@ -6,8 +6,10 @@ import Image from 'next/image';
 import { Product } from '@/data/products';
 import StockImage from '@/components/images/StockImage';
 import AddToCartButton from './AddToCartButton';
+import WarehouseSelector from './WarehouseSelector';
 import RelatedProductsAccordion from './RelatedProductsAccordion';
 import { useToast } from '@/components/ui/ToastProvider';
+import { useWarehouse } from '@/lib/context/WarehouseContext';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 
 interface ProductDetailLayoutProps {
@@ -19,6 +21,9 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
   const [selectedSize, setSelectedSize] = useState('50MG');
   const [quantity, setQuantity] = useState(1);
   const { showToast } = useToast();
+  const { getPrice } = useWarehouse();
+  
+  const displayPrice = getPrice(product);
 
   // Gallery images
   const galleryImages = [
@@ -111,6 +116,11 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                   {product.name}
                 </h1>
 
+                {/* Warehouse Selector */}
+                <div className="mb-6">
+                  <WarehouseSelector />
+                </div>
+
                 {/* Size Selector */}
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-white mb-2">SIZE</label>
@@ -133,9 +143,16 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
 
                 {/* Price */}
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-white">
-                    ${product.price.toFixed(2)}
-                  </span>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-4xl font-bold text-white">
+                      ${displayPrice.toFixed(2)}
+                    </span>
+                    {product.warehouseOptions && (
+                      <span className="text-sm text-gray-400">
+                        (Base: ${product.price.toFixed(2)})
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Stock Status */}
@@ -180,7 +197,12 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                         </button>
                       </div>
                     </div>
-                    <AddToCartButton product={product} size={selectedSize} quantity={quantity} />
+                    <AddToCartButton 
+                      product={product} 
+                      size={selectedSize} 
+                      quantity={quantity}
+                      warehousePrice={displayPrice}
+                    />
                   </div>
                 ) : (
                   <div className="mb-6">

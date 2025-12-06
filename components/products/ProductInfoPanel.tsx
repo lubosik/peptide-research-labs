@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { Product } from '@/data/products';
 import AddToCartButton from './AddToCartButton';
+import WarehouseSelector from './WarehouseSelector';
 import { getComplianceText } from '@/lib/utils/compliance-text';
+import { useWarehouse } from '@/lib/context/WarehouseContext';
 
 interface ProductInfoPanelProps {
   product: Product;
@@ -12,8 +14,10 @@ interface ProductInfoPanelProps {
 export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
   const [selectedSize, setSelectedSize] = useState('50MG');
   const [quantity, setQuantity] = useState(1);
+  const { getPrice } = useWarehouse();
 
   const sizes = ['50MG', '100MG', '250MG'];
+  const displayPrice = getPrice(product);
 
   return (
     <div>
@@ -21,11 +25,23 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
         {product.name}
       </h1>
 
+      {/* Warehouse Selector */}
+      <div className="mb-6">
+        <WarehouseSelector />
+      </div>
+
       {/* Price */}
       <div className="mb-6">
-        <span className="text-4xl font-bold text-white">
-          ${product.price.toFixed(2)}
-        </span>
+        <div className="flex items-baseline gap-3">
+          <span className="text-4xl font-bold text-white">
+            ${displayPrice.toFixed(2)}
+          </span>
+          {product.warehouseOptions && (
+            <span className="text-sm text-gray-400">
+              (Base: ${product.price.toFixed(2)})
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Stock Status */}
@@ -124,7 +140,12 @@ export default function ProductInfoPanel({ product }: ProductInfoPanelProps) {
 
       {/* Add to Cart Button */}
       <div className="mb-6">
-        <AddToCartButton product={product} size={selectedSize} quantity={quantity} />
+        <AddToCartButton 
+          product={product} 
+          size={selectedSize} 
+          quantity={quantity}
+          warehousePrice={displayPrice}
+        />
       </div>
     </div>
   );
