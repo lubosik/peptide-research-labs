@@ -120,8 +120,9 @@ export async function GET(request: NextRequest) {
         article.category,
         ...article.keywords,
         article.content.introduction,
+        article.content.mechanismOfAction,
         article.content.chemicalBackground,
-        article.content.laboratoryStudySummary,
+        article.content.laboratoryApplications,
         article.content.handlingAndStorage,
         article.content.conclusion,
       ]

@@ -66,12 +66,12 @@ export interface ProductSchema {
 
 export interface ArticleSchema {
   '@context': string;
-  '@type': string;
+  '@type': 'Article' | 'BlogPosting';
   headline: string;
   description: string;
   image?: string;
   author: {
-    '@type': string;
+    '@type': 'Person' | 'Organization';
     name: string;
   };
   publisher: {
@@ -84,6 +84,8 @@ export interface ArticleSchema {
   };
   datePublished: string;
   dateModified?: string;
+  articleSection?: string;
+  keywords?: string[];
 }
 
 export interface FAQSchema {
@@ -194,19 +196,25 @@ export function generateProductSchema(product: Product, selectedVariantStrength?
 
 /**
  * Generate Article schema for blog posts
+ * Enhanced with BlogPosting schema for peptide articles
  */
-export function generateArticleSchema(article: Article): ArticleSchema {
-  return {
+export function generateArticleSchema(
+  article: Article | any,
+  isBlogPosting: boolean = false,
+  keywords?: string[],
+  articleSection?: string
+): ArticleSchema {
+  const baseSchema: ArticleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': isBlogPosting ? 'BlogPosting' : 'Article',
     headline: article.title,
-    description: article.description,
+    description: article.description || article.metaDescription || article.subheadline,
     image: article.headerImage
       ? `https://vicipetides.com${article.headerImage}`
       : undefined,
     author: {
-      '@type': 'Person',
-      name: article.author,
+      '@type': isBlogPosting ? 'Organization' : 'Person',
+      name: article.author || 'Vici Peptides Editorial',
     },
     publisher: {
       '@type': 'Organization',
@@ -217,8 +225,18 @@ export function generateArticleSchema(article: Article): ArticleSchema {
       },
     },
     datePublished: article.publishedDate,
-    dateModified: article.publishedDate,
+    dateModified: article.publishedDate || article.publishedDate,
   };
+
+  // Add BlogPosting-specific fields
+  if (isBlogPosting) {
+    baseSchema.articleSection = articleSection || article.category || 'Peptide Research';
+    if (keywords && keywords.length > 0) {
+      baseSchema.keywords = keywords;
+    }
+  }
+
+  return baseSchema;
 }
 
 /**

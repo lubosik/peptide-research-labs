@@ -17,6 +17,7 @@ export interface PageMetadataOptions {
   type?: 'website' | 'article';
   publishedTime?: string;
   modifiedTime?: string;
+  keywords?: string;
 }
 
 /**
@@ -31,6 +32,7 @@ export function generateMetadata(options: PageMetadataOptions): Metadata {
     type = 'website',
     publishedTime,
     modifiedTime,
+    keywords,
   } = options;
 
   // OpenGraph only supports 'website' or 'article', default to 'website' for products
@@ -45,16 +47,18 @@ export function generateMetadata(options: PageMetadataOptions): Metadata {
       template: `%s | ${siteName}`,
     },
     description,
-    keywords: [
-      'research peptides',
-      'laboratory reagents',
-      'biochemical compounds',
-      'peptide research',
-      'laboratory supplies',
-      'research-grade peptides',
-      'biochemical reagents',
-      'laboratory research',
-    ],
+    keywords: keywords
+      ? keywords.split(',').map(k => k.trim())
+      : [
+          'research peptides',
+          'laboratory reagents',
+          'biochemical compounds',
+          'peptide research',
+          'laboratory supplies',
+          'research-grade peptides',
+          'biochemical reagents',
+          'laboratory research',
+        ],
     authors: [{ name: siteName }],
     creator: siteName,
     publisher: siteName,

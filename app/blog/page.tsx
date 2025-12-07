@@ -1,11 +1,15 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { articles } from '@/data/articles';
 import { products, getProductBySlug } from '@/data/products';
 import { generateAllPeptideArticles } from '@/lib/blog/generate-peptide-article';
 import { motion } from 'framer-motion';
+import ArticleImage from '@/components/blog/ArticleImage';
+import BlogSidebar from '@/components/blog/BlogSidebar';
+
+const ARTICLES_PER_PAGE = 12;
 
 // Get unique categories from all articles
 function getAllCategories(articles: any[], peptideArticles: any[]): string[] {
@@ -36,15 +40,17 @@ export default function BlogPage() {
       readTime: pa.readTime,
       content: [
         pa.content.introduction,
+        pa.content.mechanismOfAction,
         pa.content.chemicalBackground,
-        pa.content.laboratoryStudySummary,
+        pa.content.laboratoryApplications,
         pa.content.handlingAndStorage,
         pa.content.conclusion,
       ],
       tableOfContents: [
         { id: 'introduction', title: 'Introduction', level: 2 },
+        { id: 'mechanism-of-action', title: 'Mechanism of Action', level: 2 },
         { id: 'chemical-background', title: 'Chemical Background', level: 2 },
-        { id: 'laboratory-study', title: 'Laboratory Study Summary', level: 2 },
+        { id: 'laboratory-applications', title: 'Laboratory Applications', level: 2 },
         { id: 'handling-storage', title: 'Handling and Storage Guidelines', level: 2 },
         { id: 'conclusion', title: 'Conclusion', level: 2 },
       ],
@@ -56,14 +62,27 @@ export default function BlogPage() {
   // Get all unique categories
   const categories = getAllCategories(articles, peptideArticles);
   const [selectedCategory, setSelectedCategory] = useState<string>('All Articles');
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // Filter articles by category
   const filteredArticles = useMemo(() => {
-    if (selectedCategory === 'All Articles') {
-      return allArticles;
+    let filtered = allArticles;
+    if (selectedCategory !== 'All Articles') {
+      filtered = allArticles.filter(article => article.category === selectedCategory);
     }
-    return allArticles.filter(article => article.category === selectedCategory);
+    return filtered;
   }, [selectedCategory, allArticles]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredArticles.length / ARTICLES_PER_PAGE);
+  const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
+  const endIndex = startIndex + ARTICLES_PER_PAGE;
+  const paginatedArticles = filteredArticles.slice(startIndex, endIndex);
+
+  // Reset to page 1 when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
   // Get product link for article (if it's a peptide article)
   const getProductLink = (article: any) => {
@@ -73,13 +92,19 @@ export default function BlogPage() {
 
   return (
     <div className="bg-primary-black min-h-screen">
-      {/* Page Header with Breadcrumb */}
-      <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-b from-primary-black via-secondary-charcoal to-primary-black py-20 md:py-30">
+        {/* Subtle gold particle glow effect */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-luxury-gold/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-gold-light/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
             {/* Breadcrumb Navigation */}
             <nav className="mb-6 text-sm">
-              <ol className="flex items-center space-x-2 text-neutral-gray">
+              <ol className="flex items-center justify-center space-x-2 text-neutral-gray">
                 <li>
                   <Link href="/" className="hover:text-luxury-gold transition-colors">
                     Home
@@ -90,11 +115,11 @@ export default function BlogPage() {
               </ol>
             </nav>
 
-            <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-4">
-              Research Blog
+            <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-6">
+              Research Articles & Peptide Insights
             </h1>
-            <p className="text-lg text-pure-white">
-              Scientific insights and research articles about peptides and laboratory applications
+            <p className="text-lg md:text-xl text-pure-white text-neutral-gray max-w-3xl mx-auto">
+              Explore our continuously updated database of laboratory research overviews and analytical summaries.
             </p>
           </div>
         </div>
@@ -131,73 +156,75 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Articles Grid - Simplified */}
+      {/* Articles Grid with Sidebar */}
       <section className="py-12 md:py-16 bg-primary-black">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredArticles.map((article, index) => {
+            {/* Results Count */}
+            <div className="mb-8 flex items-center justify-between">
+              <p className="text-sm text-neutral-gray">
+                {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'}
+                {selectedCategory !== 'All Articles' && (
+                  <span className="ml-2 text-luxury-gold">in {selectedCategory}</span>
+                )}
+              </p>
+            </div>
+
+            {/* Main Content Grid with Sidebar */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              {/* Main Articles Grid - 2 columns on desktop when sidebar visible, 3 when sidebar hidden */}
+              <div className="lg:col-span-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {paginatedArticles.map((article, index) => {
                 const productLink = getProductLink(article);
                 return (
                   <motion.article
                     key={article.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="bg-secondary-charcoal rounded-lg border border-luxury-gold/20 overflow-hidden flex flex-col hover:border-luxury-gold/40 transition-all duration-400"
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    className="bg-secondary-charcoal rounded-lg border-2 border-luxury-gold/20 overflow-hidden flex flex-col hover:border-luxury-gold/60 hover:shadow-lg hover:shadow-luxury-gold/30 transition-all duration-400"
                   >
-                    {/* Image */}
-                    <Link href={`/blog/${article.slug}`}>
-                      <div className="relative w-full h-48 bg-gradient-to-br from-primary-black to-secondary-charcoal flex items-center justify-center">
-                        <div className="text-center p-4">
-                          <svg
-                            className="w-20 h-20 mx-auto text-luxury-gold opacity-40"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={1.5}
-                              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                            />
-                          </svg>
-                        </div>
+                    {/* Thumbnail Image */}
+                    <Link href={`/blog/${article.slug}`} className="block">
+                      <div className="relative w-full h-48 overflow-hidden">
+                        <ArticleImage
+                          slug={article.slug}
+                          articleType={(article as any).relatedProductSlug ? 'peptide' : 'article'}
+                          peptideName={(article as any).relatedProductSlug ? article.title.replace('Research Overview: ', '') : undefined}
+                          type="thumbnail"
+                          className="w-full h-full"
+                          alt={article.title}
+                        />
                       </div>
                     </Link>
 
-                    {/* Content - Simplified */}
+                    {/* Content */}
                     <div className="p-6 flex-grow flex flex-col">
-                      {/* Title */}
+                      {/* Title - Gold text */}
                       <Link href={`/blog/${article.slug}`}>
                         <h2 className="text-heading text-xl font-bold text-accent-gold-light mb-3 hover:text-luxury-gold transition-colors line-clamp-2">
                           {article.title}
                         </h2>
                       </Link>
 
-                      {/* 2-Line Excerpt */}
-                      <p className="text-pure-white text-sm mb-4 line-clamp-2 leading-relaxed">
-                        {article.description}
+                      {/* Excerpt */}
+                      <p className="text-pure-white text-sm mb-4 line-clamp-3 leading-relaxed">
+                        {article.description || article.subheadline}
                       </p>
 
-                      {/* Product Link (if applicable) */}
-                      {productLink && (
-                        <div className="mb-4">
-                          <Link
-                            href={productLink}
-                            className="inline-flex items-center gap-2 text-sm text-luxury-gold hover:text-accent-gold-light transition-colors"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                            </svg>
-                            View Product
-                          </Link>
-                        </div>
-                      )}
+                      {/* Read Article Button */}
+                      <div className="mt-auto pt-4">
+                        <Link
+                          href={`/blog/${article.slug}`}
+                          className="inline-block w-full bg-transparent border-2 border-luxury-gold/50 text-luxury-gold text-center py-3 px-4 rounded-lg font-semibold hover:bg-luxury-gold/10 hover:border-luxury-gold transition-all duration-400 text-sm min-h-[44px] flex items-center justify-center"
+                        >
+                          Read Article
+                        </Link>
+                      </div>
 
-                      {/* Meta Info - Simplified */}
-                      <div className="flex items-center justify-between text-xs text-neutral-gray mt-auto">
+                      {/* Meta Info */}
+                      <div className="flex items-center justify-between text-xs text-neutral-gray mt-4 pt-4 border-t border-luxury-gold/10">
                         <span>{article.category}</span>
                         <span>{article.readTime}</span>
                       </div>
@@ -205,6 +232,67 @@ export default function BlogPage() {
                   </motion.article>
                 );
               })}
+                </div>
+
+                {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-secondary-charcoal border border-luxury-gold/30 text-pure-white rounded-lg hover:bg-luxury-gold/10 hover:border-luxury-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-400"
+                >
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    // Show first page, last page, current page, and pages around current
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 1 && page <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`px-4 py-2 rounded-lg transition-all duration-400 min-w-[44px] ${
+                            currentPage === page
+                              ? 'bg-luxury-gold text-primary-black font-semibold'
+                              : 'bg-secondary-charcoal border border-luxury-gold/30 text-pure-white hover:bg-luxury-gold/10 hover:border-luxury-gold'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      );
+                    } else if (page === currentPage - 2 || page === currentPage + 2) {
+                      return <span key={page} className="text-neutral-gray">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 bg-secondary-charcoal border border-luxury-gold/30 text-pure-white rounded-lg hover:bg-luxury-gold/10 hover:border-luxury-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-400"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-1">
+                <BlogSidebar
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                  allArticles={allArticles}
+                />
+              </div>
             </div>
           </div>
         </div>

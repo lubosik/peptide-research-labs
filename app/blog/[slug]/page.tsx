@@ -8,6 +8,8 @@ import { getComplianceText } from '@/lib/utils/compliance-text';
 import { generateArticleSchema } from '@/lib/seo/structured-data';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
 import { generatePeptideArticle } from '@/lib/blog/generate-peptide-article';
+import ArticleImage from '@/components/blog/ArticleImage';
+import { extractLinks, processContentWithProductLinks } from '@/lib/blog/render-content';
 
 interface ArticlePageProps {
   params: {
@@ -49,7 +51,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   // Try peptide article
   const product = getProductBySlug(params.slug);
   if (product) {
-    const peptideArticle = generatePeptideArticle(product);
+    const peptideArticle = generatePeptideArticle(product, products);
     return generateSEOMetadata({
       title: peptideArticle.title,
       description: peptideArticle.metaDescription,
@@ -57,6 +59,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
       type: 'article',
       publishedTime: peptideArticle.publishedDate,
       modifiedTime: peptideArticle.publishedDate,
+      keywords: peptideArticle.keywords.join(', '),
     });
   }
 
@@ -76,7 +79,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
   if (!article) {
     const product = getProductBySlug(params.slug);
     if (product) {
-      peptideArticle = generatePeptideArticle(product);
+      peptideArticle = generatePeptideArticle(product, products);
       relatedProduct = product;
       isPeptideArticle = true;
     } else {
@@ -103,7 +106,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
     id: peptideArticle.id,
     slug: peptideArticle.slug,
     title: peptideArticle.title,
-    subheadline: peptideArticle.metaDescription,
+    subheadline: peptideArticle.subtitle || peptideArticle.metaDescription,
     description: peptideArticle.metaDescription,
     thumbnail: '',
     headerImage: '',
@@ -113,22 +116,38 @@ export default function ArticlePage({ params }: ArticlePageProps) {
     readTime: peptideArticle.readTime,
     content: [
       peptideArticle.content.introduction,
+      peptideArticle.content.mechanismOfAction,
       peptideArticle.content.chemicalBackground,
-      peptideArticle.content.laboratoryStudySummary,
+      peptideArticle.content.laboratoryApplications,
       peptideArticle.content.handlingAndStorage,
       peptideArticle.content.conclusion,
     ],
     tableOfContents: [
       { id: 'introduction', title: 'Introduction', level: 2 },
+      { id: 'mechanism-of-action', title: 'Mechanism of Action', level: 2 },
       { id: 'chemical-background', title: 'Chemical Background', level: 2 },
-      { id: 'laboratory-study', title: 'Laboratory Study Summary', level: 2 },
+      { id: 'laboratory-applications', title: 'Laboratory Applications', level: 2 },
       { id: 'handling-storage', title: 'Handling and Storage Guidelines', level: 2 },
       { id: 'conclusion', title: 'Conclusion', level: 2 },
     ],
+    // Add peptide-specific data
+    crossLinkedResearch: peptideArticle.crossLinkedResearch || [],
+    externalCitations: peptideArticle.externalCitations || [],
+    disclaimer: peptideArticle.disclaimer,
+    relatedProductSlug: peptideArticle.slug,
   } : (article as NonNullable<typeof article>);
 
-  // Generate schema for regular article format
-  const articleSchema = article ? generateArticleSchema(displayArticle as typeof article) : null;
+  // Generate schema for article (BlogPosting for peptide articles, Article for regular)
+  const articleSchema = isPeptideArticle && peptideArticle
+    ? generateArticleSchema(
+        displayArticle as any,
+        true, // isBlogPosting
+        peptideArticle.keywords,
+        peptideArticle.category
+      )
+    : article
+    ? generateArticleSchema(displayArticle as typeof article, false)
+    : null;
 
   return (
     <div className="bg-primary-black min-h-screen">
@@ -164,28 +183,18 @@ export default function ArticlePage({ params }: ArticlePageProps) {
         </div>
       </section>
 
-      {/* Header Image */}
-      <section className="relative w-full h-64 md:h-96 bg-gradient-to-br from-primary-black to-secondary-charcoal">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center p-8">
-            <svg
-              className="w-32 h-32 md:w-48 md:h-48 mx-auto text-luxury-gold opacity-40"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-              />
-            </svg>
-            <p className="text-sm text-neutral-gray mt-4 opacity-50">
-              Article Header Image
-            </p>
-          </div>
-        </div>
+      {/* Header Image - Black-to-charcoal gradient with faint gold overlay */}
+      <section className="relative w-full h-64 md:h-96">
+        {/* Faint gold overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-luxury-gold/5 via-transparent to-luxury-gold/5 z-10 pointer-events-none"></div>
+        <ArticleImage
+          slug={displayArticle.slug}
+          articleType={isPeptideArticle ? 'peptide' : 'article'}
+          peptideName={isPeptideArticle && relatedProduct ? relatedProduct.name.split('(')[0].trim() : undefined}
+          type="header"
+          className="w-full h-full"
+          alt={displayArticle.title}
+        />
       </section>
 
       {/* Article Content */}
@@ -230,6 +239,73 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                         (item, tocIndex) => tocIndex === index
                       );
 
+                      // Process content with internal links
+                      const processedContent = isPeptideArticle && relatedProduct
+                        ? processContentWithProductLinks(paragraph, relatedProduct.slug)
+                        : paragraph;
+
+                      // Extract links from processed content
+                      const links = extractLinks(processedContent);
+                      
+                      // Render content with links
+                      const renderContent = () => {
+                        if (links.length === 0) {
+                          return processedContent;
+                        }
+
+                        const parts: (string | React.ReactElement)[] = [];
+                        let lastIndex = 0;
+
+                        links.forEach((link, linkIndex) => {
+                          // Add text before the link
+                          if (link.startIndex > lastIndex) {
+                            parts.push(processedContent.substring(lastIndex, link.startIndex));
+                          }
+
+                          // Determine if it's an external link
+                          const isExternal = link.href.startsWith('http');
+                          const isInternalProduct = link.href.startsWith('/products/');
+                          
+                          // Add the link with enhanced styling
+                          parts.push(
+                            <Link
+                              key={linkIndex}
+                              href={link.href}
+                              target={isExternal ? '_blank' : undefined}
+                              rel={isExternal ? 'noopener noreferrer' : undefined}
+                              className="text-luxury-gold hover:text-accent-gold-light hover:underline transition-all duration-400 underline-offset-2 decoration-luxury-gold/50 hover:decoration-luxury-gold"
+                            >
+                              {link.text}
+                              {isExternal && (
+                                <svg
+                                  className="inline-block w-3 h-3 ml-1 mb-0.5"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                  />
+                                </svg>
+                              )}
+                            </Link>
+                          );
+
+                          lastIndex = link.endIndex;
+                        });
+
+                        // Add remaining text
+                        if (lastIndex < processedContent.length) {
+                          parts.push(processedContent.substring(lastIndex));
+                        }
+
+                        return <>{parts}</>;
+                      };
+
                       if (tocItem) {
                         return (
                           <div key={index} id={tocItem.id} className="scroll-mt-24">
@@ -237,7 +313,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                               {tocItem.title}
                             </h2>
                             <div className="text-pure-white leading-relaxed mb-6 whitespace-pre-line">
-                              {paragraph}
+                              {renderContent()}
                             </div>
                           </div>
                         );
@@ -245,15 +321,142 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 
                       return (
                         <p key={index} className="text-pure-white leading-relaxed mb-6">
-                          {paragraph}
+                          {renderContent()}
                         </p>
                       );
                     })}
                   </div>
 
+                  {/* Cross-Linked Research (Related Peptides) */}
+                  {isPeptideArticle && peptideArticle && peptideArticle.crossLinkedResearch && peptideArticle.crossLinkedResearch.length > 0 && (
+                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                      <h2 id="cross-linked-research" className="text-heading text-2xl font-bold text-accent-gold-light mb-6 scroll-mt-24">
+                        Cross-Linked Research
+                      </h2>
+                      <p className="text-pure-white mb-4 leading-relaxed">
+                        Related research peptides in the same category:
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {peptideArticle.crossLinkedResearch.map((related) => (
+                          <Link
+                            key={related.slug}
+                            href={`/blog/${related.slug}`}
+                            className="p-4 bg-secondary-charcoal border border-luxury-gold/30 rounded-lg hover:border-luxury-gold/60 hover:bg-luxury-gold/5 transition-all duration-400 group"
+                          >
+                            <h3 className="text-heading font-semibold text-accent-gold-light mb-2 group-hover:text-luxury-gold transition-colors duration-400">
+                              {related.name}
+                            </h3>
+                            <p className="text-sm text-neutral-gray flex items-center gap-1 group-hover:text-luxury-gold/70 transition-colors duration-400">
+                              Read research overview
+                              <svg
+                                className="w-4 h-4 inline-block transition-transform duration-400 group-hover:translate-x-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* External Citations */}
+                  {isPeptideArticle && peptideArticle && peptideArticle.externalCitations && peptideArticle.externalCitations.length > 0 && (
+                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                      <h2 id="external-citations" className="text-heading text-2xl font-bold text-accent-gold-light mb-6 scroll-mt-24">
+                        External Citations
+                      </h2>
+                      <p className="text-pure-white mb-4 leading-relaxed">
+                        Reference authoritative research sources:
+                      </p>
+                      <ul className="space-y-3">
+                        {peptideArticle.externalCitations.map((citation, index) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <svg
+                              className="w-5 h-5 text-luxury-gold mt-0.5 flex-shrink-0"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                              />
+                            </svg>
+                            <div className="flex-1">
+                              <a
+                                href={citation.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-luxury-gold hover:text-accent-gold-light hover:underline transition-all duration-400 underline-offset-2 decoration-luxury-gold/50 hover:decoration-luxury-gold inline-flex items-center gap-1"
+                              >
+                                {citation.title}
+                                <svg
+                                  className="w-3 h-3 mb-0.5"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  aria-hidden="true"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                  />
+                                </svg>
+                              </a>
+                              <span className="text-neutral-gray text-sm ml-2">({citation.source})</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* References Section */}
+                  {isPeptideArticle && peptideArticle && peptideArticle.references && peptideArticle.references.length > 0 && (
+                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                      <h2 id="references" className="text-heading text-2xl font-bold text-accent-gold-light mb-6 scroll-mt-24">
+                        References
+                      </h2>
+                      <p className="text-pure-white mb-4 leading-relaxed text-sm">
+                        The following references provide authoritative information about this research compound:
+                      </p>
+                      <ol className="space-y-3 list-decimal list-inside">
+                        {peptideArticle.references.map((ref, index) => (
+                          <li key={ref.id || index} className="text-pure-white text-sm leading-relaxed">
+                            {ref.url ? (
+                              <a
+                                href={ref.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-luxury-gold hover:text-accent-gold-light hover:underline transition-colors duration-400"
+                              >
+                                {ref.citation}
+                              </a>
+                            ) : (
+                              <span>{ref.citation}</span>
+                            )}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )}
+
                   {/* Peptide Article Disclaimer */}
                   {isPeptideArticle && peptideArticle && (
-                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                    <div className="mt-12 pt-8 border-t-2 border-luxury-gold/30">
                       <div className="p-6 bg-red-900/30 border-l-4 border-red-500 rounded">
                         <h3 className="text-heading text-lg font-semibold text-red-400 mb-2">
                           Research Use Only Disclaimer
@@ -265,9 +468,9 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                     </div>
                   )}
 
-                  {/* Product Link (if peptide article) */}
+                  {/* Product Link (if peptide article) - Gold divider and link back */}
                   {isPeptideArticle && relatedProduct && (
-                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                    <div className="mt-12 pt-8 border-t-2 border-luxury-gold">
                       <div className="p-6 bg-luxury-gold/10 border border-luxury-gold/30 rounded-lg">
                         <h3 className="text-heading text-lg font-semibold text-accent-gold-light mb-3">
                           Related Product
