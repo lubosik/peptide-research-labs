@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Product } from '@/data/products';
+import { Product, getProductMinPrice } from '@/data/products';
 
 interface RelatedProductsProps {
   currentProduct: Product;
@@ -55,7 +55,7 @@ export default function RelatedProducts({
             <p className="text-sm text-text-gray line-clamp-2 mb-2">
               {product.shortDescription}
             </p>
-            <p className="text-primary font-semibold">${product.price.toFixed(2)}</p>
+            <p className="text-primary font-semibold">${getProductMinPrice(product).toFixed(2)}</p>
           </Link>
         ))}
       </div>

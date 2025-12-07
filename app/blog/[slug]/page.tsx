@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getArticleBySlug, articles } from '@/data/articles';
-import { products, getProductBySlug } from '@/data/products';
+import { products, getProductBySlug, getProductMinPrice } from '@/data/products';
 import { Metadata } from 'next';
 import TableOfContents from '@/components/blog/TableOfContents';
 import { getComplianceText } from '@/lib/utils/compliance-text';
@@ -373,7 +373,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                           <p className="text-sm text-pure-white line-clamp-2 mb-2">
                             {product.shortDescription}
                           </p>
-                          <p className="text-luxury-gold font-semibold">${product.price.toFixed(2)}</p>
+                          <p className="text-luxury-gold font-semibold">${getProductMinPrice(product).toFixed(2)}</p>
                         </Link>
                       ))}
                   </div>

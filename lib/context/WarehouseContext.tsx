@@ -53,8 +53,8 @@ export function WarehouseProvider({ children }: { children: React.ReactNode }) {
     const basePrice = product.price;
     const warehouseOption = getWarehouseOption(product);
     
-    if (!warehouseOption) {
-      return basePrice; // Fallback to base price if no warehouse options
+    if (!warehouseOption || basePrice === undefined) {
+      return basePrice ?? 0; // Fallback to base price if no warehouse options, or 0 if undefined
     }
     
     return basePrice * warehouseOption.priceMultiplier;

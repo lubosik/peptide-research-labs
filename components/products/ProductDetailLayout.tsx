@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Product } from '@/data/products';
+import { Product, getProductMinPrice, getDefaultVariant, hasVariants } from '@/data/products';
 import StockImage from '@/components/images/StockImage';
 import AddToCartButton from './AddToCartButton';
 import WarehouseSelector from './WarehouseSelector';
@@ -24,6 +24,8 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
   const { getPrice } = useWarehouse();
   
   const displayPrice = getPrice(product);
+  // Get default variant for products with variants, or null for legacy products
+  const defaultVariant = hasVariants(product) ? null : getDefaultVariant(product);
 
   // Gallery images
   const galleryImages = [
@@ -149,7 +151,7 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                     </span>
                     {product.warehouseOptions && (
                       <span className="text-sm text-gray-400">
-                        (Base: ${product.price.toFixed(2)})
+                        (Base: ${getProductMinPrice(product).toFixed(2)})
                       </span>
                     )}
                   </div>
@@ -199,7 +201,7 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                     </div>
                     <AddToCartButton 
                       product={product} 
-                      size={selectedSize} 
+                      variant={defaultVariant}
                       quantity={quantity}
                       warehousePrice={displayPrice}
                     />
