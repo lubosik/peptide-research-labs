@@ -13,20 +13,19 @@ export interface ArticleImage {
 
 /**
  * Get image for an article (peptide or regular article)
- * Returns placeholder if no image found
+ * Returns the Vici Research Cover image for all articles
  */
 export function getArticleImage(
   slug: string,
   articleType: 'peptide' | 'article' = 'article',
   peptideName?: string
 ): ArticleImage {
-  // In production, this would check /data/thumbnails.json
-  // For now, return placeholder
+  // Use the Vici Research Cover image for all articles
   return {
-    thumbnail: getPlaceholderImage(slug, peptideName),
-    headerImage: getPlaceholderImage(slug, peptideName, 'header'),
-    source: 'placeholder',
-    alt: peptideName ? `${peptideName} Research Article` : 'Research Article',
+    thumbnail: '/images/vici-research-cover.png',
+    headerImage: '/images/vici-research-cover.png',
+    source: 'vici-cover',
+    alt: peptideName ? `${peptideName} Research Article` : 'Vici Peptides Research Article',
   };
 }
 
@@ -38,14 +37,8 @@ function getPlaceholderImage(
   peptideName?: string,
   type: 'thumbnail' | 'header' = 'thumbnail'
 ): string {
-  // For now, return a placeholder path
-  // In production, this would:
-  // 1. Check if image exists in /data/thumbnails.json
-  // 2. If not, generate a branded placeholder
-  // 3. Or fetch from external source
-  
-  // Branded placeholder path
-  return `/images/blog/placeholders/${slug}-${type}.jpg`;
+  // Use the Vici Research Cover image for all articles
+  return '/images/vici-research-cover.png';
 }
 
 /**

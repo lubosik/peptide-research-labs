@@ -44,7 +44,6 @@ export default function BlogPage() {
         pa.content.chemicalBackground,
         pa.content.laboratoryApplications,
         pa.content.handlingAndStorage,
-        pa.content.conclusion,
       ],
       tableOfContents: [
         { id: 'introduction', title: 'Introduction', level: 2 },
@@ -52,7 +51,6 @@ export default function BlogPage() {
         { id: 'chemical-background', title: 'Chemical Background', level: 2 },
         { id: 'laboratory-applications', title: 'Laboratory Applications', level: 2 },
         { id: 'handling-storage', title: 'Handling and Storage Guidelines', level: 2 },
-        { id: 'conclusion', title: 'Conclusion', level: 2 },
       ],
       // Link to product if it's a peptide article
       relatedProductSlug: pa.slug, // Peptide articles use product slug

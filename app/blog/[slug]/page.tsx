@@ -12,9 +12,9 @@ import ArticleImage from '@/components/blog/ArticleImage';
 import { extractLinks, processContentWithProductLinks } from '@/lib/blog/render-content';
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -34,8 +34,11 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  // Unwrap params for Next.js 15
+  const { slug } = await params;
+  
   // Try regular article first
-  const article = getArticleBySlug(params.slug);
+  const article = getArticleBySlug(slug);
   
   if (article) {
     return generateSEOMetadata({
@@ -49,7 +52,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   }
   
   // Try peptide article
-  const product = getProductBySlug(params.slug);
+  const product = getProductBySlug(slug);
   if (product) {
     const peptideArticle = generatePeptideArticle(product, products);
     return generateSEOMetadata({
@@ -68,16 +71,19 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   };
 }
 
-export default function ArticlePage({ params }: ArticlePageProps) {
+export default async function ArticlePage({ params }: ArticlePageProps) {
+  // Unwrap params for Next.js 15
+  const { slug } = await params;
+  
   // Try regular article first
-  const article = getArticleBySlug(params.slug);
+  const article = getArticleBySlug(slug);
   let isPeptideArticle = false;
   let peptideArticle = null;
   let relatedProduct = null;
 
   // If not found, try peptide article
   if (!article) {
-    const product = getProductBySlug(params.slug);
+    const product = getProductBySlug(slug);
     if (product) {
       peptideArticle = generatePeptideArticle(product, products);
       relatedProduct = product;
@@ -120,7 +126,6 @@ export default function ArticlePage({ params }: ArticlePageProps) {
       peptideArticle.content.chemicalBackground,
       peptideArticle.content.laboratoryApplications,
       peptideArticle.content.handlingAndStorage,
-      peptideArticle.content.conclusion,
     ],
     tableOfContents: [
       { id: 'introduction', title: 'Introduction', level: 2 },
@@ -128,7 +133,6 @@ export default function ArticlePage({ params }: ArticlePageProps) {
       { id: 'chemical-background', title: 'Chemical Background', level: 2 },
       { id: 'laboratory-applications', title: 'Laboratory Applications', level: 2 },
       { id: 'handling-storage', title: 'Handling and Storage Guidelines', level: 2 },
-      { id: 'conclusion', title: 'Conclusion', level: 2 },
     ],
     // Add peptide-specific data
     crossLinkedResearch: peptideArticle.crossLinkedResearch || [],

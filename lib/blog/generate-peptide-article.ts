@@ -23,7 +23,6 @@ export interface PeptideArticle {
     chemicalBackground: string;
     laboratoryApplications: string;
     handlingAndStorage: string;
-    conclusion: string;
   };
   crossLinkedResearch: Array<{
     name: string;
@@ -115,12 +114,8 @@ Ex vivo applications involve experiments conducted on tissues or organs removed 
 Researchers working with ${baseName} should follow established laboratory protocols, maintain sterile conditions during reconstitution and handling, and adhere to all safety guidelines. Proper documentation of experimental procedures, storage conditions, and handling protocols is essential for research reproducibility and scientific rigor.`;
 
   const handlingAndStorage = product.storageRequirements && product.handlingGuidelines
-    ? `**Storage Requirements:** ${product.storageRequirements}\n\n**Handling Guidelines:** ${product.handlingGuidelines}`
-    : `**Storage Requirements:** Store lyophilized powder at -20°C in a dry environment. Protect from light and moisture. Reconstituted solution should be stored at 4°C for up to 14 days. Maintain sterile conditions during reconstitution.\n\n**Handling Guidelines:** Handle using sterile techniques and appropriate laboratory personal protective equipment (PPE). Use in well-ventilated areas. Avoid inhalation, ingestion, or skin contact. Follow standard laboratory safety protocols.`;
-
-  const conclusion = `This overview provides comprehensive information about ${baseName} for laboratory research purposes. Researchers should consult the complete product documentation, material safety data sheets, and relevant scientific literature before conducting experiments with this compound. Understanding the mechanism of action, chemical properties, stability characteristics, biological function, and proper handling procedures is essential for safe and effective laboratory research.
-
-For researchers interested in obtaining ${baseName} for laboratory use, please visit our product page at /products/${product.slug} to view available strengths and specifications. All materials are provided for research purposes only and must be handled in accordance with applicable laboratory safety protocols and regulations.`;
+    ? `Storage Requirements: ${product.storageRequirements.replace(/\*\*/g, '')}\n\nHandling Guidelines: ${product.handlingGuidelines.replace(/\*\*/g, '')}`
+    : `Storage Requirements: Store lyophilized powder at -20°C in a dry environment. Protect from light and moisture. Reconstituted solution should be stored at 4°C for up to 14 days. Maintain sterile conditions during reconstitution.\n\nHandling Guidelines: Handle using sterile techniques and appropriate laboratory personal protective equipment (PPE). Use in well-ventilated areas. Avoid inhalation, ingestion, or skin contact. Follow standard laboratory safety protocols.`;
 
   // Generate cross-linked research (related peptides from same category)
   const crossLinkedResearch: Array<{ name: string; slug: string }> = [];
@@ -198,7 +193,7 @@ For researchers interested in obtaining ${baseName} for laboratory use, please v
     url: `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(baseName)}`,
   });
 
-  const disclaimer = `**Important Disclaimer:** All materials are sold strictly for laboratory research use only. Not for human administration. ${baseName} is not approved by the FDA for any therapeutic purpose. All research should be conducted in accordance with applicable laws and regulations.`;
+  const disclaimer = `All materials are sold strictly for laboratory research use only. Not for human administration. ${baseName} is not approved by the FDA for any therapeutic purpose. All research should be conducted in accordance with applicable laws and regulations.`;
 
   return {
     id: `peptide-${product.id}`,
@@ -217,7 +212,6 @@ For researchers interested in obtaining ${baseName} for laboratory use, please v
       chemicalBackground,
       laboratoryApplications,
       handlingAndStorage,
-      conclusion,
     },
     crossLinkedResearch,
     externalCitations,

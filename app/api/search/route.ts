@@ -124,7 +124,6 @@ export async function GET(request: NextRequest) {
         article.content.chemicalBackground,
         article.content.laboratoryApplications,
         article.content.handlingAndStorage,
-        article.content.conclusion,
       ]
         .filter(Boolean)
         .join(' ')
