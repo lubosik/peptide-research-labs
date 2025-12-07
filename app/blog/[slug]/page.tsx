@@ -153,7 +153,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                 <li className="text-luxury-gold">/</li>
                 <li>
                   <Link href="/blog" className="hover:text-luxury-gold transition-colors">
-                    Blog
+                    All Articles
                   </Link>
                 </li>
                 <li className="text-luxury-gold">/</li>
@@ -261,6 +261,29 @@ export default function ArticlePage({ params }: ArticlePageProps) {
                         <div className="text-sm text-red-300 whitespace-pre-line">
                           {peptideArticle.disclaimer}
                         </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Product Link (if peptide article) */}
+                  {isPeptideArticle && relatedProduct && (
+                    <div className="mt-12 pt-8 border-t border-luxury-gold/20">
+                      <div className="p-6 bg-luxury-gold/10 border border-luxury-gold/30 rounded-lg">
+                        <h3 className="text-heading text-lg font-semibold text-accent-gold-light mb-3">
+                          Related Product
+                        </h3>
+                        <p className="text-sm text-pure-white mb-4">
+                          This article discusses {relatedProduct.name}. View product details and available strengths.
+                        </p>
+                        <Link
+                          href={`/products/${relatedProduct.slug}`}
+                          className="inline-flex items-center gap-2 bg-luxury-gold text-primary-black px-6 py-3 rounded-lg font-semibold hover:bg-accent-gold-light transition-all duration-400"
+                        >
+                          View {relatedProduct.name}
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                          </svg>
+                        </Link>
                       </div>
                     </div>
                   )}

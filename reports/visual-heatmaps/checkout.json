@@ -1,0 +1,111 @@
+{
+  "page": "checkout",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "elements": [
+    {
+      "id": "order-summary",
+      "type": "text",
+      "position": {
+        "x": 70,
+        "y": 15,
+        "width": 25,
+        "height": 60
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.3329340353940746,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "checkout-form",
+      "type": "input",
+      "position": {
+        "x": 5,
+        "y": 15,
+        "width": 60,
+        "height": 70
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.7599340353940746,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "complete-order-btn",
+      "type": "cta",
+      "position": {
+        "x": 5,
+        "y": 80,
+        "width": 60,
+        "height": 5
+      },
+      "color": "#D4AF37",
+      "text": "Complete Order",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "saliency": 0.7228656569922122,
+      "luminance": 0.4493282849610608
+    },
+    {
+      "id": "secure-checkout-badge",
+      "type": "text",
+      "position": {
+        "x": 5,
+        "y": 87,
+        "width": 20,
+        "height": 3
+      },
+      "color": "#D4AF37",
+      "text": "Secure Checkout",
+      "fontSize": 14,
+      "fontWeight": 600,
+      "saliency": 0.42046565699221217,
+      "luminance": 0.4493282849610608
+    }
+  ],
+  "focalPoints": [
+    {
+      "x": 82.5,
+      "y": 45,
+      "intensity": 0.3329340353940746
+    },
+    {
+      "x": 35,
+      "y": 50,
+      "intensity": 0.7599340353940746
+    },
+    {
+      "x": 35,
+      "y": 82.5,
+      "intensity": 0.7228656569922122
+    },
+    {
+      "x": 15,
+      "y": 88.5,
+      "intensity": 0.42046565699221217
+    }
+  ],
+  "scanPath": [
+    {
+      "x": 35,
+      "y": 50,
+      "timestamp": 0
+    },
+    {
+      "x": 82.5,
+      "y": 45,
+      "timestamp": 200
+    },
+    {
+      "x": 35,
+      "y": 82.5,
+      "timestamp": 400
+    },
+    {
+      "x": 15,
+      "y": 88.5,
+      "timestamp": 600
+    }
+  ]
+}

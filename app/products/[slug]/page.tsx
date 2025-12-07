@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getProductBySlug, products } from '@/data/products';
+import { getProductBySlug, products, hasVariants, getProductMinPrice } from '@/data/products';
 import { Metadata } from 'next';
 import ImageGallery from '@/components/products/ImageGallery';
 import ProductInfoPanel from '@/components/products/ProductInfoPanel';
@@ -10,9 +10,9 @@ import { generateProductSchema } from '@/lib/seo/structured-data';
 import { generateMetadata as generateSEOMetadata, getCanonicalUrl } from '@/lib/seo/metadata';
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -22,7 +22,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
   
   if (!product) {
     return {
@@ -30,16 +31,31 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     };
   }
 
+  // Build description with variant information
+  let description = product.description;
+  const hasMultipleVariants = hasVariants(product);
+  
+  if (hasMultipleVariants && product.variants) {
+    const variantStrengths = product.variants.map(v => v.strength).join(', ');
+    const minPrice = getProductMinPrice(product);
+    description = `${product.shortDescription || product.description.substring(0, 200)} Available in multiple strengths: ${variantStrengths}. Starting from $${minPrice.toFixed(2)}. For laboratory research use only.`;
+  } else {
+    const price = product.price ?? getProductMinPrice(product);
+    description = `${product.shortDescription || product.description.substring(0, 200)} $${price.toFixed(2)}. For laboratory research use only.`;
+  }
+
   return generateSEOMetadata({
     title: product.name,
-    description: product.description,
+    description: description,
     path: `/products/${product.slug}`,
     type: 'website',
+    image: product.image,
   });
 }
 
-export default function ProductDetailPage({ params }: ProductPageProps) {
-  const product = getProductBySlug(params.slug);
+export default async function ProductDetailPage({ params }: ProductPageProps) {
+  const { slug } = await params;
+  const product = getProductBySlug(slug);
 
   if (!product) {
     notFound();
@@ -48,7 +64,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   const productSchema = generateProductSchema(product);
 
   return (
-    <div className="bg-slate-950 min-h-screen">
+    <div className="bg-primary-black min-h-screen">
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -56,36 +72,36 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
       />
       
       {/* Product Header Section */}
-      <section className="bg-slate-900 border-b border-gray-700 py-8">
+      <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-8">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             {/* Breadcrumbs */}
             <nav className="mb-6 text-sm">
-              <ol className="flex items-center space-x-2 text-gray-400">
+              <ol className="flex items-center space-x-2 text-neutral-gray">
                 <li>
-                  <Link href="/" className="hover:text-primary transition-colors">
+                  <Link href="/" className="hover:text-luxury-gold transition-colors">
                     Home
                   </Link>
                 </li>
                 <li>/</li>
                 <li>
-                  <Link href="/shop" className="hover:text-primary transition-colors">
+                  <Link href="/shop" className="hover:text-luxury-gold transition-colors">
                     Shop
                   </Link>
                 </li>
                 <li>/</li>
-                <li className="text-white font-medium">{product.name}</li>
+                <li className="text-pure-white font-medium">{product.name}</li>
               </ol>
             </nav>
           </div>
         </div>
       </section>
 
-      {/* Main Product Section */}
-      <section className="py-12 md:py-16">
+      {/* Main Product Section - Reduced Padding for Above Fold */}
+      <section className="py-8 md:py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
               {/* Left Column - Image Gallery */}
               <ImageGallery productName={product.name} productSlug={product.slug} />
 

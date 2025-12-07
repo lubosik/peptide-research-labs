@@ -1,0 +1,307 @@
+{
+  "totalOriginalProducts": 101,
+  "totalUnifiedProducts": 63,
+  "productsWithVariants": 29,
+  "singleProducts": 34,
+  "mergedGroups": [
+    {
+      "baseName": "Epitalon",
+      "unifiedId": "et10",
+      "unifiedSlug": "epitalon",
+      "variantCount": 2,
+      "originalIds": [
+        "et10",
+        "et50"
+      ]
+    },
+    {
+      "baseName": "MOTS-C",
+      "unifiedId": "ms10",
+      "unifiedSlug": "mots-c",
+      "variantCount": 2,
+      "originalIds": [
+        "ms10",
+        "ms40"
+      ]
+    },
+    {
+      "baseName": "NAD+",
+      "unifiedId": "nj100",
+      "unifiedSlug": "nad",
+      "variantCount": 3,
+      "originalIds": [
+        "nj100",
+        "nj500",
+        "nj1000"
+      ]
+    },
+    {
+      "baseName": "Glutathione",
+      "unifiedId": "gtt600",
+      "unifiedSlug": "glutathione",
+      "variantCount": 2,
+      "originalIds": [
+        "gtt600",
+        "gtt1500"
+      ]
+    },
+    {
+      "baseName": "Cagrilintide",
+      "unifiedId": "cgl5",
+      "unifiedSlug": "cagrilintide",
+      "variantCount": 2,
+      "originalIds": [
+        "cgl5",
+        "cgl10"
+      ]
+    },
+    {
+      "baseName": "Retatrutide",
+      "unifiedId": "rt5",
+      "unifiedSlug": "retatrutide",
+      "variantCount": 4,
+      "originalIds": [
+        "rt5",
+        "rt10",
+        "rt20",
+        "rt30"
+      ]
+    },
+    {
+      "baseName": "Semaglutide",
+      "unifiedId": "sm5",
+      "unifiedSlug": "semaglutide",
+      "variantCount": 4,
+      "originalIds": [
+        "sm5",
+        "sm10",
+        "sm15",
+        "sm20"
+      ]
+    },
+    {
+      "baseName": "Tirzepatide",
+      "unifiedId": "tr5",
+      "unifiedSlug": "tirzepatide",
+      "variantCount": 6,
+      "originalIds": [
+        "tr5",
+        "tr10",
+        "tr15",
+        "tr20",
+        "tr30",
+        "tr60"
+      ]
+    },
+    {
+      "baseName": "AOD9604",
+      "unifiedId": "aod5",
+      "unifiedSlug": "aod9604",
+      "variantCount": 2,
+      "originalIds": [
+        "aod5",
+        "aod10"
+      ]
+    },
+    {
+      "baseName": "L-carnitine",
+      "unifiedId": "lc600",
+      "unifiedSlug": "l-carnitine",
+      "variantCount": 2,
+      "originalIds": [
+        "lc600",
+        "lc1200"
+      ]
+    },
+    {
+      "baseName": "BPC-157",
+      "unifiedId": "bc5",
+      "unifiedSlug": "bpc-157",
+      "variantCount": 2,
+      "originalIds": [
+        "bc5",
+        "bc10"
+      ]
+    },
+    {
+      "baseName": "BPC + TB",
+      "unifiedId": "bb10",
+      "unifiedSlug": "bpc-tb",
+      "variantCount": 2,
+      "originalIds": [
+        "bb10",
+        "bb20"
+      ]
+    },
+    {
+      "baseName": "GHK-Cu",
+      "unifiedId": "cu50",
+      "unifiedSlug": "ghk-cu",
+      "variantCount": 2,
+      "originalIds": [
+        "cu50",
+        "cu100"
+      ]
+    },
+    {
+      "baseName": "Thymosin Alpha-1",
+      "unifiedId": "ta5",
+      "unifiedSlug": "thymosin-alpha-1",
+      "variantCount": 2,
+      "originalIds": [
+        "ta5",
+        "ta10"
+      ]
+    },
+    {
+      "baseName": "TB-500",
+      "unifiedId": "bt5",
+      "unifiedSlug": "tb-500",
+      "variantCount": 2,
+      "originalIds": [
+        "bt5",
+        "bt10"
+      ]
+    },
+    {
+      "baseName": "CJC-1295 without DAC",
+      "unifiedId": "cnd5",
+      "unifiedSlug": "cjc-1295-without-dac",
+      "variantCount": 2,
+      "originalIds": [
+        "cnd5",
+        "cnd10"
+      ]
+    },
+    {
+      "baseName": "IGF-1LR3",
+      "unifiedId": "ig01",
+      "unifiedSlug": "igf-1lr3",
+      "variantCount": 2,
+      "originalIds": [
+        "ig01",
+        "ig1"
+      ]
+    },
+    {
+      "baseName": "Tesamorelin",
+      "unifiedId": "tsm5",
+      "unifiedSlug": "tesamorelin",
+      "variantCount": 2,
+      "originalIds": [
+        "tsm5",
+        "tsm10"
+      ]
+    },
+    {
+      "baseName": "HCG",
+      "unifiedId": "g5k",
+      "unifiedSlug": "hcg",
+      "variantCount": 2,
+      "originalIds": [
+        "g5k",
+        "g10k"
+      ]
+    },
+    {
+      "baseName": "Ipamorelin",
+      "unifiedId": "ip5",
+      "unifiedSlug": "ipamorelin",
+      "variantCount": 2,
+      "originalIds": [
+        "ip5",
+        "ip10"
+      ]
+    },
+    {
+      "baseName": "Kisspeptin-10",
+      "unifiedId": "ks5",
+      "unifiedSlug": "kisspeptin-10",
+      "variantCount": 2,
+      "originalIds": [
+        "ks5",
+        "ks10"
+      ]
+    },
+    {
+      "baseName": "GHRP-2 Acetate",
+      "unifiedId": "g25",
+      "unifiedSlug": "ghrp-2-acetate",
+      "variantCount": 2,
+      "originalIds": [
+        "g25",
+        "g210"
+      ]
+    },
+    {
+      "baseName": "GHRP-6 Acetate",
+      "unifiedId": "g65",
+      "unifiedSlug": "ghrp-6-acetate",
+      "variantCount": 2,
+      "originalIds": [
+        "g65",
+        "g610"
+      ]
+    },
+    {
+      "baseName": "Sermorelin",
+      "unifiedId": "smo5",
+      "unifiedSlug": "sermorelin",
+      "variantCount": 2,
+      "originalIds": [
+        "smo5",
+        "smo10"
+      ]
+    },
+    {
+      "baseName": "HGH",
+      "unifiedId": "h10",
+      "unifiedSlug": "hgh",
+      "variantCount": 2,
+      "originalIds": [
+        "h10",
+        "h15"
+      ]
+    },
+    {
+      "baseName": "Semax",
+      "unifiedId": "xa5",
+      "unifiedSlug": "semax",
+      "variantCount": 2,
+      "originalIds": [
+        "xa5",
+        "xa10"
+      ]
+    },
+    {
+      "baseName": "Selank",
+      "unifiedId": "sk5",
+      "unifiedSlug": "selank",
+      "variantCount": 2,
+      "originalIds": [
+        "sk5",
+        "sk10"
+      ]
+    },
+    {
+      "baseName": "Bac Water",
+      "unifiedId": "wa3",
+      "unifiedSlug": "bac-water",
+      "variantCount": 2,
+      "originalIds": [
+        "wa3",
+        "wa10"
+      ]
+    },
+    {
+      "baseName": "SS-31",
+      "unifiedId": "2s10",
+      "unifiedSlug": "ss-31",
+      "variantCount": 2,
+      "originalIds": [
+        "2s10",
+        "2s50"
+      ]
+    }
+  ]
+}

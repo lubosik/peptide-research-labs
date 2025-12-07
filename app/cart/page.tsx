@@ -27,7 +27,10 @@ export default function CartPage() {
             <p className="text-neutral-gray mb-8">Add some research peptides to your cart to continue.</p>
             <Link
               href="/shop"
-              className="inline-block bg-luxury-gold text-luxury-gold-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-colors duration-200 shadow-lg hover:shadow-golden-glow"
+              className="inline-block bg-luxury-gold text-luxury-gold-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg"
+              style={{
+                boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
+              }}
             >
               Browse Products
             </Link>
@@ -47,12 +50,36 @@ export default function CartPage() {
       <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-4">
-              Shopping Cart
-            </h1>
-            <p className="text-lg text-pure-white">
-              {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
-            </p>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-2">
+                  Shopping Cart
+                </h1>
+                <p className="text-lg text-pure-white">
+                  {items.length} {items.length === 1 ? 'item' : 'items'} in your cart
+                </p>
+              </div>
+              {/* Checkout Now Button - Direct from Cart */}
+              <button
+                onClick={handleCheckout}
+                className="hidden md:block bg-luxury-gold text-primary-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg hover:shadow-xl min-h-[44px] flex items-center justify-center"
+                style={{
+                  boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
+                }}
+              >
+                Checkout Now
+              </button>
+            </div>
+            {/* Mobile Checkout Button */}
+            <button
+              onClick={handleCheckout}
+              className="md:hidden w-full bg-luxury-gold text-primary-black py-4 px-6 rounded-lg font-semibold hover:bg-accent-gold-light transition-all duration-400 shadow-lg min-h-[44px] flex items-center justify-center"
+              style={{
+                boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
+              }}
+            >
+              Checkout Now
+            </button>
           </div>
         </div>
       </section>
@@ -65,9 +92,14 @@ export default function CartPage() {
               {/* Left Column - Cart Items */}
               <div className="lg:col-span-2">
                 <div className="bg-secondary-charcoal rounded-lg p-6 space-y-6">
-                  {items.map((item) => (
+                  {items.map((item) => {
+                    // Use variantStrength if available, otherwise fall back to size for legacy support
+                    const variantStrength = item.variantStrength || item.size;
+                    const itemKey = `${item.product.id}-${variantStrength || 'default'}-${item.warehouse}`;
+                    
+                    return (
                     <div
-                      key={`${item.product.id}-${item.size || 'default'}-${item.warehouse}`}
+                      key={itemKey}
                       className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-luxury-gold/20 last:border-b-0 last:pb-0"
                     >
                       {/* Product Image */}
@@ -91,12 +123,14 @@ export default function CartPage() {
                             >
                               {item.product.name}
                             </Link>
-                            {item.size && (
-                              <p className="text-sm text-neutral-gray mt-1">Size: {item.size}</p>
+                            {variantStrength && (
+                              <p className="text-sm text-accent-gold-light mt-1 font-semibold">
+                                Variant: {variantStrength}
+                              </p>
                             )}
                           </div>
                           <button
-                            onClick={() => removeItem(item.product.id)}
+                            onClick={() => removeItem(item.product.id, variantStrength)}
                             className="text-neutral-gray hover:text-red-400 transition-colors"
                             aria-label="Remove item"
                           >
@@ -119,8 +153,8 @@ export default function CartPage() {
                           <div className="flex gap-2">
                             <button
                               type="button"
-                              onClick={() => updateWarehouse(item.product.id, item.size, 'overseas')}
-                              className={`flex-1 px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm ${
+                              onClick={() => updateWarehouse(item.product.id, variantStrength, 'overseas')}
+                              className={`flex-1 px-3 py-2 rounded-lg border-2 transition-all duration-400 text-sm ${
                                 item.warehouse === 'overseas'
                                   ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white shadow-glow-sm'
                                   : 'border-luxury-gold/30 bg-primary-black text-pure-white hover:border-luxury-gold/50'
@@ -133,8 +167,8 @@ export default function CartPage() {
                             </button>
                             <button
                               type="button"
-                              onClick={() => updateWarehouse(item.product.id, item.size, 'us')}
-                              className={`flex-1 px-3 py-2 rounded-lg border-2 transition-all duration-200 text-sm ${
+                              onClick={() => updateWarehouse(item.product.id, variantStrength, 'us')}
+                              className={`flex-1 px-3 py-2 rounded-lg border-2 transition-all duration-400 text-sm ${
                                 item.warehouse === 'us'
                                   ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white shadow-glow-sm'
                                   : 'border-luxury-gold/30 bg-primary-black text-pure-white hover:border-luxury-gold/50'
@@ -161,7 +195,7 @@ export default function CartPage() {
                             <span className="text-sm text-neutral-gray">Quantity:</span>
                             <div className="flex items-center space-x-2">
                               <button
-                                onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                                onClick={() => updateQuantity(item.product.id, variantStrength, item.quantity - 1)}
                                 className="w-8 h-8 border border-luxury-gold/30 bg-primary-black text-pure-white rounded hover:bg-secondary-charcoal transition-colors"
                               >
                                 -
@@ -170,19 +204,20 @@ export default function CartPage() {
                                 {item.quantity}
                               </span>
                               <button
-                                onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                                onClick={() => updateQuantity(item.product.id, variantStrength, item.quantity + 1)}
                                 className="w-8 h-8 border border-luxury-gold/30 bg-primary-black text-pure-white rounded hover:bg-secondary-charcoal transition-colors"
                               >
                                 +
                               </button>
                             </div>
+                            <span className="text-xs text-neutral-gray ml-2">vials</span>
                           </div>
                           <div className="text-right">
                             <p className="text-2xl font-bold text-luxury-gold">
                               ${(item.calculatedPrice * item.quantity).toFixed(2)}
                             </p>
                             <p className="text-sm text-neutral-gray">
-                              ${item.calculatedPrice.toFixed(2)} each
+                              ${item.calculatedPrice.toFixed(2)} per vial
                               {item.warehouse === 'us' && ' (US)'}
                               {item.warehouse === 'overseas' && ' (Overseas)'}
                             </p>
@@ -190,7 +225,8 @@ export default function CartPage() {
                         </div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 {/* Continue Shopping */}
@@ -250,7 +286,10 @@ export default function CartPage() {
                   {/* Checkout Button */}
                   <button
                     onClick={handleCheckout}
-                    className="w-full bg-luxury-gold text-primary-black py-4 px-6 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-300 shadow-lg hover:shadow-golden-glow"
+                    className="w-full bg-luxury-gold text-primary-black py-4 px-6 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg hover:shadow-xl min-h-[44px] flex items-center justify-center"
+                    style={{
+                      boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
+                    }}
                   >
                     Proceed to Checkout
                   </button>
@@ -258,7 +297,7 @@ export default function CartPage() {
                   {/* Clear Cart */}
                   <button
                     onClick={clearCart}
-                    className="w-full mt-4 text-neutral-gray hover:text-red-400 transition-colors text-sm"
+                    className="w-full mt-4 text-neutral-gray hover:text-red-400 transition-colors text-sm min-h-[44px] flex items-center justify-center"
                   >
                     Clear Cart
                   </button>

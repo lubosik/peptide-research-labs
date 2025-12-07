@@ -1,0 +1,346 @@
+# Variant Merge Log
+Generated: 2025-12-06T19:36:05.380Z
+
+## Summary
+- Products with variants: 29
+- Single products: 34
+- Total original products: 101
+
+## Merged Products
+
+### Epitalon
+- Unified ID: et10
+- Unified Slug: epitalon
+- Variants: 2
+- Merged Products:
+  - et10 (epitalon-10mg): Epitalon (10mg × 10 vials) - $35.00
+  - et50 (epitalon-50mg): Epitalon (50mg × 10 vials) - $162.00
+- Variant Details:
+  - 10mg: $35.00 (SKU: et10, Stock: Yes)
+  - 50mg: $162.00 (SKU: et50, Stock: Yes)
+
+### MOTS-C
+- Unified ID: ms10
+- Unified Slug: mots-c
+- Variants: 2
+- Merged Products:
+  - ms10 (mots-c-10mg): MOTS-C (10mg × 10 vials) - $68.00
+  - ms40 (mots-c-40mg): MOTS-C (40mg × 10 vials) - $225.00
+- Variant Details:
+  - 10mg: $68.00 (SKU: ms10, Stock: Yes)
+  - 40mg: $225.00 (SKU: ms40, Stock: Yes)
+
+### NAD+
+- Unified ID: nj100
+- Unified Slug: nad
+- Variants: 3
+- Merged Products:
+  - nj100 (nad-plus-100mg): NAD+ (100mg × 10 vials) - $45.00
+  - nj500 (nad-plus-500mg): NAD+ (500mg × 10 vials) - $90.00
+  - nj1000 (nad-plus-1000mg): NAD+ (1000mg × 10 vials) - $169.00
+- Variant Details:
+  - 100mg: $45.00 (SKU: nj100, Stock: Yes)
+  - 500mg: $90.00 (SKU: nj500, Stock: Yes)
+  - 1000mg: $169.00 (SKU: nj1000, Stock: Yes)
+
+### Glutathione
+- Unified ID: gtt600
+- Unified Slug: glutathione
+- Variants: 2
+- Merged Products:
+  - gtt600 (glutathione-600mg): Glutathione (600mg × 10 vials) - $60.00
+  - gtt1500 (glutathione-1500mg): Glutathione (1500mg × 10 vials) - $159.00
+- Variant Details:
+  - 600mg: $60.00 (SKU: gtt600, Stock: Yes)
+  - 1500mg: $159.00 (SKU: gtt1500, Stock: Yes)
+
+### Cagrilintide
+- Unified ID: cgl5
+- Unified Slug: cagrilintide
+- Variants: 2
+- Merged Products:
+  - cgl5 (cagrilintide-5mg): Cagrilintide (5mg × 10 vials) - $117.00
+  - cgl10 (cagrilintide-10mg): Cagrilintide (10mg × 10 vials) - $227.00
+- Variant Details:
+  - 5mg: $117.00 (SKU: cgl5, Stock: Yes)
+  - 10mg: $227.00 (SKU: cgl10, Stock: Yes)
+
+### Retatrutide
+- Unified ID: rt5
+- Unified Slug: retatrutide
+- Variants: 4
+- Merged Products:
+  - rt5 (retatrutide-5mg): Retatrutide (5mg × 10 vials) - $91.00
+  - rt10 (retatrutide-10mg): Retatrutide (10mg × 10 vials) - $130.00
+  - rt20 (retatrutide-20mg): Retatrutide (20mg × 10 vials) - $207.00
+  - rt30 (retatrutide-30mg): Retatrutide (30mg × 10 vials) - $270.00
+- Variant Details:
+  - 5mg: $91.00 (SKU: rt5, Stock: Yes)
+  - 10mg: $130.00 (SKU: rt10, Stock: Yes)
+  - 20mg: $207.00 (SKU: rt20, Stock: Yes)
+  - 30mg: $270.00 (SKU: rt30, Stock: Yes)
+
+### Semaglutide
+- Unified ID: sm5
+- Unified Slug: semaglutide
+- Variants: 4
+- Merged Products:
+  - sm5 (semaglutide-5mg): Semaglutide (5mg × 10 vials) - $42.00
+  - sm10 (semaglutide-10mg): Semaglutide (10mg × 10 vials) - $60.00
+  - sm15 (semaglutide-15mg): Semaglutide (15mg × 10 vials) - $81.00
+  - sm20 (semaglutide-20mg): Semaglutide (20mg × 10 vials) - $90.00
+- Variant Details:
+  - 5mg: $42.00 (SKU: sm5, Stock: Yes)
+  - 10mg: $60.00 (SKU: sm10, Stock: Yes)
+  - 15mg: $81.00 (SKU: sm15, Stock: Yes)
+  - 20mg: $90.00 (SKU: sm20, Stock: Yes)
+
+### Tirzepatide
+- Unified ID: tr5
+- Unified Slug: tirzepatide
+- Variants: 6
+- Merged Products:
+  - tr5 (tirzepatide-5mg): Tirzepatide (5mg × 10 vials) - $49.00
+  - tr10 (tirzepatide-10mg): Tirzepatide (10mg × 10 vials) - $67.00
+  - tr15 (tirzepatide-15mg): Tirzepatide (15mg × 10 vials) - $83.00
+  - tr20 (tirzepatide-20mg): Tirzepatide (20mg × 10 vials) - $110.00
+  - tr30 (tirzepatide-30mg): Tirzepatide (30mg × 10 vials) - $155.00
+  - tr60 (tirzepatide-60mg): Tirzepatide (60mg × 10 vials) - $232.00
+- Variant Details:
+  - 5mg: $49.00 (SKU: tr5, Stock: Yes)
+  - 10mg: $67.00 (SKU: tr10, Stock: Yes)
+  - 15mg: $83.00 (SKU: tr15, Stock: Yes)
+  - 20mg: $110.00 (SKU: tr20, Stock: Yes)
+  - 30mg: $155.00 (SKU: tr30, Stock: Yes)
+  - 60mg: $232.00 (SKU: tr60, Stock: Yes)
+
+### AOD9604
+- Unified ID: aod5
+- Unified Slug: aod9604
+- Variants: 2
+- Merged Products:
+  - aod5 (aod9604-5mg): AOD9604 (5mg × 10 vials) - $101.00
+  - aod10 (aod9604-10mg): AOD9604 (10mg × 10 vials) - $185.00
+- Variant Details:
+  - 5mg: $101.00 (SKU: aod5, Stock: Yes)
+  - 10mg: $185.00 (SKU: aod10, Stock: Yes)
+
+### L-carnitine
+- Unified ID: lc600
+- Unified Slug: l-carnitine
+- Variants: 2
+- Merged Products:
+  - lc600 (l-carnitine-600mg): L-carnitine (600mg 10ml × 10 vials) - $40.00
+  - lc1200 (l-carnitine-1200mg): L-carnitine (1200mg 10ml × 10 vials) - $50.00
+- Variant Details:
+  - 600mg: $40.00 (SKU: lc600, Stock: Yes)
+  - 1200mg: $50.00 (SKU: lc1200, Stock: Yes)
+
+### BPC-157
+- Unified ID: bc5
+- Unified Slug: bpc-157
+- Variants: 2
+- Merged Products:
+  - bc5 (bpc-157-5mg): BPC-157 (5mg × 10 vials) - $48.00
+  - bc10 (bpc-157-10mg): BPC-157 (10mg × 10 vials) - $70.00
+- Variant Details:
+  - 5mg: $48.00 (SKU: bc5, Stock: Yes)
+  - 10mg: $70.00 (SKU: bc10, Stock: Yes)
+
+### BPC + TB
+- Unified ID: bb10
+- Unified Slug: bpc-tb
+- Variants: 2
+- Merged Products:
+  - bb10 (bpc-tb-combo-10mg): BPC 5mg + TB 5mg - $117.00
+  - bb20 (bpc-tb-combo-20mg): BPC 10mg + TB 10mg - $196.00
+- Variant Details:
+  - 5mg: $117.00 (SKU: bb10, Stock: Yes)
+  - 10mg: $196.00 (SKU: bb20, Stock: Yes)
+
+### GHK-Cu
+- Unified ID: cu50
+- Unified Slug: ghk-cu
+- Variants: 2
+- Merged Products:
+  - cu50 (ghk-cu-50mg): GHK-Cu (50mg × 10 vials) - $33.00
+  - cu100 (ghk-cu-100mg): GHK-Cu (100mg × 10 vials) - $59.00
+- Variant Details:
+  - 50mg: $33.00 (SKU: cu50, Stock: Yes)
+  - 100mg: $59.00 (SKU: cu100, Stock: Yes)
+
+### Thymosin Alpha-1
+- Unified ID: ta5
+- Unified Slug: thymosin-alpha-1
+- Variants: 2
+- Merged Products:
+  - ta5 (thymosin-alpha-1-5mg): Thymosin Alpha-1 (5mg × 10 vials) - $100.00
+  - ta10 (thymosin-alpha-1-10mg): Thymosin Alpha-1 (10mg × 10 vials) - $168.00
+- Variant Details:
+  - 5mg: $100.00 (SKU: ta5, Stock: Yes)
+  - 10mg: $168.00 (SKU: ta10, Stock: Yes)
+
+### TB-500
+- Unified ID: bt5
+- Unified Slug: tb-500
+- Variants: 2
+- Merged Products:
+  - bt5 (tb-500-5mg): TB-500 (Thymosin B4 Acetate) (5mg × 10 vials) - $89.00
+  - bt10 (tb-500-10mg): TB-500 (Thymosin B4 Acetate) (10mg × 10 vials) - $168.00
+- Variant Details:
+  - 5mg: $89.00 (SKU: bt5, Stock: Yes)
+  - 10mg: $168.00 (SKU: bt10, Stock: Yes)
+
+### CJC-1295 without DAC
+- Unified ID: cnd5
+- Unified Slug: cjc-1295-without-dac
+- Variants: 2
+- Merged Products:
+  - cnd5 (cjc-1295-without-dac-5mg): CJC-1295 without DAC (5mg × 10 vials) - $95.00
+  - cnd10 (cjc-1295-without-dac-10mg): CJC-1295 without DAC (10mg × 10 vials) - $185.00
+- Variant Details:
+  - 5mg: $95.00 (SKU: cnd5, Stock: Yes)
+  - 10mg: $185.00 (SKU: cnd10, Stock: Yes)
+
+### IGF-1LR3
+- Unified ID: ig01
+- Unified Slug: igf-1lr3
+- Variants: 2
+- Merged Products:
+  - ig01 (igf-1lr3-0.1mg): IGF-1LR3 (0.1mg × 10 vials) - $45.00
+  - ig1 (igf-1lr3-1mg): IGF-1LR3 (1mg × 10 vials) - $220.00
+- Variant Details:
+  - 0.1mg: $45.00 (SKU: ig01, Stock: Yes)
+  - 1mg: $220.00 (SKU: ig1, Stock: Yes)
+
+### Tesamorelin
+- Unified ID: tsm5
+- Unified Slug: tesamorelin
+- Variants: 2
+- Merged Products:
+  - tsm5 (tesamorelin-5mg): Tesamorelin (5mg × 10 vials) - $112.00
+  - tsm10 (tesamorelin-10mg): Tesamorelin (10mg × 10 vials) - $220.00
+- Variant Details:
+  - 5mg: $112.00 (SKU: tsm5, Stock: Yes)
+  - 10mg: $220.00 (SKU: tsm10, Stock: Yes)
+
+### HCG
+- Unified ID: g5k
+- Unified Slug: hcg
+- Variants: 2
+- Merged Products:
+  - g5k (hcg-5000iu): HCG (5000iu × 10 vials) - $88.00
+  - g10k (hcg-10000iu): HCG (10000iu × 10 vials) - $156.00
+- Variant Details:
+  - 5000iu: $88.00 (SKU: g5k, Stock: Yes)
+  - 10000iu: $156.00 (SKU: g10k, Stock: Yes)
+
+### Ipamorelin
+- Unified ID: ip5
+- Unified Slug: ipamorelin
+- Variants: 2
+- Merged Products:
+  - ip5 (ipamorelin-5mg): Ipamorelin (5mg × 10 vials) - $38.00
+  - ip10 (ipamorelin-10mg): Ipamorelin (10mg × 10 vials) - $72.00
+- Variant Details:
+  - 5mg: $38.00 (SKU: ip5, Stock: Yes)
+  - 10mg: $72.00 (SKU: ip10, Stock: Yes)
+
+### Kisspeptin-10
+- Unified ID: ks5
+- Unified Slug: kisspeptin-10
+- Variants: 2
+- Merged Products:
+  - ks5 (kisspeptin-10-5mg): Kisspeptin-10 (5mg × 10 vials) - $60.00
+  - ks10 (kisspeptin-10-10mg): Kisspeptin-10 (10mg × 10 vials) - $117.00
+- Variant Details:
+  - 5mg: $60.00 (SKU: ks5, Stock: Yes)
+  - 10mg: $117.00 (SKU: ks10, Stock: Yes)
+
+### GHRP-2 Acetate
+- Unified ID: g25
+- Unified Slug: ghrp-2-acetate
+- Variants: 2
+- Merged Products:
+  - g25 (ghrp-2-acetate-5mg): GHRP-2 Acetate (5mg × 10 vials) - $27.00
+  - g210 (ghrp-2-acetate-10mg): GHRP-2 Acetate (10mg × 10 vials) - $54.00
+- Variant Details:
+  - 5mg: $27.00 (SKU: g25, Stock: Yes)
+  - 10mg: $54.00 (SKU: g210, Stock: Yes)
+
+### GHRP-6 Acetate
+- Unified ID: g65
+- Unified Slug: ghrp-6-acetate
+- Variants: 2
+- Merged Products:
+  - g65 (ghrp-6-acetate-5mg): GHRP-6 Acetate (5mg × 10 vials) - $27.00
+  - g610 (ghrp-6-acetate-10mg): GHRP-6 Acetate (10mg × 10 vials) - $54.00
+- Variant Details:
+  - 5mg: $27.00 (SKU: g65, Stock: Yes)
+  - 10mg: $54.00 (SKU: g610, Stock: Yes)
+
+### Sermorelin
+- Unified ID: smo5
+- Unified Slug: sermorelin
+- Variants: 2
+- Merged Products:
+  - smo5 (sermorelin-5mg): Sermorelin (5mg × 10 vials) - $70.00
+  - smo10 (sermorelin-10mg): Sermorelin (10mg × 10 vials) - $142.00
+- Variant Details:
+  - 5mg: $70.00 (SKU: smo5, Stock: Yes)
+  - 10mg: $142.00 (SKU: smo10, Stock: Yes)
+
+### HGH
+- Unified ID: h10
+- Unified Slug: hgh
+- Variants: 2
+- Merged Products:
+  - h10 (hgh-10iu): HGH (10iu × 10 vials) - $49.00
+  - h15 (hgh-15iu): HGH (15iu × 10 vials) - $73.00
+- Variant Details:
+  - 10iu: $49.00 (SKU: h10, Stock: Yes)
+  - 15iu: $73.00 (SKU: h15, Stock: Yes)
+
+### Semax
+- Unified ID: xa5
+- Unified Slug: semax
+- Variants: 2
+- Merged Products:
+  - xa5 (semax-5mg): Semax (5mg × 10 vials) - $44.00
+  - xa10 (semax-10mg): Semax (10mg × 10 vials) - $72.00
+- Variant Details:
+  - 5mg: $44.00 (SKU: xa5, Stock: Yes)
+  - 10mg: $72.00 (SKU: xa10, Stock: Yes)
+
+### Selank
+- Unified ID: sk5
+- Unified Slug: selank
+- Variants: 2
+- Merged Products:
+  - sk5 (selank-5mg): Selank (5mg × 10 vials) - $45.00
+  - sk10 (selank-10mg): Selank (10mg × 10 vials) - $72.00
+- Variant Details:
+  - 5mg: $45.00 (SKU: sk5, Stock: Yes)
+  - 10mg: $72.00 (SKU: sk10, Stock: Yes)
+
+### Bac Water
+- Unified ID: wa3
+- Unified Slug: bac-water
+- Variants: 2
+- Merged Products:
+  - wa3 (bac-water-3ml): Bac Water (3ml × 10 vials) - $10.00
+  - wa10 (bac-water-10ml): Bac Water (10ml × 10 vials) - $11.00
+- Variant Details:
+  - 3ml: $10.00 (SKU: wa3, Stock: Yes)
+  - 10ml: $11.00 (SKU: wa10, Stock: Yes)
+
+### SS-31
+- Unified ID: 2s10
+- Unified Slug: ss-31
+- Variants: 2
+- Merged Products:
+  - 2s10 (ss-31-10mg): SS-31 (10mg × 10 vials) - $105.00
+  - 2s50 (ss-31-50mg): SS-31 (50mg × 10 vials) - $410.00
+- Variant Details:
+  - 10mg: $105.00 (SKU: 2s10, Stock: Yes)
+  - 50mg: $410.00 (SKU: 2s50, Stock: Yes)

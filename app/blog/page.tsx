@@ -1,15 +1,19 @@
+'use client';
+
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { articles } from '@/data/articles';
-import { products } from '@/data/products';
+import { products, getProductBySlug } from '@/data/products';
 import { generateAllPeptideArticles } from '@/lib/blog/generate-peptide-article';
-import { Metadata } from 'next';
-import { generateMetadata as generateSEOMetadata } from '@/lib/seo/metadata';
+import { motion } from 'framer-motion';
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: 'Research Blog - Scientific Articles',
-  description: 'Scientific articles and research insights about peptides and laboratory research. Educational content for researchers.',
-  path: '/blog',
-});
+// Get unique categories from all articles
+function getAllCategories(articles: any[], peptideArticles: any[]): string[] {
+  const categories = new Set<string>();
+  articles.forEach(article => categories.add(article.category));
+  peptideArticles.forEach(article => categories.add(article.category));
+  return Array.from(categories).sort();
+}
 
 export default function BlogPage() {
   // Generate peptide articles (one per unique base name)
@@ -44,99 +48,163 @@ export default function BlogPage() {
         { id: 'handling-storage', title: 'Handling and Storage Guidelines', level: 2 },
         { id: 'conclusion', title: 'Conclusion', level: 2 },
       ],
+      // Link to product if it's a peptide article
+      relatedProductSlug: pa.slug, // Peptide articles use product slug
     })),
   ];
 
+  // Get all unique categories
+  const categories = getAllCategories(articles, peptideArticles);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All Articles');
+
+  // Filter articles by category
+  const filteredArticles = useMemo(() => {
+    if (selectedCategory === 'All Articles') {
+      return allArticles;
+    }
+    return allArticles.filter(article => article.category === selectedCategory);
+  }, [selectedCategory, allArticles]);
+
+  // Get product link for article (if it's a peptide article)
+  const getProductLink = (article: any) => {
+    const product = getProductBySlug(article.relatedProductSlug || article.slug);
+    return product ? `/products/${product.slug}` : null;
+  };
+
   return (
     <div className="bg-primary-black min-h-screen">
-      {/* Page Header */}
+      {/* Page Header with Breadcrumb */}
       <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
+            {/* Breadcrumb Navigation */}
+            <nav className="mb-6 text-sm">
+              <ol className="flex items-center space-x-2 text-neutral-gray">
+                <li>
+                  <Link href="/" className="hover:text-luxury-gold transition-colors">
+                    Home
+                  </Link>
+                </li>
+                <li>/</li>
+                <li className="text-pure-white font-medium">Blog</li>
+              </ol>
+            </nav>
+
             <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-4">
               Research Blog
             </h1>
             <p className="text-lg text-pure-white">
               Scientific insights and research articles about peptides and laboratory applications
             </p>
-            <p className="text-sm text-neutral-gray mt-2">
-              Showing {allArticles.length} articles
-            </p>
           </div>
         </div>
       </section>
 
-      {/* Articles Grid */}
+      {/* Filter Bar */}
+      <section className="bg-primary-black border-b border-luxury-gold/10 py-6">
+        <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <label htmlFor="categoryFilter" className="text-sm font-semibold text-pure-white">
+                  Filter by Topic:
+                </label>
+                <select
+                  id="categoryFilter"
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="bg-secondary-charcoal border border-luxury-gold/30 text-pure-white rounded-lg px-4 py-2 focus:outline-none focus:border-luxury-gold transition-all duration-400"
+                >
+                  <option value="All Articles">All Articles</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <p className="text-sm text-neutral-gray">
+                {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Articles Grid - Simplified */}
       <section className="py-12 md:py-16 bg-primary-black">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-              {allArticles.map((article) => (
-                <article
-                  key={article.id}
-                  className="bg-secondary-charcoal rounded-xl border border-luxury-gold/20 overflow-hidden shadow-md hover:shadow-xl hover:shadow-golden-glow transition-all duration-300 flex flex-col hover-glow"
-                >
-                  {/* Thumbnail */}
-                  <Link href={`/blog/${article.slug}`}>
-                    <div className="relative w-full h-48 bg-gradient-to-br from-primary-black to-secondary-charcoal flex items-center justify-center">
-                      <div className="text-center p-4">
-                        <svg
-                          className="w-24 h-24 mx-auto text-luxury-gold opacity-40"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={1.5}
-                            d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                          />
-                        </svg>
-                        <p className="text-xs text-neutral-gray mt-2 opacity-50">
-                          Article Image
-                        </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredArticles.map((article, index) => {
+                const productLink = getProductLink(article);
+                return (
+                  <motion.article
+                    key={article.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    className="bg-secondary-charcoal rounded-lg border border-luxury-gold/20 overflow-hidden flex flex-col hover:border-luxury-gold/40 transition-all duration-400"
+                  >
+                    {/* Image */}
+                    <Link href={`/blog/${article.slug}`}>
+                      <div className="relative w-full h-48 bg-gradient-to-br from-primary-black to-secondary-charcoal flex items-center justify-center">
+                        <div className="text-center p-4">
+                          <svg
+                            className="w-20 h-20 mx-auto text-luxury-gold opacity-40"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={1.5}
+                              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    </Link>
+
+                    {/* Content - Simplified */}
+                    <div className="p-6 flex-grow flex flex-col">
+                      {/* Title */}
+                      <Link href={`/blog/${article.slug}`}>
+                        <h2 className="text-heading text-xl font-bold text-accent-gold-light mb-3 hover:text-luxury-gold transition-colors line-clamp-2">
+                          {article.title}
+                        </h2>
+                      </Link>
+
+                      {/* 2-Line Excerpt */}
+                      <p className="text-pure-white text-sm mb-4 line-clamp-2 leading-relaxed">
+                        {article.description}
+                      </p>
+
+                      {/* Product Link (if applicable) */}
+                      {productLink && (
+                        <div className="mb-4">
+                          <Link
+                            href={productLink}
+                            className="inline-flex items-center gap-2 text-sm text-luxury-gold hover:text-accent-gold-light transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                            View Product
+                          </Link>
+                        </div>
+                      )}
+
+                      {/* Meta Info - Simplified */}
+                      <div className="flex items-center justify-between text-xs text-neutral-gray mt-auto">
+                        <span>{article.category}</span>
+                        <span>{article.readTime}</span>
                       </div>
                     </div>
-                  </Link>
-
-                  {/* Content */}
-                  <div className="p-6 flex-grow flex flex-col">
-                    {/* Category Badge */}
-                    <div className="mb-3">
-                      <span className="inline-block bg-luxury-gold/20 text-luxury-gold text-xs font-semibold px-3 py-1 rounded-full">
-                        {article.category}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <Link href={`/blog/${article.slug}`}>
-                      <h2 className="text-heading text-xl font-bold text-accent-gold-light mb-3 hover:text-luxury-gold transition-colors line-clamp-2">
-                        {article.title}
-                      </h2>
-                    </Link>
-
-                    {/* Description */}
-                    <p className="text-pure-white text-sm mb-4 flex-grow line-clamp-3">
-                      {article.description}
-                    </p>
-
-                    {/* Meta Info */}
-                    <div className="flex items-center justify-between text-xs text-neutral-gray mb-4">
-                      <span>{article.author}</span>
-                      <span>{article.readTime}</span>
-                    </div>
-
-                    {/* Read More Button */}
-                    <Link
-                      href={`/blog/${article.slug}`}
-                      className="inline-block bg-luxury-gold text-primary-black text-center py-3 px-6 rounded-lg font-semibold hover:bg-accent-gold-light transition-colors duration-200 text-sm"
-                    >
-                      Read More
-                    </Link>
-                  </div>
-                </article>
-              ))}
+                  </motion.article>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -144,4 +212,3 @@ export default function BlogPage() {
     </div>
   );
 }
-

@@ -1,0 +1,172 @@
+{
+  "page": "shop",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "elements": [
+    {
+      "id": "search-bar",
+      "type": "input",
+      "position": {
+        "x": 5,
+        "y": 5,
+        "width": 40,
+        "height": 4
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.7195340353940746,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "filter-bar",
+      "type": "input",
+      "position": {
+        "x": 5,
+        "y": 12,
+        "width": 90,
+        "height": 5
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.7224340353940745,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "sort-control",
+      "type": "button",
+      "position": {
+        "x": 75,
+        "y": 12,
+        "width": 15,
+        "height": 4
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.46853403539407457,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "product-card-1",
+      "type": "button",
+      "position": {
+        "x": 5,
+        "y": 22,
+        "width": 28,
+        "height": 40
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.5791340353940746,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "product-card-2",
+      "type": "button",
+      "position": {
+        "x": 36,
+        "y": 22,
+        "width": 28,
+        "height": 40
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.37913403539407464,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "product-card-3",
+      "type": "button",
+      "position": {
+        "x": 67,
+        "y": 22,
+        "width": 28,
+        "height": 40
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.1791340353940746,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "add-to-cart-btn-1",
+      "type": "cta",
+      "position": {
+        "x": 8,
+        "y": 58,
+        "width": 22,
+        "height": 4
+      },
+      "color": "#D4AF37",
+      "text": "ADD TO CART",
+      "fontSize": 16,
+      "fontWeight": 600,
+      "saliency": 0.7207456569922123,
+      "luminance": 0.4493282849610608
+    }
+  ],
+  "focalPoints": [
+    {
+      "x": 25,
+      "y": 7,
+      "intensity": 0.7195340353940746
+    },
+    {
+      "x": 50,
+      "y": 14.5,
+      "intensity": 0.7224340353940745
+    },
+    {
+      "x": 82.5,
+      "y": 14,
+      "intensity": 0.46853403539407457
+    },
+    {
+      "x": 19,
+      "y": 42,
+      "intensity": 0.5791340353940746
+    },
+    {
+      "x": 50,
+      "y": 42,
+      "intensity": 0.37913403539407464
+    },
+    {
+      "x": 19,
+      "y": 60,
+      "intensity": 0.7207456569922123
+    }
+  ],
+  "scanPath": [
+    {
+      "x": 25,
+      "y": 7,
+      "timestamp": 0
+    },
+    {
+      "x": 50,
+      "y": 14.5,
+      "timestamp": 200
+    },
+    {
+      "x": 82.5,
+      "y": 14,
+      "timestamp": 400
+    },
+    {
+      "x": 19,
+      "y": 42,
+      "timestamp": 600
+    },
+    {
+      "x": 50,
+      "y": 42,
+      "timestamp": 800
+    },
+    {
+      "x": 81,
+      "y": 42,
+      "timestamp": 1000
+    },
+    {
+      "x": 19,
+      "y": 60,
+      "timestamp": 1200
+    }
+  ]
+}

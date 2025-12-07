@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { products, getProductBySlug } from '@/data/products';
+import { products, getProductBySlug, getProductMinPrice, hasVariants } from '@/data/products';
 import { articles, getArticleBySlug } from '@/data/articles';
 import { generateAllPeptideArticles } from '@/lib/blog/generate-peptide-article';
 
@@ -29,16 +29,30 @@ export async function GET(request: NextRequest) {
       image?: string;
     }> = [];
 
-    // Search Products
+    // Search Products (including variant fields)
     const productMatches = products.filter((product) => {
-      const searchableText = [
+      // Base product searchable fields
+      const baseSearchableText = [
         product.name,
         product.shortDescription,
         product.description,
         product.sku,
         product.category,
         ...(product.synonyms || []),
-      ]
+      ];
+      
+      // Add variant strengths and SKUs to searchable text
+      if (product.variants && product.variants.length > 0) {
+        product.variants.forEach((variant) => {
+          baseSearchableText.push(variant.strength);
+          baseSearchableText.push(variant.sku);
+          if (variant.specification) {
+            baseSearchableText.push(variant.specification);
+          }
+        });
+      }
+      
+      const searchableText = baseSearchableText
         .join(' ')
         .toLowerCase();
 
@@ -47,14 +61,25 @@ export async function GET(request: NextRequest) {
 
     // Add product results
     productMatches.forEach((product) => {
+      // Use minimum variant price if product has variants
+      const displayPrice = getProductMinPrice(product);
+      const hasMultipleVariants = hasVariants(product);
+      
+      // Build description with variant info
+      let description = product.shortDescription || product.description.substring(0, 150);
+      if (hasMultipleVariants && product.variants) {
+        const variantStrengths = product.variants.map(v => v.strength).join(', ');
+        description = `${description} (Available in: ${variantStrengths})`;
+      }
+      
       results.push({
         type: 'product',
         id: product.id,
         title: product.name,
-        description: product.shortDescription || product.description.substring(0, 150),
+        description: description,
         url: `/products/${product.slug}`,
         category: product.category,
-        price: product.price,
+        price: displayPrice,
         image: product.image,
       });
     });

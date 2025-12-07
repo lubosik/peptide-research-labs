@@ -41,6 +41,12 @@ const config: Config = {
         sans: ['Lato', 'sans-serif'],
         heading: ['Montserrat', 'sans-serif'],
       },
+      spacing: {
+        '30': '120px', // 120px spacing for section breathing room
+      },
+      transitionDuration: {
+        '400': '400ms', // Standardized 400ms transition duration
+      },
       animation: {
         'fade-in': 'fadeIn 0.6s ease-out',
         'fade-in-up': 'fadeInUp 0.6s ease-out',

@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="bg-primary-black bg-primary-gradient">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 md:py-32 relative">
+      <section className="container mx-auto px-4 py-20 md:py-32 relative mb-30">
         {/* Subtle radial light gradient behind vial */}
         <div 
           className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-10 pointer-events-none"
@@ -26,96 +26,80 @@ export default function Home() {
         />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
-            {/* Left Column - Headline & CTA (60%) */}
-            <FadeInOnScroll direction="right" delay={0.1} className="lg:col-span-3 space-y-6">
+            {/* Left Column - Headline & CTA (60%) - Stacks First on Mobile */}
+            <div className="lg:col-span-3 space-y-6 order-1 lg:order-1">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 1.1, delay: 0.2, ease: 'easeOut' }}
                 className="text-heading text-4xl md:text-5xl lg:text-6xl font-bold text-accent-gold-light leading-tight"
               >
-                Advancing Scientific Discovery Through Research Peptides
+                Premium Research Peptides
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
+                transition={{ duration: 1.1, delay: 0.3, ease: 'easeOut' }}
                 className="text-lg md:text-xl text-pure-white leading-relaxed max-w-2xl"
               >
-                Providing high-purity biochemical reagents for laboratory research. Our peptides are 
-                manufactured under strict quality controls and verified through third-party testing 
-                to ensure research-grade standards.
+                Simple to Explore, Simple to Order. High-purity biochemical reagents for laboratory research use only.
               </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="pt-4 flex flex-col sm:flex-row gap-4"
+                transition={{ duration: 1.1, delay: 0.4, ease: 'easeOut' }}
+                className="pt-4"
               >
                 <Link
                   href="/shop"
-                  className="inline-block bg-luxury-gold text-primary-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-300 shadow-lg hover:shadow-glow-md glow-on-hover gpu-accelerated text-center"
-                >
-                  Browse Products
-                </Link>
-                <Link
-                  href="/shop"
-                  className="inline-block bg-transparent border-2 border-luxury-gold text-luxury-gold px-8 py-4 rounded-lg font-semibold text-lg hover:bg-luxury-gold hover:text-primary-black transition-all duration-300 shadow-lg hover:shadow-xl gpu-accelerated text-center animate-gold-pulse"
+                  className="inline-block bg-luxury-gold text-primary-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg hover:shadow-xl text-center min-h-[44px] flex items-center justify-center"
                   style={{
-                    boxShadow: '0 0 20px rgba(245, 214, 123, 0.3)',
+                    boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
                   }}
                 >
-                  Shop Now
+                  Shop Research Peptides
                 </Link>
               </motion.div>
-            </FadeInOnScroll>
+            </div>
 
-            {/* Right Column - Hero Image (40%) */}
-            <ParallaxSection speed={0.3} className="lg:col-span-2">
-              <FadeInOnScroll direction="left" delay={0.2}>
-                <div 
-                  className="relative w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden gpu-accelerated"
-                  style={{
-                    background: 'radial-gradient(circle at center, rgba(245, 214, 123, 0.05) 0%, transparent 70%)',
-                  }}
-                >
-                  <Image
-                    src="/images/peptide-vial-hero.jpg"
-                    alt="Research peptide vials for laboratory use"
-                    fill
-                    priority
-                    className="object-contain rounded-lg"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                  />
-                </div>
-              </FadeInOnScroll>
-            </ParallaxSection>
+            {/* Right Column - Hero Image (40%) - Stacks Second on Mobile */}
+            <div className="lg:col-span-2 order-2 lg:order-2">
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.1, delay: 0.3, ease: 'easeOut' }}
+                className="relative w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden"
+                style={{
+                  background: 'radial-gradient(circle at center, rgba(245, 214, 123, 0.05) 0%, transparent 70%)',
+                }}
+              >
+                <Image
+                  src="/images/peptide-vial-hero.jpg"
+                  alt="Research peptide vials for laboratory use"
+                  fill
+                  priority
+                  className="object-contain rounded-lg"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Glowing Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
-
-      {/* Best-Selling Research Compounds Carousel */}
-      <section className="bg-primary-black py-12 md:py-16 relative">
-        {/* Glowing divider line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
-        <ProductCarousel title="Best-Selling Research Compounds" products={bestSelling} />
+      {/* Best-Selling Research Compounds - Above the Fold */}
+      <section className="bg-primary-black py-12 md:py-16 relative mb-30">
+        <FadeInOnScroll direction="up" delay={0.1}>
+          <ProductCarousel title="Best-Selling Research Compounds" products={bestSelling} />
+        </FadeInOnScroll>
       </section>
-
-      {/* Glowing Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
 
       {/* Newest Additions Carousel */}
-      <section className="bg-primary-black py-12 md:py-16 relative">
-        {/* Glowing divider line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
-        <ProductCarousel title="Newest Additions" products={newest} />
+      <section className="bg-primary-black py-12 md:py-16 relative mb-30">
+        <FadeInOnScroll direction="up" delay={0.1}>
+          <ProductCarousel title="Newest Additions" products={newest} />
+        </FadeInOnScroll>
       </section>
-
-      {/* Glowing Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
 
       {/* Feature Cards Section */}
       <section className="bg-secondary-charcoal py-16 md:py-24 relative">
@@ -127,7 +111,17 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               {/* Card 1: Purity & Verification */}
               <FadeInOnScroll direction="up" delay={0.1}>
-                <div className="bg-primary-black rounded-xl p-8 md:p-10 shadow-md hover:shadow-xl hover:shadow-glow-sm transition-all duration-300 border border-luxury-gold/30 glow-on-hover gpu-accelerated">
+                <div className="bg-primary-black rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-luxury-gold/30"
+                  style={{
+                    boxShadow: '0 0 0 rgba(245, 214, 123, 0)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(245, 214, 123, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '';
+                  }}
+                >
                 <div className="mb-6">
                   <div className="w-16 h-16 bg-luxury-gold/10 rounded-lg flex items-center justify-center mb-4">
                     <svg
@@ -155,7 +149,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/shop"
-                  className="text-luxury-gold font-semibold hover:text-accent-gold-light transition-all duration-300 inline-flex items-center glow-on-hover"
+                  className="text-luxury-gold font-semibold hover:text-accent-gold-light transition-all duration-400 inline-flex items-center"
                 >
                   Learn More
                   <svg
@@ -177,7 +171,17 @@ export default function Home() {
 
               {/* Card 2: Regulatory Compliance */}
               <FadeInOnScroll direction="up" delay={0.2}>
-                <div className="bg-slate-800 rounded-xl p-8 md:p-10 shadow-md hover:shadow-xl hover:shadow-glow-sm transition-all duration-300 border border-slate-700 glow-on-hover gpu-accelerated">
+                <div className="bg-slate-800 rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-slate-700"
+                  style={{
+                    boxShadow: '0 0 0 rgba(245, 214, 123, 0)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(245, 214, 123, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '';
+                  }}
+                >
                 <div className="mb-6">
                   <div className="w-16 h-16 bg-luxury-gold/10 rounded-lg flex items-center justify-center mb-4">
                     <svg
@@ -227,7 +231,17 @@ export default function Home() {
 
               {/* Card 3: Trusted Supply Chain */}
               <FadeInOnScroll direction="up" delay={0.3}>
-                <div className="bg-primary-black rounded-xl p-8 md:p-10 shadow-md hover:shadow-xl hover:shadow-glow-sm transition-all duration-300 border border-luxury-gold/30 glow-on-hover gpu-accelerated">
+                <div className="bg-primary-black rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-luxury-gold/30"
+                  style={{
+                    boxShadow: '0 0 0 rgba(245, 214, 123, 0)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '0 0 10px rgba(245, 214, 123, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '';
+                  }}
+                >
                 <div className="mb-6">
                   <div className="w-16 h-16 bg-luxury-gold/10 rounded-lg flex items-center justify-center mb-4">
                     <svg
@@ -281,4 +295,5 @@ export default function Home() {
     </div>
   );
 }
+
 

@@ -41,7 +41,10 @@ export default function Toast({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -50, scale: 0.9 }}
           transition={{ duration: 0.3 }}
-          className="fixed top-24 right-4 z-[100] max-w-md"
+          className="fixed top-20 right-20 z-[100] max-w-md"
+          style={{
+            // Position near cart icon (top-right) for same visual cluster
+          }}
         >
           <div
             className={`${bgColor} text-white px-6 py-4 rounded-lg shadow-xl flex items-center space-x-3 glow-on-hover`}

@@ -1,0 +1,327 @@
+{
+  "timestamp": "2025-12-06T20:31:20.956Z",
+  "summary": {
+    "total": 8,
+    "passed": 6,
+    "failed": 2,
+    "passRate": "75.0%"
+  },
+  "results": [
+    {
+      "test": "Unique Products in Array",
+      "passed": false,
+      "message": "Found 28 products with duplicate base names",
+      "details": [
+        {
+          "name": "Epitalon",
+          "ids": [
+            "et10",
+            "et50"
+          ]
+        },
+        {
+          "name": "MOTS-C",
+          "ids": [
+            "ms10",
+            "ms40"
+          ]
+        },
+        {
+          "name": "NAD+",
+          "ids": [
+            "nj100",
+            "nj500",
+            "nj1000"
+          ]
+        },
+        {
+          "name": "Glutathione",
+          "ids": [
+            "gtt600",
+            "gtt1500"
+          ]
+        },
+        {
+          "name": "Cagrilintide",
+          "ids": [
+            "cgl5",
+            "cgl10"
+          ]
+        },
+        {
+          "name": "Retatrutide",
+          "ids": [
+            "rt5",
+            "rt10",
+            "rt20",
+            "rt30"
+          ]
+        },
+        {
+          "name": "Semaglutide",
+          "ids": [
+            "sm5",
+            "sm10",
+            "sm15",
+            "sm20"
+          ]
+        },
+        {
+          "name": "Tirzepatide",
+          "ids": [
+            "tr5",
+            "tr10",
+            "tr15",
+            "tr20",
+            "tr30",
+            "tr60"
+          ]
+        },
+        {
+          "name": "AOD9604",
+          "ids": [
+            "aod5",
+            "aod10"
+          ]
+        },
+        {
+          "name": "L-carnitine",
+          "ids": [
+            "lc600",
+            "lc1200"
+          ]
+        },
+        {
+          "name": "BPC-157",
+          "ids": [
+            "bc5",
+            "bc10"
+          ]
+        },
+        {
+          "name": "GHK-Cu",
+          "ids": [
+            "cu50",
+            "cu100"
+          ]
+        },
+        {
+          "name": "Thymosin Alpha-1",
+          "ids": [
+            "ta5",
+            "ta10"
+          ]
+        },
+        {
+          "name": "TB-500",
+          "ids": [
+            "bt5",
+            "bt10"
+          ]
+        },
+        {
+          "name": "CJC-1295 without DAC",
+          "ids": [
+            "cnd5",
+            "cnd10"
+          ]
+        },
+        {
+          "name": "IGF-1LR3",
+          "ids": [
+            "ig01",
+            "ig1"
+          ]
+        },
+        {
+          "name": "Tesamorelin",
+          "ids": [
+            "tsm5",
+            "tsm10"
+          ]
+        },
+        {
+          "name": "HCG",
+          "ids": [
+            "g5k",
+            "g10k"
+          ]
+        },
+        {
+          "name": "Ipamorelin",
+          "ids": [
+            "ip5",
+            "ip10"
+          ]
+        },
+        {
+          "name": "Kisspeptin-10",
+          "ids": [
+            "ks5",
+            "ks10"
+          ]
+        },
+        {
+          "name": "GHRP-2 Acetate",
+          "ids": [
+            "g25",
+            "g210"
+          ]
+        },
+        {
+          "name": "GHRP-6 Acetate",
+          "ids": [
+            "g65",
+            "g610"
+          ]
+        },
+        {
+          "name": "Sermorelin",
+          "ids": [
+            "smo5",
+            "smo10"
+          ]
+        },
+        {
+          "name": "HGH",
+          "ids": [
+            "h10",
+            "h15"
+          ]
+        },
+        {
+          "name": "Semax",
+          "ids": [
+            "xa5",
+            "xa10"
+          ]
+        },
+        {
+          "name": "Selank",
+          "ids": [
+            "sk5",
+            "sk10"
+          ]
+        },
+        {
+          "name": "Bac Water",
+          "ids": [
+            "wa3",
+            "wa10"
+          ]
+        },
+        {
+          "name": "SS-31",
+          "ids": [
+            "2s10",
+            "2s50"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "Variants Array Structure",
+      "passed": true,
+      "message": "All 0 products with variants have valid variants arrays"
+    },
+    {
+      "test": "Variant Required Fields",
+      "passed": true,
+      "message": "All variants have required fields (strength, quantityPerOrder: 1, price, sku, inStock)"
+    },
+    {
+      "test": "Helper Functions",
+      "passed": true,
+      "message": "All helper functions work correctly"
+    },
+    {
+      "test": "SEO Schema Generation",
+      "passed": true,
+      "message": "All products generate valid SEO schemas"
+    },
+    {
+      "test": "Category Filtering",
+      "passed": false,
+      "message": "Found duplicate products in 6 categories",
+      "details": [
+        {
+          "category": "Beauty / Anti-Aging / Antioxidant",
+          "duplicateNames": [
+            "Epitalon",
+            "MOTS-C",
+            "NAD+",
+            "NAD+",
+            "Glutathione"
+          ]
+        },
+        {
+          "category": "Weight Loss / Blood Sugar Control / Metabolic Regulation",
+          "duplicateNames": [
+            "Cagrilintide",
+            "Retatrutide",
+            "Retatrutide",
+            "Retatrutide",
+            "Semaglutide",
+            "Semaglutide",
+            "Semaglutide",
+            "Tirzepatide",
+            "Tirzepatide",
+            "Tirzepatide",
+            "Tirzepatide",
+            "Tirzepatide",
+            "AOD9604",
+            "L-carnitine"
+          ]
+        },
+        {
+          "category": "Repair / Healing / Anti-inflammatory",
+          "duplicateNames": [
+            "BPC-157",
+            "GHK-Cu",
+            "Thymosin Alpha-1",
+            "TB-500"
+          ]
+        },
+        {
+          "category": "Hormones / Growth Factors / Bodybuilding",
+          "duplicateNames": [
+            "CJC-1295 without DAC",
+            "IGF-1LR3",
+            "Tesamorelin",
+            "HCG",
+            "Ipamorelin",
+            "Kisspeptin-10",
+            "GHRP-2 Acetate",
+            "GHRP-6 Acetate",
+            "Sermorelin",
+            "HGH"
+          ]
+        },
+        {
+          "category": "Mental / Neurological / Sleep",
+          "duplicateNames": [
+            "Semax",
+            "Selank"
+          ]
+        },
+        {
+          "category": "Others",
+          "duplicateNames": [
+            "Bac Water",
+            "SS-31"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "Variant Uniqueness",
+      "passed": true,
+      "message": "All variants have unique strengths and SKUs within their products"
+    },
+    {
+      "test": "Default Variant Generation",
+      "passed": true,
+      "message": "All products have valid default variants with quantityPerOrder = 1"
+    }
+  ]
+}

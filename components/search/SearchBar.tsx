@@ -193,6 +193,11 @@ export default function SearchBar({
                             {result.category}
                           </span>
                         )}
+                        {result.type === 'product' && result.description.includes('Available in:') && (
+                          <span className="text-xs bg-luxury-gold/10 text-accent-gold-light px-2 py-0.5 rounded border border-luxury-gold/30">
+                            Multiple Strengths
+                          </span>
+                        )}
                       </div>
                       <h3 className="font-semibold text-accent-gold-light mb-1 truncate">
                         {result.title}
@@ -202,10 +207,19 @@ export default function SearchBar({
                       </p>
                     </div>
                     {result.price !== undefined && (
-                      <div className="flex-shrink-0">
-                        <span className="text-lg font-bold text-luxury-gold">
-                          ${result.price.toFixed(2)}
-                        </span>
+                      <div className="flex-shrink-0 text-right">
+                        {result.type === 'product' && result.description.includes('Available in:') ? (
+                          <div>
+                            <span className="text-xs text-neutral-gray block">from</span>
+                            <span className="text-lg font-bold text-luxury-gold">
+                              ${result.price.toFixed(2)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-lg font-bold text-luxury-gold">
+                            ${result.price.toFixed(2)}
+                          </span>
+                        )}
                       </div>
                     )}
                   </div>

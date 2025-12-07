@@ -1,0 +1,173 @@
+{
+  "page": "homepage",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "elements": [
+    {
+      "id": "hero-headline",
+      "type": "heading",
+      "position": {
+        "x": 5,
+        "y": 15,
+        "width": 55,
+        "height": 12
+      },
+      "color": "#F5D67B",
+      "text": "Premium Research Peptides",
+      "fontSize": 48,
+      "fontWeight": 700,
+      "saliency": 1,
+      "luminance": 0.6893567240996472
+    },
+    {
+      "id": "hero-cta",
+      "type": "cta",
+      "position": {
+        "x": 5,
+        "y": 32,
+        "width": 25,
+        "height": 5
+      },
+      "color": "#D4AF37",
+      "text": "Shop Research Peptides",
+      "fontSize": 18,
+      "fontWeight": 600,
+      "saliency": 0.9211156569922122,
+      "luminance": 0.4493282849610608
+    },
+    {
+      "id": "hero-image",
+      "type": "image",
+      "position": {
+        "x": 60,
+        "y": 10,
+        "width": 35,
+        "height": 40
+      },
+      "color": "#000000",
+      "saliency": 0.314,
+      "luminance": 0
+    },
+    {
+      "id": "best-selling-title",
+      "type": "heading",
+      "position": {
+        "x": 5,
+        "y": 60,
+        "width": 40,
+        "height": 4
+      },
+      "color": "#F5D67B",
+      "text": "Best-Selling Research Compounds",
+      "fontSize": 32,
+      "fontWeight": 600,
+      "saliency": 0.6694713448199295,
+      "luminance": 0.6893567240996472
+    },
+    {
+      "id": "product-card-1",
+      "type": "button",
+      "position": {
+        "x": 5,
+        "y": 68,
+        "width": 28,
+        "height": 35
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.37773403539407463,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "product-card-2",
+      "type": "button",
+      "position": {
+        "x": 36,
+        "y": 68,
+        "width": 28,
+        "height": 35
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.17773403539407462,
+      "luminance": 0.010329823029626938
+    },
+    {
+      "id": "product-card-3",
+      "type": "button",
+      "position": {
+        "x": 67,
+        "y": 68,
+        "width": 28,
+        "height": 35
+      },
+      "color": "#1A1A1A",
+      "saliency": 0.17773403539407462,
+      "luminance": 0.010329823029626938
+    }
+  ],
+  "focalPoints": [
+    {
+      "x": 32.5,
+      "y": 21,
+      "intensity": 1
+    },
+    {
+      "x": 17.5,
+      "y": 34.5,
+      "intensity": 0.9211156569922122
+    },
+    {
+      "x": 77.5,
+      "y": 30,
+      "intensity": 0.314
+    },
+    {
+      "x": 25,
+      "y": 62,
+      "intensity": 0.6694713448199295
+    },
+    {
+      "x": 19,
+      "y": 85.5,
+      "intensity": 0.37773403539407463
+    }
+  ],
+  "scanPath": [
+    {
+      "x": 77.5,
+      "y": 30,
+      "timestamp": 0
+    },
+    {
+      "x": 32.5,
+      "y": 21,
+      "timestamp": 200
+    },
+    {
+      "x": 17.5,
+      "y": 34.5,
+      "timestamp": 400
+    },
+    {
+      "x": 25,
+      "y": 62,
+      "timestamp": 600
+    },
+    {
+      "x": 19,
+      "y": 85.5,
+      "timestamp": 800
+    },
+    {
+      "x": 50,
+      "y": 85.5,
+      "timestamp": 1000
+    },
+    {
+      "x": 81,
+      "y": 85.5,
+      "timestamp": 1200
+    }
+  ]
+}

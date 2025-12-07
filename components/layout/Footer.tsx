@@ -43,6 +43,11 @@ export default function Footer() {
                   About
                 </Link>
               </li>
+              <li>
+                <Link href="/contact" className="text-pure-white hover:text-luxury-gold transition-colors text-sm">
+                  Contact
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -1,0 +1,98 @@
+{
+  "variantDescriptions": {
+    "Retatrutide": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial dose-ranging studies and baseline research protocols.",
+      "10mg": "The 10mg strength offers increased peptide concentration, ideal for extended research protocols requiring higher dosing regimens.",
+      "20mg": "The 20mg strength provides elevated concentration for advanced research applications and dose-scaling studies.",
+      "30mg": "The 30mg strength delivers maximum concentration for high-dose research protocols and comprehensive laboratory investigations."
+    },
+    "Semaglutide": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial metabolic research and baseline studies.",
+      "10mg": "The 10mg strength offers increased concentration for extended research protocols and dose-response investigations.",
+      "15mg": "The 15mg strength provides elevated concentration for advanced metabolic research applications.",
+      "20mg": "The 20mg strength delivers maximum concentration for high-dose research protocols and comprehensive metabolic studies."
+    },
+    "Tirzepatide": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial dual-agonist research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies and dose-response evaluations.",
+      "15mg": "The 15mg strength provides elevated concentration for advanced dual-agonist research applications.",
+      "20mg": "The 20mg strength delivers higher concentration for comprehensive research protocols.",
+      "30mg": "The 30mg strength provides elevated concentration for advanced research applications requiring higher dosing.",
+      "60mg": "The 60mg strength delivers maximum concentration for high-dose research protocols and comprehensive dual-agonist investigations."
+    },
+    "Epitalon": {
+      "10mg": "The 10mg strength provides a standard concentration suitable for initial telomere and cellular aging research protocols.",
+      "50mg": "The 50mg strength offers increased concentration for extended research studies and comprehensive cellular aging investigations."
+    },
+    "MOTS-C": {
+      "10mg": "The 10mg strength provides a standard concentration suitable for initial metabolic and mitochondrial research protocols.",
+      "40mg": "The 40mg strength offers increased concentration for extended research studies requiring higher dosing regimens."
+    },
+    "NAD+": {
+      "100mg": "The 100mg strength provides a standard concentration suitable for initial cellular metabolism and sirtuin activation research.",
+      "500mg": "The 500mg strength offers increased concentration for extended research protocols and dose-response studies.",
+      "1000mg": "The 1000mg strength delivers maximum concentration for high-dose research protocols and comprehensive metabolic investigations."
+    },
+    "BPC-157": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial tissue repair and healing research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies and comprehensive healing investigations."
+    },
+    "GHK-Cu": {
+      "50mg": "The 50mg strength provides a standard concentration suitable for initial wound healing and tissue regeneration research.",
+      "100mg": "The 100mg strength offers increased concentration for extended research protocols requiring higher dosing regimens."
+    },
+    "TB-500": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial tissue repair and recovery research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies and comprehensive recovery investigations."
+    },
+    "CJC-1295 without DAC": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial growth hormone research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies requiring higher dosing regimens."
+    },
+    "IGF-1LR3": {
+      "0.1mg": "The 0.1mg strength provides a standard concentration suitable for initial growth factor research protocols.",
+      "1mg": "The 1mg strength offers significantly increased concentration for extended research studies and comprehensive growth factor investigations."
+    },
+    "Tesamorelin": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial growth hormone-releasing hormone research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies requiring higher dosing regimens."
+    },
+    "Ipamorelin": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial growth hormone secretagogue research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies and comprehensive secretagogue investigations."
+    },
+    "AOD9604": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial metabolic and fat loss research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies requiring higher dosing regimens."
+    },
+    "Thymosin Alpha-1": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial immune system research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies and comprehensive immune investigations."
+    },
+    "HCG": {
+      "5000iu": "The 5000iu strength provides a standard concentration suitable for initial hormonal research protocols.",
+      "10000iu": "The 10000iu strength offers increased concentration for extended research studies requiring higher dosing regimens."
+    },
+    "SS-31": {
+      "10mg": "The 10mg strength provides a standard concentration suitable for initial mitochondrial protection research protocols.",
+      "50mg": "The 50mg strength offers significantly increased concentration for extended research studies and comprehensive mitochondrial investigations."
+    },
+    "Glutathione": {
+      "600mg": "The 600mg strength provides a standard concentration suitable for initial antioxidant and cellular protection research.",
+      "1500mg": "The 1500mg strength offers increased concentration for extended research protocols requiring higher dosing regimens."
+    },
+    "L-carnitine": {
+      "600mg 10ml": "The 600mg 10ml strength provides a standard concentration suitable for initial metabolic and energy research protocols.",
+      "1200mg 10ml": "The 1200mg 10ml strength offers increased concentration for extended research studies requiring higher dosing regimens."
+    },
+    "Cagrilintide": {
+      "5mg": "The 5mg strength provides a standard concentration suitable for initial dual-agonist research protocols.",
+      "10mg": "The 10mg strength offers increased concentration for extended research studies and comprehensive dual-agonist investigations."
+    },
+    "BPC + TB": {
+      "5mg + 5mg": "The 5mg + 5mg combination provides balanced concentrations of both peptides for synergistic tissue repair research protocols.",
+      "10mg + 10mg": "The 10mg + 10mg combination offers increased concentrations for extended research studies requiring higher dosing regimens."
+    }
+  }
+}
+

@@ -14,7 +14,7 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <label className="block text-sm font-semibold text-white mb-2">
+      <label className="block text-sm font-semibold text-accent-gold-light mb-2">
         CHOOSE WAREHOUSE
       </label>
       
@@ -23,11 +23,14 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         <button
           type="button"
           onClick={() => setSelectedWarehouse('overseas')}
-          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
+          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-400 ${
             selectedWarehouse === 'overseas'
-              ? 'border-primary bg-primary/10 text-white shadow-glow-sm'
-              : 'border-gray-600 bg-slate-800 text-gray-300 hover:border-gray-500'
+              ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white'
+              : 'border-luxury-gold/30 bg-secondary-charcoal text-pure-white hover:border-luxury-gold/50'
           }`}
+          style={{
+            boxShadow: selectedWarehouse === 'overseas' ? '0 0 10px rgba(212, 175, 55, 0.25)' : 'none',
+          }}
         >
           <div className="flex items-center justify-center gap-2">
             <span className="text-lg">🌍</span>
@@ -42,11 +45,14 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         <button
           type="button"
           onClick={() => setSelectedWarehouse('us')}
-          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-200 ${
+          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-400 ${
             selectedWarehouse === 'us'
-              ? 'border-primary bg-primary/10 text-white shadow-glow-sm'
-              : 'border-gray-600 bg-slate-800 text-gray-300 hover:border-gray-500'
+              ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white'
+              : 'border-luxury-gold/30 bg-secondary-charcoal text-pure-white hover:border-luxury-gold/50'
           }`}
+          style={{
+            boxShadow: selectedWarehouse === 'us' ? '0 0 10px rgba(212, 175, 55, 0.25)' : 'none',
+          }}
         >
           <div className="flex items-center justify-center gap-2">
             <span className="text-lg">🇺🇸</span>
@@ -63,7 +69,7 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         <button
           type="button"
           onClick={() => setShowInfo(!showInfo)}
-          className="text-xs text-gray-400 hover:text-primary transition-colors flex items-center gap-1 w-full"
+          className="text-xs text-neutral-gray hover:text-luxury-gold transition-colors duration-400 flex items-center gap-1 w-full"
           aria-label="Warehouse information"
         >
           <span>ℹ️</span>
@@ -101,9 +107,9 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
       </div>
 
       {/* Current Selection Description */}
-      <div className="mt-2 p-3 bg-slate-800/50 border border-gray-700/50 rounded-lg text-xs text-gray-400">
-        <p className="font-semibold text-white mb-1">Selected: {selectedWarehouse === 'us' ? 'U.S. Warehouse' : 'Overseas Warehouse'}</p>
-        <p>{getWarehouseDescription()}</p>
+      <div className="mt-2 p-3 bg-luxury-gold/5 border border-luxury-gold/20 rounded-lg text-xs text-neutral-gray">
+        <p className="font-semibold text-pure-white mb-1">Selected: {selectedWarehouse === 'us' ? 'U.S. Warehouse' : 'Overseas Warehouse'}</p>
+        <p className="text-pure-white">{getWarehouseDescription()}</p>
       </div>
     </div>
   );

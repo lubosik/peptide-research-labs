@@ -46,7 +46,17 @@ export interface ProductSchema {
     priceCurrency: string;
     availability: string;
     url: string;
-  };
+    sku?: string;
+    description?: string;
+  } | Array<{
+    '@type': string;
+    price: string;
+    priceCurrency: string;
+    availability: string;
+    url: string;
+    sku: string;
+    description: string;
+  }>;
   aggregateRating?: {
     '@type': string;
     ratingValue: string;
@@ -117,26 +127,67 @@ export function generateOrganizationSchema(): OrganizationSchema {
 
 /**
  * Generate Product schema for research peptides
+ * Supports both single products and products with variants
  */
-export function generateProductSchema(product: Product): ProductSchema {
+export function generateProductSchema(product: Product, selectedVariantStrength?: string): ProductSchema {
+  const baseUrl = 'https://vicipetides.com';
+  const productUrl = `${baseUrl}/products/${product.slug}`;
+  
+  // If product has variants, create multiple offers
+  if (product.variants && product.variants.length > 0) {
+    const offers = product.variants.map((variant) => ({
+      '@type': 'Offer' as const,
+      price: variant.price.toString(),
+      priceCurrency: 'USD',
+      availability: variant.inStock
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      url: productUrl,
+      sku: variant.sku,
+      description: `${product.name} ${variant.strength} vial for laboratory research use only. ${variant.specification || ''}`.trim(),
+    }));
+
+    // If a specific variant is selected, prioritize it in the schema
+    // For now, we'll include all variants in the offers array
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      description: product.description,
+      image: product.image ? (product.image.startsWith('http') ? product.image : `${baseUrl}${product.image}`) : undefined,
+      brand: {
+        '@type': 'Brand',
+        name: 'Vici Peptides',
+      },
+      offers: offers,
+    };
+  }
+
+  // Legacy product without variants - single offer
+  const legacyPrice = product.price ?? 0;
+  const legacySku = product.sku || product.id;
+  const legacyInStock = product.inStock ?? true;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    image: product.image || `https://vicipetides.com${product.image}`,
+    image: product.image ? (product.image.startsWith('http') ? product.image : `${baseUrl}${product.image}`) : undefined,
     brand: {
       '@type': 'Brand',
       name: 'Vici Peptides',
     },
     offers: {
       '@type': 'Offer',
-      price: product.price.toString(),
+      price: legacyPrice.toString(),
       priceCurrency: 'USD',
-      availability: product.inStock
+      availability: legacyInStock
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      url: `https://vicipetides.com/products/${product.slug}`,
+      url: productUrl,
+      sku: legacySku,
+      description: `${product.name} for laboratory research use only. ${product.specification || ''}`.trim(),
     },
   };
 }

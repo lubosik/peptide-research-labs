@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ComplianceBanner from '@/components/layout/ComplianceBanner';
+import FixedCartIcon from '@/components/layout/FixedCartIcon';
 import { CartProvider } from '@/lib/context/CartContext';
 import { WarehouseProvider } from '@/lib/context/WarehouseContext';
 import { ToastProvider } from '@/components/ui/ToastProvider';
@@ -86,6 +87,7 @@ export default function RootLayout({
               <MarketingPopup />
               <Header />
               <ComplianceBanner />
+              <FixedCartIcon />
               <main className="flex-grow">{children}</main>
               <Footer />
             </ToastProvider>

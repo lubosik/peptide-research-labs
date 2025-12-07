@@ -1,11 +1,12 @@
 'use client';
 
 import { use, useState, useMemo, useEffect } from 'react';
-import { products, getProductsByCategory } from '@/data/products';
+import { products, getProductsByCategory, getProductMinPrice } from '@/data/products';
 import { getCategoryBySlug, getAllCategorySlugs } from '@/data/categories';
 import ProductCard from '@/components/products/ProductCard';
 import { useWarehouse } from '@/lib/context/WarehouseContext';
 import { useDebounce } from '@/lib/hooks/useDebounce';
+import ScrollToTop from '@/components/layout/ScrollToTop';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
@@ -38,30 +39,53 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = [...categoryProducts];
 
-    // Search filter
+    // Search filter (including variant fields)
     if (debouncedSearch) {
       const query = debouncedSearch.toLowerCase();
-      filtered = filtered.filter(
-        (product) =>
+      filtered = filtered.filter((product) => {
+        // Base product fields
+        const baseMatch =
           product.name.toLowerCase().includes(query) ||
           product.shortDescription.toLowerCase().includes(query) ||
-          product.sku?.toLowerCase().includes(query)
-      );
+          product.sku?.toLowerCase().includes(query);
+        
+        // Variant fields
+        let variantMatch = false;
+        if (product.variants && product.variants.length > 0) {
+          variantMatch = product.variants.some(
+            (variant) =>
+              variant.strength.toLowerCase().includes(query) ||
+              variant.sku.toLowerCase().includes(query) ||
+              variant.specification?.toLowerCase().includes(query)
+          );
+        }
+        
+        return baseMatch || variantMatch;
+      });
     }
 
-    // Price range filter
+    // Price range filter (using minimum variant price)
+    const warehouseMultiplier = selectedWarehouse === 'us' ? 1.25 : 1.0;
     filtered = filtered.filter((product) => {
-      const price = getPrice(product);
-      return price >= priceRange[0] && price <= priceRange[1];
+      const minPrice = getProductMinPrice(product) * warehouseMultiplier;
+      return minPrice >= priceRange[0] && minPrice <= priceRange[1];
     });
 
-    // Sort
+    // Sort (using minimum variant price)
     switch (sortBy) {
       case 'price-low':
-        filtered.sort((a, b) => getPrice(a) - getPrice(b));
+        filtered.sort((a, b) => {
+          const priceA = getProductMinPrice(a) * warehouseMultiplier;
+          const priceB = getProductMinPrice(b) * warehouseMultiplier;
+          return priceA - priceB;
+        });
         break;
       case 'price-high':
-        filtered.sort((a, b) => getPrice(b) - getPrice(a));
+        filtered.sort((a, b) => {
+          const priceA = getProductMinPrice(a) * warehouseMultiplier;
+          const priceB = getProductMinPrice(b) * warehouseMultiplier;
+          return priceB - priceA;
+        });
         break;
       case 'newest':
         // Assuming newer products have higher IDs or we can use a timestamp
@@ -69,9 +93,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         filtered.sort((a, b) => b.id.localeCompare(a.id));
         break;
       case 'popular':
-        // For now, sort by price as a proxy for popularity
+        // For now, sort by minimum price as a proxy for popularity
         // In production, you'd use actual popularity data
-        filtered.sort((a, b) => getPrice(b) - getPrice(a));
+        filtered.sort((a, b) => {
+          const priceA = getProductMinPrice(a) * warehouseMultiplier;
+          const priceB = getProductMinPrice(b) * warehouseMultiplier;
+          return priceB - priceA;
+        });
         break;
       default:
         // Default: keep original order
@@ -79,7 +107,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     }
 
     return filtered;
-  }, [categoryProducts, debouncedSearch, priceRange, sortBy, getPrice]);
+  }, [categoryProducts, debouncedSearch, priceRange, sortBy, selectedWarehouse]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
@@ -88,12 +116,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     return filteredAndSortedProducts.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredAndSortedProducts, currentPage, itemsPerPage]);
 
-  // Calculate price range for slider
+  // Calculate price range for slider (using minimum variant prices)
   const priceRangeBounds = useMemo(() => {
     if (categoryProducts.length === 0) return [0, 1000];
-    const prices = categoryProducts.map((p) => getPrice(p));
+    const warehouseMultiplier = selectedWarehouse === 'us' ? 1.25 : 1.0;
+    const prices = categoryProducts.map((p) => getProductMinPrice(p) * warehouseMultiplier);
     return [Math.min(...prices), Math.max(...prices)];
-  }, [categoryProducts, getPrice]);
+  }, [categoryProducts, selectedWarehouse]);
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -324,6 +353,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           </div>
         </div>
       </div>
+      
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </div>
   );
 }
