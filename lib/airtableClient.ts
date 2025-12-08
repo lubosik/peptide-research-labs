@@ -89,7 +89,7 @@ function normalizeSynonyms(synonyms: any): string[] {
 function mapRecordToProduct(record: any): AirtableProduct {
   return {
     productId: record.get('Product_ID')?.toString() || '',
-    productName: record.get('Product_Name') || '',
+    productName: record.get('Product_Nmae') || '',
     variantStrength: record.get('Variant_Strength') || '',
     category: record.get('Category') || '',
     priceUSD: record.get('Price_USD') || 0,
@@ -135,7 +135,7 @@ export async function getAllProducts(): Promise<AirtableProduct[]> {
     const records = await base(TABLE_NAME)
       .select({
         filterByFormula: '{API_Visibility_Status} = "LIVE"',
-        sort: [{ field: 'Product_Name', direction: 'asc' }],
+        sort: [{ field: 'Product_Nmae', direction: 'asc' }],
       })
       .all();
 
@@ -198,7 +198,7 @@ export async function getProductsByCategory(category: string): Promise<AirtableP
     const records = await base(TABLE_NAME)
       .select({
         filterByFormula: `AND({Category} = "${category}", {API_Visibility_Status} = "LIVE")`,
-        sort: [{ field: 'Product_Name', direction: 'asc' }],
+        sort: [{ field: 'Product_Nmae', direction: 'asc' }],
       })
       .all();
 
