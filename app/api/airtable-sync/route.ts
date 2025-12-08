@@ -98,6 +98,15 @@ export async function POST(request: NextRequest) {
       revalidatePath('/products', 'page');
       revalidatedPaths.push('/products/*');
 
+      // Revalidate API routes that serve product data
+      revalidatePath('/api/products');
+      revalidatedPaths.push('/api/products');
+      
+      // Revalidate cart and checkout pages (client-side, but ensures fresh data on load)
+      revalidatePath('/cart', 'page');
+      revalidatePath('/checkout', 'page');
+      revalidatedPaths.push('/cart', '/checkout');
+
       logSyncEvent('Revalidation successful', {
         recordCount: recordIds.length,
         revalidatedPaths: revalidatedPaths.length,

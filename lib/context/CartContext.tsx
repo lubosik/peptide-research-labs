@@ -20,6 +20,8 @@ interface CartContextType {
   removeItem: (productId: string, variantStrength?: string) => void;
   updateQuantity: (productId: string, variantStrength: string | undefined, quantity: number) => void;
   updateWarehouse: (productId: string, variantStrength: string | undefined, newWarehouse: Warehouse) => void;
+  updateItemPrice: (productId: string, variantStrength: string | undefined, newPrice: number) => void;
+  updateItemProduct: (productId: string, variantStrength: string | undefined, newProduct: Product) => void;
   clearCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
@@ -133,7 +135,59 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const updateWarehouse = (productId: string, variantStrength: string | undefined, newWarehouse: Warehouse) => {
+  const updateWarehouse = async (productId: string, variantStrength: string | undefined, newWarehouse: Warehouse) => {
+    // Fetch fresh product data from Airtable to get updated prices
+    try {
+      const response = await fetch(`/api/products?t=${Date.now()}`, {
+        cache: 'no-store',
+        next: { revalidate: 0 },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const { convertAirtableToProducts } = await import('@/lib/airtableProductAdapter');
+        const allProducts = convertAirtableToProducts(data.products);
+        const freshProduct = allProducts.find((p) => p.slug === productId);
+        
+        if (freshProduct) {
+          setItems((prevItems) =>
+            prevItems.map((item) => {
+              if (item.product.id === productId && 
+                  (item.variantStrength === variantStrength || (!item.variantStrength && !variantStrength))) {
+                // Calculate new price based on fresh data
+                let basePrice = freshProduct.price ?? 0;
+                
+                // If product has variants, use variant price
+                if (freshProduct.variants && variantStrength) {
+                  const variant = freshProduct.variants.find(v => v.strength === variantStrength);
+                  if (variant) {
+                    basePrice = variant.price;
+                  }
+                }
+                
+                const warehouseOption = freshProduct.warehouseOptions?.[newWarehouse];
+                const newPrice = warehouseOption
+                  ? basePrice * warehouseOption.priceMultiplier
+                  : basePrice;
+                
+                return {
+                  ...item,
+                  product: freshProduct, // Update product data
+                  warehouse: newWarehouse,
+                  calculatedPrice: newPrice,
+                };
+              }
+              return item;
+            })
+          );
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching fresh product data:', error);
+    }
+    
+    // Fallback to using cached product data if fetch fails
     setItems((prevItems) =>
       prevItems.map((item) => {
         if (item.product.id === productId && 
@@ -165,6 +219,48 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const updateItemPrice = (productId: string, variantStrength: string | undefined, newPrice: number) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.product.id === productId && 
+        (item.variantStrength === variantStrength || (!item.variantStrength && !variantStrength))
+          ? { ...item, calculatedPrice: newPrice }
+          : item
+      )
+    );
+  };
+
+  const updateItemProduct = (productId: string, variantStrength: string | undefined, newProduct: Product) => {
+    setItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.product.id === productId && 
+            (item.variantStrength === variantStrength || (!item.variantStrength && !variantStrength))) {
+          // Recalculate price with new product data
+          let basePrice = newProduct.price ?? 0;
+          
+          if (newProduct.variants && variantStrength) {
+            const variant = newProduct.variants.find(v => v.strength === variantStrength);
+            if (variant) {
+              basePrice = variant.price;
+            }
+          }
+          
+          const warehouseOption = newProduct.warehouseOptions?.[item.warehouse];
+          const newPrice = warehouseOption
+            ? basePrice * warehouseOption.priceMultiplier
+            : basePrice;
+          
+          return {
+            ...item,
+            product: newProduct,
+            calculatedPrice: newPrice,
+          };
+        }
+        return item;
+      })
+    );
+  };
+
   const clearCart = () => {
     setItems([]);
   };
@@ -185,6 +281,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeItem,
         updateQuantity,
         updateWarehouse,
+        updateItemPrice,
+        updateItemProduct,
         clearCart,
         getTotal,
         getItemCount,

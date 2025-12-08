@@ -6,12 +6,41 @@ import { useCart } from '@/lib/context/CartContext';
 import Link from 'next/link';
 import StockImage from '@/components/images/StockImage';
 import { getComplianceText } from '@/lib/utils/compliance-text';
+import { useCartRefresh } from '@/lib/hooks/useCartRefresh';
 
 export default function CheckoutPage() {
-  const { items, getTotal, clearCart } = useCart();
+  const { items, getTotal, clearCart, updateItemPrice, updateItemProduct } = useCart();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasAgreed, setHasAgreed] = useState(false);
+  const { validatedItems, loading, refresh } = useCartRefresh(items);
+  const [checkoutErrors, setCheckoutErrors] = useState<string[]>([]);
+
+  // Update cart items with fresh data and prices when validation completes
+  useEffect(() => {
+    if (validatedItems.length > 0) {
+      validatedItems.forEach((validation) => {
+        if (validation.updatedProduct && validation.updatedPrice !== undefined) {
+          // Update product data if it changed
+          if (validation.updatedProduct.slug !== validation.item.product.slug) {
+            updateItemProduct(
+              validation.item.product.id,
+              validation.item.variantStrength,
+              validation.updatedProduct
+            );
+          }
+          // Update price if it changed
+          if (Math.abs(validation.updatedPrice - validation.item.calculatedPrice) > 0.01) {
+            updateItemPrice(
+              validation.item.product.id,
+              validation.item.variantStrength,
+              validation.updatedPrice
+            );
+          }
+        }
+      });
+    }
+  }, [validatedItems, updateItemPrice, updateItemProduct]);
 
   // Form state with pre-fill from localStorage
   const [formData, setFormData] = useState({
@@ -105,6 +134,18 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Refresh cart items before checkout
+    await refresh();
+
+    // Check for validation errors
+    const invalidItems = validatedItems.filter((v) => !v.isValid);
+    if (invalidItems.length > 0) {
+      const errors = invalidItems.flatMap((v) => v.errors);
+      setCheckoutErrors(errors);
+      return;
+    }
+
+    setCheckoutErrors([]);
     setIsProcessing(true);
 
     // Simulate payment processing
@@ -172,7 +213,7 @@ export default function CheckoutPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column - Checkout Form - Single Scrollable Page (Mobile: Full Width) */}
               <div className="lg:col-span-2 order-2 lg:order-1">
-                {/* Complete Order Button - Above Fold (Sticky on Desktop, Outside Form) */}
+                  {/* Complete Order Button - Above Fold (Sticky on Desktop, Outside Form) */}
                 <div className="lg:sticky lg:top-24 lg:z-10 mb-6 pb-6 border-b border-luxury-gold/20 bg-secondary-charcoal rounded-t-lg pt-6 px-6 md:px-8">
                   {/* Secure Checkout Badge - Above Button */}
                   <div className="mb-3 text-center">
@@ -183,17 +224,36 @@ export default function CheckoutPage() {
                       <span className="text-sm font-semibold text-luxury-gold">Secure Checkout</span>
                     </div>
                   </div>
+                  {loading && (
+                    <div className="mb-3 text-center text-sm text-neutral-gray">
+                      Verifying product availability and prices...
+                    </div>
+                  )}
+                  {checkoutErrors.length > 0 && (
+                    <div className="mb-3 p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
+                      <p className="text-red-400 text-sm font-semibold mb-1">⚠️ Cannot Complete Checkout</p>
+                      {checkoutErrors.map((error, idx) => (
+                        <p key={idx} className="text-red-300 text-xs">{error}</p>
+                      ))}
+                      <Link
+                        href="/cart"
+                        className="mt-2 inline-block text-xs text-red-400 hover:text-red-300 underline"
+                      >
+                        Return to cart to fix issues
+                      </Link>
+                    </div>
+                  )}
                   <button
                     type="submit"
                     form="checkout-form"
-                    disabled={isProcessing}
+                    disabled={isProcessing || loading}
                     className="w-full text-primary-black py-4 px-6 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] flex items-center justify-center"
                     style={{
                       backgroundColor: '#E5C047', // 10% brighter gold for better visibility
                       boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
                     }}
                   >
-                    {isProcessing ? 'Processing...' : 'Complete Order'}
+                    {isProcessing ? 'Processing...' : loading ? 'Verifying...' : 'Complete Order'}
                   </button>
                 </div>
 

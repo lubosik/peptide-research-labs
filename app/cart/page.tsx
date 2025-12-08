@@ -7,11 +7,40 @@ import Image from 'next/image';
 import StockImage from '@/components/images/StockImage';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 import { Warehouse } from '@/lib/context/WarehouseContext';
+import { useCartRefresh } from '@/lib/hooks/useCartRefresh';
+import { useEffect } from 'react';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, updateWarehouse, getTotal, clearCart } = useCart();
+  const { items, removeItem, updateQuantity, updateWarehouse, updateItemPrice, updateItemProduct, getTotal, clearCart } = useCart();
   const router = useRouter();
   const ruoDisclaimer = getComplianceText('RUO_DISCLAIMER');
+  const { validatedItems, loading, refresh } = useCartRefresh(items);
+
+  // Update cart items with fresh data and prices when validation completes
+  useEffect(() => {
+    if (validatedItems.length > 0) {
+      validatedItems.forEach((validation) => {
+        if (validation.updatedProduct && validation.updatedPrice !== undefined) {
+          // Update product data if it changed
+          if (validation.updatedProduct.slug !== validation.item.product.slug) {
+            updateItemProduct(
+              validation.item.product.id,
+              validation.item.variantStrength,
+              validation.updatedProduct
+            );
+          }
+          // Update price if it changed
+          if (Math.abs(validation.updatedPrice - validation.item.calculatedPrice) > 0.01) {
+            updateItemPrice(
+              validation.item.product.id,
+              validation.item.variantStrength,
+              validation.updatedPrice
+            );
+          }
+        }
+      });
+    }
+  }, [validatedItems, updateItemPrice, updateItemProduct]);
 
   const handleCheckout = () => {
     if (items.length === 0) return;
@@ -92,16 +121,42 @@ export default function CartPage() {
               {/* Left Column - Cart Items */}
               <div className="lg:col-span-2">
                 <div className="bg-secondary-charcoal rounded-lg p-6 space-y-6">
+                  {loading && (
+                    <div className="text-center py-4 text-neutral-gray">
+                      Refreshing product data...
+                    </div>
+                  )}
                   {items.map((item) => {
                     // Use variantStrength if available, otherwise fall back to size for legacy support
                     const variantStrength = item.variantStrength || item.size;
                     const itemKey = `${item.product.id}-${variantStrength || 'default'}-${item.warehouse}`;
+                    const validation = validatedItems.find(
+                      (v) => v.item.product.id === item.product.id && 
+                             (v.item.variantStrength === variantStrength || (!v.item.variantStrength && !variantStrength))
+                    );
+                    const hasErrors = validation && !validation.isValid;
                     
                     return (
                     <div
                       key={itemKey}
-                      className="flex flex-col sm:flex-row gap-4 pb-6 border-b border-luxury-gold/20 last:border-b-0 last:pb-0"
+                      className={`flex flex-col sm:flex-row gap-4 pb-6 border-b border-luxury-gold/20 last:border-b-0 last:pb-0 ${
+                        hasErrors ? 'opacity-75' : ''
+                      }`}
                     >
+                      {hasErrors && (
+                        <div className="w-full mb-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
+                          <p className="text-red-400 text-sm font-semibold mb-1">⚠️ Product Update Required</p>
+                          {validation.errors.map((error, idx) => (
+                            <p key={idx} className="text-red-300 text-xs">{error}</p>
+                          ))}
+                          <button
+                            onClick={() => removeItem(item.product.id, variantStrength)}
+                            className="mt-2 text-xs text-red-400 hover:text-red-300 underline"
+                          >
+                            Remove from cart
+                          </button>
+                        </div>
+                      )}
                       {/* Product Image */}
                       <div className="relative w-full sm:w-32 h-32 bg-primary-black rounded-lg overflow-hidden flex-shrink-0">
                         <StockImage
