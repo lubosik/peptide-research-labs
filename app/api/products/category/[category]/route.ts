@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getProductsByCategory } from '@/lib/airtableClient';
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 0; // Always fetch fresh data
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: Request,

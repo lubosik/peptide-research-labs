@@ -17,7 +17,8 @@ interface ProductPageProps {
   }>;
 }
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const revalidate = 0; // Always fetch fresh data from Airtable
+export const dynamic = 'force-dynamic';
 
 export async function generateStaticParams() {
   // Fetch products from Airtable for static generation

@@ -58,15 +58,38 @@ export default function MarketingPopup() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Mock newsletter subscription
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Subscribe to ConvertKit newsletter
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+        }),
+      });
 
-    // In production, this would call an API
-    console.log('Newsletter subscription:', email);
+      const data = await response.json();
 
-    setIsSubmitting(false);
-    alert('Thank you for subscribing! Check your email for your discount code.');
-    handleClose();
+      if (data.success) {
+        alert('Thank you for subscribing! Check your email for your discount code.');
+        handleClose();
+      } else {
+        // If already subscribed, still show success
+        if (data.alreadySubscribed) {
+          alert('You are already subscribed! Check your email for your discount code.');
+          handleClose();
+        } else {
+          alert('There was an error subscribing. Please try again later.');
+        }
+      }
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      alert('There was an error subscribing. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!isOpen || isDismissed) {

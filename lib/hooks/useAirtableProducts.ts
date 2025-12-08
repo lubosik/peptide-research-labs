@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Product } from '@/data/products';
 import { convertAirtableToProducts } from '@/lib/airtableProductAdapter';
 
@@ -13,45 +13,61 @@ export function useAirtableProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/products');
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
-        const data = await response.json();
-        
-        // Convert Airtable products to our Product interface
-        const convertedProducts = convertAirtableToProducts(data.products);
-        
-        // Map to include Airtable-specific fields
-        const productsWithAirtableData: AirtableProductData[] = convertedProducts.map((product) => {
-          // Find the first variant or product in Airtable data to get stock/discontinued status
-          const airtableProduct = data.products.find((ap: any) => ap.productSlug === product.slug);
-          
-          return {
-            product,
-            isDiscontinued: airtableProduct?.isDiscontinued || false,
-            airtableInStock: airtableProduct?.inStock !== undefined ? airtableProduct.inStock : (product.inStock ?? true),
-          };
-        });
-        
-        setProducts(productsWithAirtableData);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-        console.error('Error fetching products:', err);
-      } finally {
-        setLoading(false);
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      // Add cache-busting timestamp to ensure fresh data
+      const response = await fetch(`/api/products?t=${Date.now()}`, {
+        cache: 'no-store',
+        next: { revalidate: 0 },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
       }
+      const data = await response.json();
+      
+      // Convert Airtable products to our Product interface
+      const convertedProducts = convertAirtableToProducts(data.products);
+      
+      // Map to include Airtable-specific fields
+      const productsWithAirtableData: AirtableProductData[] = convertedProducts.map((product) => {
+        // Find all variants for this product to get accurate stock/discontinued status
+        const productVariants = data.products.filter((ap: any) => ap.productSlug === product.slug);
+        
+        // Use the first variant's status, or check if any variant is in stock
+        const firstVariant = productVariants[0];
+        const hasInStockVariant = productVariants.some((ap: any) => ap.inStock === true);
+        const hasDiscontinuedVariant = productVariants.some((ap: any) => ap.isDiscontinued === true);
+        
+        return {
+          product,
+          isDiscontinued: hasDiscontinuedVariant || (firstVariant?.isDiscontinued || false),
+          airtableInStock: hasInStockVariant || (firstVariant?.inStock !== undefined ? firstVariant.inStock : (product.inStock ?? true)),
+        };
+      });
+      
+      setProducts(productsWithAirtableData);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error fetching products:', err);
+    } finally {
+      setLoading(false);
     }
-
-    fetchProducts();
   }, []);
 
-  return { products, loading, error };
+  useEffect(() => {
+    fetchProducts();
+    
+    // Set up periodic refresh every 30 seconds to catch Airtable changes
+    const interval = setInterval(() => {
+      fetchProducts();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [fetchProducts]);
+
+  return { products, loading, error, refresh: fetchProducts };
 }
 
 export function useAirtableProductsByCategory(category: string) {
@@ -59,46 +75,59 @@ export function useAirtableProductsByCategory(category: string) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        setLoading(true);
-        const encodedCategory = encodeURIComponent(category);
-        const response = await fetch(`/api/products/category/${encodedCategory}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
-        const data = await response.json();
-        
-        // Convert Airtable products to our Product interface
-        const convertedProducts = convertAirtableToProducts(data.products);
-        
-        // Map to include Airtable-specific fields
-        const productsWithAirtableData: AirtableProductData[] = convertedProducts.map((product) => {
-          const airtableProduct = data.products.find((ap: any) => ap.productSlug === product.slug);
-          
-          return {
-            product,
-            isDiscontinued: airtableProduct?.isDiscontinued || false,
-            airtableInStock: airtableProduct?.inStock !== undefined ? airtableProduct.inStock : (product.inStock ?? true),
-          };
-        });
-        
-        setProducts(productsWithAirtableData);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-        console.error('Error fetching products:', err);
-      } finally {
-        setLoading(false);
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const encodedCategory = encodeURIComponent(category);
+      // Add cache-busting timestamp to ensure fresh data
+      const response = await fetch(`/api/products/category/${encodedCategory}?t=${Date.now()}`, {
+        cache: 'no-store',
+        next: { revalidate: 0 },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
       }
-    }
-
-    if (category) {
-      fetchProducts();
+      const data = await response.json();
+      
+      // Convert Airtable products to our Product interface
+      const convertedProducts = convertAirtableToProducts(data.products);
+      
+      // Map to include Airtable-specific fields
+      const productsWithAirtableData: AirtableProductData[] = convertedProducts.map((product) => {
+        const productVariants = data.products.filter((ap: any) => ap.productSlug === product.slug);
+        const firstVariant = productVariants[0];
+        const hasInStockVariant = productVariants.some((ap: any) => ap.inStock === true);
+        const hasDiscontinuedVariant = productVariants.some((ap: any) => ap.isDiscontinued === true);
+        
+        return {
+          product,
+          isDiscontinued: hasDiscontinuedVariant || (firstVariant?.isDiscontinued || false),
+          airtableInStock: hasInStockVariant || (firstVariant?.inStock !== undefined ? firstVariant.inStock : (product.inStock ?? true)),
+        };
+      });
+      
+      setProducts(productsWithAirtableData);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+      console.error('Error fetching products:', err);
+    } finally {
+      setLoading(false);
     }
   }, [category]);
 
-  return { products, loading, error };
-}
+  useEffect(() => {
+    if (category) {
+      fetchProducts();
+      
+      // Set up periodic refresh every 30 seconds
+      const interval = setInterval(() => {
+        fetchProducts();
+      }, 30000);
 
+      return () => clearInterval(interval);
+    }
+  }, [category, fetchProducts]);
+
+  return { products, loading, error, refresh: fetchProducts };
+}

@@ -75,11 +75,10 @@ export async function POST(request: NextRequest) {
     
     try {
       // Revalidate shop page
-      revalidatePath('/shop');
+      revalidatePath('/shop', 'page');
       revalidatedPaths.push('/shop');
       
-      // Revalidate all category pages (we'll need to get category slugs)
-      // For now, revalidate common categories
+      // Revalidate all category pages
       const categories = [
         'beauty-anti-aging-antioxidant',
         'weight-loss-blood-sugar-control-metabolic-regulation',
@@ -91,13 +90,12 @@ export async function POST(request: NextRequest) {
       ];
       
       categories.forEach(cat => {
-        revalidatePath(`/categories/${cat}`);
+        revalidatePath(`/categories/${cat}`, 'page');
         revalidatedPaths.push(`/categories/${cat}`);
       });
 
-      // Revalidate product pages (we'll need to fetch slugs for changed records)
-      // For now, we'll revalidate all product pages
-      revalidatePath('/products', 'layout');
+      // Revalidate all product pages
+      revalidatePath('/products', 'page');
       revalidatedPaths.push('/products/*');
 
       logSyncEvent('Revalidation successful', {
