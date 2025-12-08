@@ -1,12 +1,13 @@
 'use client';
 
 import { use, useState, useMemo, useEffect } from 'react';
-import { products, getProductsByCategory, getProductMinPrice } from '@/data/products';
+import { getProductMinPrice } from '@/data/products';
 import { getCategoryBySlug, getAllCategorySlugs } from '@/data/categories';
 import ProductCard from '@/components/products/ProductCard';
 import { useWarehouse } from '@/lib/context/WarehouseContext';
 import { useDebounce } from '@/lib/hooks/useDebounce';
 import ScrollToTop from '@/components/layout/ScrollToTop';
+import { useAirtableProductsByCategory } from '@/lib/hooks/useAirtableProducts';
 
 interface CategoryPageProps {
   params: Promise<{ categorySlug: string }>;
@@ -19,6 +20,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const category = getCategoryBySlug(categorySlug);
   const { selectedWarehouse, getPrice } = useWarehouse();
   
+  // Fetch products from Airtable
+  const { products: airtableProducts, loading, error } = useAirtableProductsByCategory(
+    category?.name || ''
+  );
+  
   // State
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('default');
@@ -29,20 +35,33 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   // Debounce search
   const debouncedSearch = useDebounce(searchQuery, 300);
 
-  // Get all products for this category
+  // Get all products for this category (filter out discontinued)
   const categoryProducts = useMemo(() => {
-    if (!category) return [];
-    return getProductsByCategory(category.name);
-  }, [category]);
+    if (!category || loading) return [];
+    return airtableProducts
+      .filter(item => !item.isDiscontinued)
+      .map(item => item.product);
+  }, [category, airtableProducts, loading]);
 
-  // Filter and sort products
+  // Filter and sort products (with Airtable data)
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = [...categoryProducts];
+    // Map products back to Airtable data
+    const productsWithAirtableData = categoryProducts.map(product => {
+      const airtableItem = airtableProducts.find(item => item.product.id === product.id);
+      return {
+        product,
+        isDiscontinued: airtableItem?.isDiscontinued || false,
+        airtableInStock: airtableItem?.airtableInStock !== undefined ? airtableItem.airtableInStock : (product.inStock ?? true),
+      };
+    });
+    
+    let filtered = productsWithAirtableData;
 
     // Search filter (including variant fields)
     if (debouncedSearch) {
       const query = debouncedSearch.toLowerCase();
-      filtered = filtered.filter((product) => {
+      filtered = filtered.filter((item) => {
+        const product = item.product;
         // Base product fields
         const baseMatch =
           product.name.toLowerCase().includes(query) ||
@@ -66,8 +85,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
     // Price range filter (using minimum variant price)
     const warehouseMultiplier = selectedWarehouse === 'us' ? 1.25 : 1.0;
-    filtered = filtered.filter((product) => {
-      const minPrice = getProductMinPrice(product) * warehouseMultiplier;
+    filtered = filtered.filter((item) => {
+      const minPrice = getProductMinPrice(item.product) * warehouseMultiplier;
       return minPrice >= priceRange[0] && minPrice <= priceRange[1];
     });
 
@@ -75,29 +94,29 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => {
-          const priceA = getProductMinPrice(a) * warehouseMultiplier;
-          const priceB = getProductMinPrice(b) * warehouseMultiplier;
+          const priceA = getProductMinPrice(a.product) * warehouseMultiplier;
+          const priceB = getProductMinPrice(b.product) * warehouseMultiplier;
           return priceA - priceB;
         });
         break;
       case 'price-high':
         filtered.sort((a, b) => {
-          const priceA = getProductMinPrice(a) * warehouseMultiplier;
-          const priceB = getProductMinPrice(b) * warehouseMultiplier;
+          const priceA = getProductMinPrice(a.product) * warehouseMultiplier;
+          const priceB = getProductMinPrice(b.product) * warehouseMultiplier;
           return priceB - priceA;
         });
         break;
       case 'newest':
         // Assuming newer products have higher IDs or we can use a timestamp
         // For now, we'll sort by ID (which might not be perfect)
-        filtered.sort((a, b) => b.id.localeCompare(a.id));
+        filtered.sort((a, b) => b.product.id.localeCompare(a.product.id));
         break;
       case 'popular':
         // For now, sort by minimum price as a proxy for popularity
         // In production, you'd use actual popularity data
         filtered.sort((a, b) => {
-          const priceA = getProductMinPrice(a) * warehouseMultiplier;
-          const priceB = getProductMinPrice(b) * warehouseMultiplier;
+          const priceA = getProductMinPrice(a.product) * warehouseMultiplier;
+          const priceB = getProductMinPrice(b.product) * warehouseMultiplier;
           return priceB - priceA;
         });
         break;
@@ -107,7 +126,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     }
 
     return filtered;
-  }, [categoryProducts, debouncedSearch, priceRange, sortBy, selectedWarehouse]);
+  }, [categoryProducts, airtableProducts, debouncedSearch, priceRange, sortBy, selectedWarehouse]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
@@ -284,8 +303,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               {paginatedProducts.length > 0 ? (
                 <>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
-                    {paginatedProducts.map((product) => (
-                      <ProductCard key={product.id} product={product} />
+                    {paginatedProducts.map((item) => (
+                      <ProductCard
+                        key={item.product.id}
+                        product={item.product}
+                        isDiscontinued={item.isDiscontinued}
+                        airtableInStock={item.airtableInStock}
+                      />
                     ))}
                   </div>
 

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getProductBySlug, products, hasVariants, getProductMinPrice } from '@/data/products';
+import { hasVariants, getProductMinPrice } from '@/data/products';
 import { Metadata } from 'next';
 import ImageGallery from '@/components/products/ImageGallery';
 import ProductInfoPanel from '@/components/products/ProductInfoPanel';
@@ -8,6 +8,8 @@ import DynamicProductTabs from '@/components/products/DynamicProductTabs';
 import RelatedProductsAccordion from '@/components/products/RelatedProductsAccordion';
 import { generateProductSchema } from '@/lib/seo/structured-data';
 import { generateMetadata as generateSEOMetadata, getCanonicalUrl } from '@/lib/seo/metadata';
+import { getProductVariantsBySlug } from '@/lib/airtableClient';
+import { convertAirtableToProduct } from '@/lib/airtableProductAdapter';
 
 interface ProductPageProps {
   params: Promise<{
@@ -15,53 +17,76 @@ interface ProductPageProps {
   }>;
 }
 
+export const revalidate = 60; // Revalidate every 60 seconds
+
 export async function generateStaticParams() {
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
+  // Fetch products from Airtable for static generation
+  const { getAllProducts } = await import('@/lib/airtableClient');
+  try {
+    const airtableProducts = await getAllProducts();
+    // Get unique slugs
+    const slugs = [...new Set(airtableProducts.map(p => p.productSlug))];
+    return slugs.map((slug) => ({
+      slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    // Fallback to empty array
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
-  
-  if (!product) {
+  try {
+    const variants = await getProductVariantsBySlug(slug);
+    if (variants.length === 0) {
+      return {
+        title: 'Product Not Found',
+      };
+    }
+    
+    const product = convertAirtableToProduct(variants[0]);
+    const hasMultipleVariants = variants.length > 1;
+    
+    // Build description with variant information
+    let description = product.description;
+    
+    if (hasMultipleVariants) {
+      const variantStrengths = variants.map(v => v.variantStrength).join(', ');
+      const minPrice = getProductMinPrice(product);
+      description = `${product.shortDescription || product.description.substring(0, 200)} Available in multiple strengths: ${variantStrengths}. Starting from $${minPrice.toFixed(2)}. For laboratory research use only.`;
+    } else {
+      const price = product.price ?? getProductMinPrice(product);
+      description = `${product.shortDescription || product.description.substring(0, 200)} $${price.toFixed(2)}. For laboratory research use only.`;
+    }
+
+    return generateSEOMetadata({
+      title: product.name,
+      description: description,
+      path: `/products/${product.slug}`,
+      type: 'website',
+      image: product.image,
+    });
+  } catch (error) {
+    console.error('Error generating metadata:', error);
     return {
       title: 'Product Not Found',
     };
   }
-
-  // Build description with variant information
-  let description = product.description;
-  const hasMultipleVariants = hasVariants(product);
-  
-  if (hasMultipleVariants && product.variants) {
-    const variantStrengths = product.variants.map(v => v.strength).join(', ');
-    const minPrice = getProductMinPrice(product);
-    description = `${product.shortDescription || product.description.substring(0, 200)} Available in multiple strengths: ${variantStrengths}. Starting from $${minPrice.toFixed(2)}. For laboratory research use only.`;
-  } else {
-    const price = product.price ?? getProductMinPrice(product);
-    description = `${product.shortDescription || product.description.substring(0, 200)} $${price.toFixed(2)}. For laboratory research use only.`;
-  }
-
-  return generateSEOMetadata({
-    title: product.name,
-    description: description,
-    path: `/products/${product.slug}`,
-    type: 'website',
-    image: product.image,
-  });
 }
 
 export default async function ProductDetailPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
-
-  if (!product) {
-    notFound();
-  }
-
-  const productSchema = generateProductSchema(product);
+  
+  try {
+    const variants = await getProductVariantsBySlug(slug);
+    if (variants.length === 0) {
+      notFound();
+    }
+    
+    const product = convertAirtableToProduct(variants[0]);
+    const productSchema = generateProductSchema(product);
 
   return (
     <div className="bg-primary-black min-h-screen">
@@ -130,4 +155,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </section>
     </div>
   );
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    notFound();
+  }
 }
