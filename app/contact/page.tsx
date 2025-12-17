@@ -14,7 +14,6 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showToast } = useToast();
   const infoGridRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
 
   // Intersection Observer for fade-in animations
   useEffect(() => {
@@ -34,9 +33,6 @@ export default function ContactPage() {
 
     if (infoGridRef.current) {
       observer.observe(infoGridRef.current);
-    }
-    if (mapRef.current) {
-      observer.observe(mapRef.current);
     }
 
     return () => {
@@ -96,21 +92,15 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="bg-primary-black min-h-screen">
+    <div className="bg-ivory min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-primary-black via-secondary-charcoal to-primary-black py-20 md:py-30">
-        {/* Subtle gold particle glow effect */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-luxury-gold/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-gold-light/5 rounded-full blur-3xl"></div>
-        </div>
-
+      <section className="relative bg-ivory py-20 md:py-30">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-6">
+            <h1 className="text-heading text-4xl md:text-5xl font-bold text-charcoal mb-6">
               Get in Touch with Vici Peptides
             </h1>
-            <p className="text-pure-white text-lg md:text-xl text-neutral-gray max-w-2xl mx-auto">
+            <p className="text-charcoal text-lg md:text-xl max-w-2xl mx-auto">
               For all inquiries, research support, or supplier verification requests — please reach out below.
             </p>
           </div>
@@ -118,7 +108,7 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-ivory">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -126,9 +116,9 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="firstName"
-                  className="block text-pure-white font-semibold mb-2"
+                  className="block text-charcoal font-semibold mb-2"
                 >
-                  First Name <span className="text-luxury-gold">*</span>
+                  First Name <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="text"
@@ -137,7 +127,7 @@ export default function ContactPage() {
                   required
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg text-pure-white placeholder-neutral-gray focus:outline-none focus:border-luxury-gold transition-all duration-400"
+                  className="w-full px-4 py-3 bg-ivory border-2 border-taupe rounded-lg text-charcoal placeholder-stone focus:outline-none focus:border-charcoal transition-all duration-400 font-serif"
                   placeholder="Enter your first name"
                 />
               </div>
@@ -146,7 +136,7 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="lastName"
-                  className="block text-pure-white font-semibold mb-2"
+                  className="block text-charcoal font-semibold mb-2"
                 >
                   Last Name
                 </label>
@@ -156,7 +146,7 @@ export default function ContactPage() {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg text-pure-white placeholder-neutral-gray focus:outline-none focus:border-luxury-gold transition-all duration-400"
+                  className="w-full px-4 py-3 bg-ivory border-2 border-taupe rounded-lg text-charcoal placeholder-stone focus:outline-none focus:border-charcoal transition-all duration-400 font-serif"
                   placeholder="Enter your last name"
                 />
               </div>
@@ -165,9 +155,9 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-pure-white font-semibold mb-2"
+                  className="block text-charcoal font-semibold mb-2"
                 >
-                  Email Address <span className="text-luxury-gold">*</span>
+                  Email Address <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="email"
@@ -176,7 +166,7 @@ export default function ContactPage() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg text-pure-white placeholder-neutral-gray focus:outline-none focus:border-luxury-gold transition-all duration-400"
+                  className="w-full px-4 py-3 bg-ivory border-2 border-taupe rounded-lg text-charcoal placeholder-stone focus:outline-none focus:border-charcoal transition-all duration-400 font-serif"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -185,9 +175,9 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="subject"
-                  className="block text-pure-white font-semibold mb-2"
+                  className="block text-charcoal font-semibold mb-2"
                 >
-                  Subject <span className="text-luxury-gold">*</span>
+                  Subject <span className="text-red-600">*</span>
                 </label>
                 <select
                   id="subject"
@@ -195,7 +185,7 @@ export default function ContactPage() {
                   required
                   value={formData.subject}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg text-pure-white focus:outline-none focus:border-luxury-gold transition-all duration-400"
+                  className="w-full px-4 py-3 bg-ivory border-2 border-taupe rounded-lg text-charcoal focus:outline-none focus:border-charcoal transition-all duration-400 font-serif"
                 >
                   <option value="General Inquiry">General Inquiry</option>
                   <option value="Order Support">Order Support</option>
@@ -209,9 +199,9 @@ export default function ContactPage() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-pure-white font-semibold mb-2"
+                  className="block text-charcoal font-semibold mb-2"
                 >
-                  Message <span className="text-luxury-gold">*</span>
+                  Message <span className="text-red-600">*</span>
                 </label>
                 <textarea
                   id="message"
@@ -220,7 +210,7 @@ export default function ContactPage() {
                   rows={6}
                   value={formData.message}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg text-pure-white placeholder-neutral-gray focus:outline-none focus:border-luxury-gold transition-all duration-400 resize-none"
+                  className="w-full px-4 py-3 bg-ivory border-2 border-taupe rounded-lg text-charcoal placeholder-stone focus:outline-none focus:border-charcoal transition-all duration-400 resize-none font-serif"
                   placeholder="Please provide details about your inquiry..."
                 />
               </div>
@@ -230,7 +220,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-luxury-gold text-primary-black font-semibold py-4 px-6 rounded-lg hover:bg-accent-gold-light hover:shadow-lg hover:shadow-luxury-gold/50 transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] flex items-center justify-center"
+                  className="w-full bg-ivory border-2 border-charcoal text-charcoal font-semibold py-4 px-6 rounded-lg hover:bg-charcoal hover:text-ivory transition-all duration-400 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] flex items-center justify-center uppercase tracking-wide"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
@@ -267,19 +257,19 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Info Grid Section */}
-      <section className="py-16 md:py-24 bg-secondary-charcoal/50">
+      <section className="py-16 md:py-24 bg-taupe">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <div
               ref={infoGridRef}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 opacity-0 translate-y-4 transition-all duration-700 ease-out"
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 opacity-0 translate-y-4 transition-all duration-700 ease-out"
             >
               {/* Email */}
-              <div className="bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg p-6 hover:border-luxury-gold/60 transition-all duration-400">
+              <div className="bg-ivory border-2 border-taupe rounded-lg p-6 hover:border-charcoal transition-all duration-400" style={{ boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)' }}>
                 <div className="flex flex-col items-center text-center">
-                  <div className="mb-4 p-3 rounded-full border-2 border-luxury-gold/50 bg-luxury-gold/5">
+                  <div className="mb-4 p-3 rounded-full border-2 border-stone bg-taupe">
                     <svg
-                      className="w-8 h-8 text-luxury-gold"
+                      className="w-8 h-8 text-charcoal"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -292,57 +282,24 @@ export default function ContactPage() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-heading font-semibold text-accent-gold-light mb-2">
+                  <h3 className="text-heading font-semibold text-charcoal mb-2">
                     Email
                   </h3>
                   <a
                     href="mailto:info@vicipeptides.com"
-                    className="text-pure-white hover:text-luxury-gold transition-colors duration-400"
+                    className="text-charcoal hover:text-charcoal/80 transition-colors duration-400"
                   >
                     info@vicipeptides.com
                   </a>
                 </div>
               </div>
 
-              {/* Business Address */}
-              <div className="bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg p-6 hover:border-luxury-gold/60 transition-all duration-400">
-                <div className="flex flex-col items-center text-center">
-                  <div className="mb-4 p-3 rounded-full border-2 border-luxury-gold/50 bg-luxury-gold/5">
-                    <svg
-                      className="w-8 h-8 text-luxury-gold"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="text-heading font-semibold text-accent-gold-light mb-2">
-                    Business Address
-                  </h3>
-                  <p className="text-pure-white text-sm">
-                    Address details to be updated
-                  </p>
-                </div>
-              </div>
-
               {/* Operating Hours */}
-              <div className="bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg p-6 hover:border-luxury-gold/60 transition-all duration-400">
+              <div className="bg-ivory border-2 border-taupe rounded-lg p-6 hover:border-charcoal transition-all duration-400" style={{ boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)' }}>
                 <div className="flex flex-col items-center text-center">
-                  <div className="mb-4 p-3 rounded-full border-2 border-luxury-gold/50 bg-luxury-gold/5">
+                  <div className="mb-4 p-3 rounded-full border-2 border-stone bg-taupe">
                     <svg
-                      className="w-8 h-8 text-luxury-gold"
+                      className="w-8 h-8 text-charcoal"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -355,62 +312,12 @@ export default function ContactPage() {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-heading font-semibold text-accent-gold-light mb-2">
+                  <h3 className="text-heading font-semibold text-charcoal mb-2">
                     Operating Hours
                   </h3>
-                  <p className="text-pure-white text-sm">
+                  <p className="text-charcoal text-sm">
                     24 Hours / 24/7
                   </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Map Container Placeholder */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div
-              ref={mapRef}
-              className="opacity-0 translate-y-4 transition-all duration-700 ease-out"
-            >
-              <h2 className="text-heading text-3xl font-bold text-accent-gold-light mb-6 text-center">
-                Find Us
-              </h2>
-              <div className="bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg overflow-hidden">
-                <div className="aspect-video bg-gradient-to-br from-primary-black to-secondary-charcoal flex items-center justify-center relative">
-                  {/* Placeholder for Google Maps integration */}
-                  <div className="text-center z-10">
-                    <div className="mb-4 p-4 rounded-full border-2 border-luxury-gold/50 bg-luxury-gold/5 inline-block">
-                      <svg
-                        className="w-12 h-12 text-luxury-gold"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                        />
-                      </svg>
-                    </div>
-                    <p className="text-pure-white text-lg font-semibold mb-2">
-                      Map Integration Coming Soon
-                    </p>
-                    <p className="text-neutral-gray text-sm">
-                      Google Maps will be integrated here
-                    </p>
-                  </div>
-                  {/* Subtle pattern overlay */}
-                  <div className="absolute inset-0 opacity-5">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.1) 10px, rgba(212, 175, 55, 0.1) 20px)`,
-                    }}></div>
-                  </div>
                 </div>
               </div>
             </div>

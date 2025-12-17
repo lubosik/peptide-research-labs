@@ -89,34 +89,28 @@ export default function BlogPage() {
   };
 
   return (
-    <div className="bg-primary-black min-h-screen">
+    <div className="bg-ivory min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-primary-black via-secondary-charcoal to-primary-black py-20 md:py-30">
-        {/* Subtle gold particle glow effect */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-luxury-gold/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-gold-light/5 rounded-full blur-3xl"></div>
-        </div>
-
+      <section className="relative bg-ivory py-20 md:py-30">
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {/* Breadcrumb Navigation */}
             <nav className="mb-6 text-sm">
-              <ol className="flex items-center justify-center space-x-2 text-neutral-gray">
+              <ol className="flex items-center justify-center space-x-2 text-stone">
                 <li>
-                  <Link href="/" className="hover:text-luxury-gold transition-colors">
+                  <Link href="/" className="hover:text-charcoal transition-colors">
                     Home
                   </Link>
                 </li>
                 <li>/</li>
-                <li className="text-pure-white font-medium">Blog</li>
+                <li className="text-charcoal font-medium">Blog</li>
               </ol>
             </nav>
 
-            <h1 className="text-heading text-4xl md:text-5xl font-bold text-accent-gold-light mb-6">
+            <h1 className="text-heading text-4xl md:text-5xl font-bold text-charcoal mb-6">
               Research Articles & Peptide Insights
             </h1>
-            <p className="text-lg md:text-xl text-pure-white text-neutral-gray max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-charcoal max-w-3xl mx-auto">
               Explore our continuously updated database of laboratory research overviews and analytical summaries.
             </p>
           </div>
@@ -124,19 +118,19 @@ export default function BlogPage() {
       </section>
 
       {/* Filter Bar */}
-      <section className="bg-primary-black border-b border-luxury-gold/10 py-6">
+      <section className="bg-ivory border-b border-taupe py-6">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <label htmlFor="categoryFilter" className="text-sm font-semibold text-pure-white">
+                <label htmlFor="categoryFilter" className="text-sm font-semibold text-charcoal">
                   Filter by Topic:
                 </label>
                 <select
                   id="categoryFilter"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="bg-secondary-charcoal border border-luxury-gold/30 text-pure-white rounded-lg px-4 py-2 focus:outline-none focus:border-luxury-gold transition-all duration-400"
+                  className="bg-ivory border border-taupe text-charcoal rounded-lg px-4 py-2 focus:outline-none focus:border-charcoal transition-all duration-400 font-serif"
                 >
                   <option value="All Articles">All Articles</option>
                   {categories.map((category) => (
@@ -146,7 +140,7 @@ export default function BlogPage() {
                   ))}
                 </select>
               </div>
-              <p className="text-sm text-neutral-gray">
+              <p className="text-sm text-stone">
                 {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'}
               </p>
             </div>
@@ -155,15 +149,15 @@ export default function BlogPage() {
       </section>
 
       {/* Articles Grid with Sidebar */}
-      <section className="py-12 md:py-16 bg-primary-black">
+      <section className="py-12 md:py-16 bg-ivory">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             {/* Results Count */}
             <div className="mb-8 flex items-center justify-between">
-              <p className="text-sm text-neutral-gray">
+              <p className="text-sm text-stone">
                 {filteredArticles.length} {filteredArticles.length === 1 ? 'article' : 'articles'}
                 {selectedCategory !== 'All Articles' && (
-                  <span className="ml-2 text-luxury-gold">in {selectedCategory}</span>
+                  <span className="ml-2 text-charcoal">in {selectedCategory}</span>
                 )}
               </p>
             </div>
@@ -181,17 +175,20 @@ export default function BlogPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="bg-secondary-charcoal rounded-lg border-2 border-luxury-gold/20 overflow-hidden flex flex-col hover:border-luxury-gold/60 hover:shadow-lg hover:shadow-luxury-gold/30 transition-all duration-400"
+                    className="bg-ivory rounded-lg border border-taupe overflow-hidden flex flex-col hover:border-charcoal hover:shadow-md transition-all duration-400"
+                    style={{
+                      boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)',
+                    }}
                   >
                     {/* Thumbnail Image */}
                     <Link href={`/blog/${article.slug}`} className="block">
-                      <div className="relative w-full h-48 overflow-hidden">
+                      <div className="relative w-full h-48 overflow-hidden bg-taupe">
                         <ArticleImage
                           slug={article.slug}
                           articleType={(article as any).relatedProductSlug ? 'peptide' : 'article'}
                           peptideName={(article as any).relatedProductSlug ? article.title.replace('Research Overview: ', '') : undefined}
                           type="thumbnail"
-                          className="w-full h-full"
+                          className="w-full h-full object-cover"
                           alt={article.title}
                         />
                       </div>
@@ -199,15 +196,15 @@ export default function BlogPage() {
 
                     {/* Content */}
                     <div className="p-6 flex-grow flex flex-col">
-                      {/* Title - Gold text */}
+                      {/* Title - Charcoal text */}
                       <Link href={`/blog/${article.slug}`}>
-                        <h2 className="text-heading text-xl font-bold text-accent-gold-light mb-3 hover:text-luxury-gold transition-colors line-clamp-2">
+                        <h2 className="text-heading text-xl font-bold text-charcoal mb-3 hover:text-charcoal/80 transition-colors line-clamp-2">
                           {article.title}
                         </h2>
                       </Link>
 
                       {/* Excerpt */}
-                      <p className="text-pure-white text-sm mb-4 line-clamp-3 leading-relaxed">
+                      <p className="text-charcoal text-sm mb-4 line-clamp-3 leading-relaxed">
                         {article.description || article.subheadline}
                       </p>
 
@@ -215,14 +212,14 @@ export default function BlogPage() {
                       <div className="mt-auto pt-4">
                         <Link
                           href={`/blog/${article.slug}`}
-                          className="inline-block w-full bg-transparent border-2 border-luxury-gold/50 text-luxury-gold text-center py-3 px-4 rounded-lg font-semibold hover:bg-luxury-gold/10 hover:border-luxury-gold transition-all duration-400 text-sm min-h-[44px] flex items-center justify-center"
+                          className="inline-block w-full bg-ivory border-2 border-charcoal text-charcoal text-center py-3 px-4 rounded-lg font-semibold hover:bg-charcoal hover:text-ivory transition-all duration-400 text-sm min-h-[44px] flex items-center justify-center uppercase tracking-wide"
                         >
                           Read Article
                         </Link>
                       </div>
 
                       {/* Meta Info */}
-                      <div className="flex items-center justify-between text-xs text-neutral-gray mt-4 pt-4 border-t border-luxury-gold/10">
+                      <div className="flex items-center justify-between text-xs text-stone mt-4 pt-4 border-t border-taupe">
                         <span>{article.category}</span>
                         <span>{article.readTime}</span>
                       </div>
@@ -238,7 +235,7 @@ export default function BlogPage() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 bg-secondary-charcoal border border-luxury-gold/30 text-pure-white rounded-lg hover:bg-luxury-gold/10 hover:border-luxury-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-400"
+                  className="px-4 py-2 bg-ivory border border-taupe text-charcoal rounded-lg hover:bg-taupe hover:border-charcoal disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-400 font-serif"
                 >
                   Previous
                 </button>
@@ -255,17 +252,17 @@ export default function BlogPage() {
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className={`px-4 py-2 rounded-lg transition-all duration-400 min-w-[44px] ${
+                          className={`px-4 py-2 rounded-lg transition-all duration-400 min-w-[44px] font-serif ${
                             currentPage === page
-                              ? 'bg-luxury-gold text-primary-black font-semibold'
-                              : 'bg-secondary-charcoal border border-luxury-gold/30 text-pure-white hover:bg-luxury-gold/10 hover:border-luxury-gold'
+                              ? 'bg-charcoal text-ivory font-semibold'
+                              : 'bg-ivory border border-taupe text-charcoal hover:bg-taupe hover:border-charcoal'
                           }`}
                         >
                           {page}
                         </button>
                       );
                     } else if (page === currentPage - 2 || page === currentPage + 2) {
-                      return <span key={page} className="text-neutral-gray">...</span>;
+                      return <span key={page} className="text-stone">...</span>;
                     }
                     return null;
                   })}
@@ -274,7 +271,7 @@ export default function BlogPage() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 bg-secondary-charcoal border border-luxury-gold/30 text-pure-white rounded-lg hover:bg-luxury-gold/10 hover:border-luxury-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-400"
+                  className="px-4 py-2 bg-ivory border border-taupe text-charcoal rounded-lg hover:bg-taupe hover:border-charcoal disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-400 font-serif"
                 >
                   Next
                 </button>

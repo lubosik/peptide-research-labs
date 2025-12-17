@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Montserrat:wght@600;700&display=swap');
 @import 'swiper/css';
 @import 'swiper/css/navigation';
 @import 'swiper/css/pagination';
@@ -8,8 +7,11 @@
 @tailwind utilities;
 
 :root {
-  --font-lato: 'Lato', sans-serif;
-  --font-montserrat: 'Montserrat', sans-serif;
+  --font-serif: 'Times New Roman', 'Times', serif;
+  --color-ivory: #F6F1EB;
+  --color-charcoal: #2B2B2B;
+  --color-stone: #CFC7BC;
+  --color-taupe: #E6DED4;
 }
 
 * {
@@ -22,15 +24,17 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: var(--font-lato);
-  color: #FFFFFF;
-  background-color: #000000; /* primary-black - luxury dark theme */
+  font-family: 'Times New Roman', 'Times', serif;
+  color: #2B2B2B; /* charcoal - primary text */
+  background-color: #F6F1EB; /* ivory - primary background */
 }
 
 body {
-  line-height: 1.6;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -42,30 +46,55 @@ a {
 @layer base {
   /* Header styles - critical */
   header {
-    background-color: #000000; /* primary-black */
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2); /* luxury-gold with opacity */
+    background-color: #F6F1EB; /* ivory */
+    border-bottom: 1px solid #E6DED4; /* taupe divider */
   }
   
   /* Hero section - critical */
   .hero-section {
-    background: linear-gradient(to bottom, #000000, #1A1A1A); /* primary-black to secondary-charcoal */
+    background: #F6F1EB; /* ivory */
   }
   
   /* Global text colors */
   h1, h2, h3, h4, h5, h6 {
-    color: #F5D67B; /* accent-gold-light for headers */
+    color: #2B2B2B; /* charcoal for headers */
+    font-family: 'Times New Roman', 'Times', serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
   
-  p, span, div {
-    color: #FFFFFF; /* pure-white for body text */
+  h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    line-height: 1.3;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+  
+  p, span, div, a {
+    color: #2B2B2B; /* charcoal for body text */
+    font-family: 'Times New Roman', 'Times', serif;
+  }
+  
+  p {
+    line-height: 1.7;
+    margin-bottom: 1em;
   }
 }
 
 /* Custom utility classes */
 @layer utilities {
   .text-heading {
-    font-family: var(--font-montserrat);
-    font-weight: 600;
+    font-family: 'Times New Roman', 'Times', serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
   
   .hover-primary {
@@ -73,33 +102,29 @@ a {
   }
   
   .hover-primary:hover {
-    color: #F5D67B; /* accent-gold-light */
+    color: #2B2B2B; /* charcoal */
+    opacity: 0.8;
   }
   
-  /* Subtle gold halo effect for interactive elements */
+  /* Subtle shadow effect for interactive elements */
   .glow-on-hover {
     @apply transition-all duration-400;
   }
   
   .glow-on-hover:hover {
-    box-shadow: 0 0 10px rgba(245, 214, 123, 0.25);
+    box-shadow: 0 4px 12px rgba(43, 43, 43, 0.15);
   }
   
-  /* Subtle gold halo utility - removed aggressive glow */
-  .hover-glow {
-    /* Removed - use inline styles with subtle halos instead */
-  }
-  
-  /* Background gradient animation - black to charcoal */
+  /* Background gradient - ivory to taupe */
   .gradient-animated {
-    background: linear-gradient(-45deg, #000000, #1A1A1A, #000000, #0D0D0D);
+    background: linear-gradient(-45deg, #F6F1EB, #E6DED4, #F6F1EB, #CFC7BC);
     background-size: 400% 400%;
     animation: gradientShift 8s ease infinite;
   }
   
   /* Primary background gradient */
   .bg-primary-gradient {
-    background: linear-gradient(to bottom, #000000, #1A1A1A);
+    background: linear-gradient(to bottom, #F6F1EB, #E6DED4);
   }
   
   /* Performance optimizations */
@@ -123,21 +148,21 @@ a {
 @layer components {
   .product-carousel .swiper-button-next,
   .product-carousel .swiper-button-prev {
-    color: #D4AF37; /* luxury-gold */
-    background: rgba(26, 26, 26, 0.8);
+    color: #2B2B2B; /* charcoal */
+    background: rgba(246, 241, 235, 0.9); /* ivory with opacity */
     backdrop-filter: blur(10px);
     width: 44px;
     height: 44px;
     border-radius: 50%;
     transition: all 0.3s;
-    border: 1px solid rgba(212, 175, 55, 0.3);
+    border: 1px solid #E6DED4; /* taupe */
   }
   
   .product-carousel .swiper-button-next:hover,
   .product-carousel .swiper-button-prev:hover {
-    background: rgba(212, 175, 55, 0.2);
-    filter: drop-shadow(0 0 10px rgba(245, 214, 123, 0.5));
-    border-color: rgba(245, 214, 123, 0.6);
+    background: rgba(230, 222, 212, 0.8); /* taupe */
+    box-shadow: 0 2px 8px rgba(43, 43, 43, 0.15);
+    border-color: #CFC7BC; /* stone */
   }
   
   .product-carousel .swiper-button-next::after,
@@ -147,13 +172,13 @@ a {
   }
   
   .product-carousel .swiper-pagination-bullet {
-    background: #D4AF37; /* luxury-gold */
+    background: #CFC7BC; /* stone */
     opacity: 0.5;
   }
   
   .product-carousel .swiper-pagination-bullet-active {
     opacity: 1;
-    background: #F5D67B; /* accent-gold-light */
+    background: #2B2B2B; /* charcoal */
   }
 }
 
@@ -170,7 +195,7 @@ a {
   
   .gradient-animated {
     animation: none !important;
-    background: #000000 !important;
+    background: #F6F1EB !important; /* ivory */
   }
   
   .animate-scroll-left {

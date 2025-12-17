@@ -20,11 +20,11 @@ export function getArticleImage(
   articleType: 'peptide' | 'article' = 'article',
   peptideName?: string
 ): ArticleImage {
-  // Use the Vici Research Cover image for all articles
+  // Use the Vici Peptides New Article Image for all articles
   return {
-    thumbnail: '/images/vici-research-cover.png',
-    headerImage: '/images/vici-research-cover.png',
-    source: 'vici-cover',
+    thumbnail: '/images/vici-article-image.png',
+    headerImage: '/images/vici-article-image.png',
+    source: 'vici-article',
     alt: peptideName ? `${peptideName} Research Article` : 'Vici Peptides Research Article',
   };
 }
@@ -37,8 +37,8 @@ function getPlaceholderImage(
   peptideName?: string,
   type: 'thumbnail' | 'header' = 'thumbnail'
 ): string {
-  // Use the Vici Research Cover image for all articles
-  return '/images/vici-research-cover.png';
+  // Use the Vici Peptides New Article Image for all articles
+  return '/images/vici-article-image.png';
 }
 
 /**

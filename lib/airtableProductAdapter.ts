@@ -5,12 +5,38 @@ import { Product, ProductVariant } from '@/data/products';
  * Convert Airtable products to the application's Product interface
  * Groups variants by product slug
  */
+/**
+ * Generate a slug from product name if needed
+ */
+function generateSlugFromName(productName: string): string {
+  if (!productName) return '';
+  
+  // Extract base name (remove variant info in parentheses)
+  let baseName = productName.split('(')[0].trim();
+  
+  // Convert to lowercase and replace spaces/special chars with hyphens
+  const slug = baseName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  
+  return slug;
+}
+
 export function convertAirtableToProducts(airtableProducts: AirtableProduct[]): Product[] {
-  // Group products by slug
+  // Group products by slug (generate slug if missing)
   const productMap = new Map<string, AirtableProduct[]>();
   
   airtableProducts.forEach((airtableProduct) => {
-    const slug = airtableProduct.productSlug;
+    // Use existing slug or generate from product name
+    const slug = airtableProduct.productSlug || generateSlugFromName(airtableProduct.productName);
+    
+    // Ensure slug is not empty
+    if (!slug) {
+      console.warn(`[Product Adapter] Skipping product with no slug: ${airtableProduct.productName}`);
+      return;
+    }
+    
     if (!productMap.has(slug)) {
       productMap.set(slug, []);
     }
@@ -37,9 +63,12 @@ export function convertAirtableToProducts(airtableProducts: AirtableProduct[]): 
     const hasVariants = variants.length > 1 || (variants.length === 1 && variants[0].variantStrength !== 'N/A' && variants[0].variantStrength !== '');
 
     // Build product object
+    // Use generated slug if Product_Slug was empty
+    const productSlug = firstVariant.productSlug || generateSlugFromName(firstVariant.productName);
+    
     const product: Product = {
-      id: firstVariant.productSlug,
-      slug: firstVariant.productSlug,
+      id: productSlug,
+      slug: productSlug,
       name: firstVariant.productName,
       description: firstVariant.fullDescription || firstVariant.shortDescription,
       shortDescription: firstVariant.shortDescription,
@@ -84,9 +113,12 @@ export function convertAirtableToProducts(airtableProducts: AirtableProduct[]): 
  * Convert single Airtable product to Product interface
  */
 export function convertAirtableToProduct(airtableProduct: AirtableProduct): Product {
+  // Generate slug if missing
+  const productSlug = airtableProduct.productSlug || generateSlugFromName(airtableProduct.productName);
+  
   const product: Product = {
-    id: airtableProduct.productSlug,
-    slug: airtableProduct.productSlug,
+    id: productSlug,
+    slug: productSlug,
     name: airtableProduct.productName,
     description: airtableProduct.fullDescription || airtableProduct.shortDescription,
     shortDescription: airtableProduct.shortDescription,

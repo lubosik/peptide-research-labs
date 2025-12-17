@@ -10,17 +10,17 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default function ShippingPage() {
   return (
-    <div className="bg-neutral-light min-h-screen py-12 md:py-16">
+    <div className="bg-ivory min-h-screen py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-heading text-4xl font-bold text-accent-gray mb-8">
+          <h1 className="text-heading text-4xl font-bold text-charcoal mb-8">
             Shipping Policy
           </h1>
 
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 md:p-12 space-y-8">
+          <div className="bg-ivory rounded-lg border border-taupe shadow-md p-8 md:p-12 space-y-8" style={{ boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)' }}>
             {/* Introduction */}
             <section>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 This Shipping Policy outlines how we ship products, shipping methods, delivery times,
                 and our return policy. Please read carefully before placing an order.
               </p>
@@ -28,14 +28,14 @@ export default function ShippingPage() {
 
             {/* RUO Labeling */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Research Use Only (RUO) Labeling
               </h2>
-              <div className="p-6 bg-red-50 border-l-4 border-red-500 rounded">
-                <p className="text-text-gray leading-relaxed font-semibold mb-2">
+              <div className="p-6 bg-red-50 border-l-4 border-red-200 rounded">
+                <p className="text-charcoal leading-relaxed font-semibold mb-2">
                   All products are shipped with Research Use Only (RUO) labeling.
                 </p>
-                <p className="text-text-gray leading-relaxed">
+                <p className="text-charcoal leading-relaxed">
                   Every shipment includes clear labeling stating that products are "For Laboratory Research
                   Purposes Only" and "Not for Human or Veterinary Use." All packaging and documentation
                   will reflect the research-only classification of these materials.
@@ -50,15 +50,15 @@ export default function ShippingPage() {
 
             {/* Shipping Methods */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Shipping Methods
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-heading text-lg font-semibold text-accent-gray mb-2">
+                  <h3 className="text-heading text-lg font-semibold text-charcoal mb-2">
                     Domestic Shipping (United States)
                   </h3>
-                  <ul className="list-disc list-inside space-y-1 text-text-gray ml-4">
+                  <ul className="list-disc list-inside space-y-1 text-charcoal ml-4">
                     <li>
                       <strong>Standard Shipping:</strong> 3-5 business days via FedEx Ground or USPS
                       Priority
@@ -74,19 +74,19 @@ export default function ShippingPage() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-heading text-lg font-semibold text-accent-gray mb-2">
+                  <h3 className="text-heading text-lg font-semibold text-charcoal mb-2">
                     International Shipping
                   </h3>
                   <p className="text-text-gray leading-relaxed mb-2">
                     International shipping is available to select countries. Shipping times vary by
                     destination:
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-text-gray ml-4">
+                  <ul className="list-disc list-inside space-y-1 text-charcoal ml-4">
                     <li>Canada: 5-10 business days</li>
                     <li>Europe: 7-14 business days</li>
                     <li>Other countries: 10-21 business days</li>
                   </ul>
-                  <p className="text-text-gray leading-relaxed mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded">
+                  <p className="text-charcoal leading-relaxed mt-4 p-4 bg-taupe border-l-4 border-stone rounded">
                     <strong>Important:</strong> International customers are responsible for ensuring
                     compliance with their local import and research laws. Some countries may have
                     restrictions on importing research peptides. Please check your local regulations
@@ -98,13 +98,13 @@ export default function ShippingPage() {
 
             {/* Packaging and Storage */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Packaging and Storage
               </h2>
               <p className="text-text-gray leading-relaxed mb-4">
                 Peptides are shipped in appropriate packaging to maintain stability:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-text-gray ml-4">
+              <ul className="list-disc list-inside space-y-2 text-charcoal ml-4">
                 <li>
                   Products are typically shipped freeze-dried (lyophilized) in sealed vials
                 </li>
@@ -118,7 +118,7 @@ export default function ShippingPage() {
                   Products are labeled with storage requirements (e.g., -20°C, refrigerated)
                 </li>
               </ul>
-              <p className="text-text-gray leading-relaxed mt-4 p-4 bg-gray-50 border-l-4 border-gray-500 rounded">
+              <p className="text-charcoal leading-relaxed mt-4 p-4 bg-taupe border-l-4 border-stone rounded">
                 <strong>Storage Note:</strong> Upon receiving your order, store products according to the
                 provided storage requirements. For laboratory storage conditions only. Improper storage
                 may affect product stability and research results.
@@ -127,10 +127,10 @@ export default function ShippingPage() {
 
             {/* Delivery Times */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Delivery Times
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 Delivery times are estimates and begin after your order is processed and shipped. Processing
                 typically takes 1-2 business days. Delivery may be delayed due to:
               </p>
@@ -144,14 +144,14 @@ export default function ShippingPage() {
 
             {/* Tracking */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Order Tracking
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 Once your order ships, you will receive a tracking number via email. You can use this
                 number to track your shipment through the carrier's website. If you have questions about
                 your shipment, please contact us through our{' '}
-                <Link href="/contact" className="text-primary hover:text-primary-dark">
+                <Link href="/contact" className="text-charcoal hover:text-charcoal/80 underline underline-offset-2">
                   contact page
                 </Link>
                 .
@@ -160,24 +160,24 @@ export default function ShippingPage() {
 
             {/* Returns and Refunds */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Returns and Refunds
               </h2>
-              <div className="p-6 bg-orange-50 border-l-4 border-orange-500 rounded">
-                <p className="text-text-gray leading-relaxed font-semibold mb-4">
+              <div className="p-6 bg-taupe border-l-4 border-stone rounded">
+                <p className="text-charcoal leading-relaxed font-semibold mb-4">
                   Returns are limited due to the nature of research materials.
                 </p>
                 <div className="space-y-3">
                   <div>
-                    <h3 className="font-semibold text-accent-gray mb-2">No Returns on Opened Products</h3>
-                    <p className="text-text-gray leading-relaxed">
+                    <h3 className="font-semibold text-charcoal mb-2">No Returns on Opened Products</h3>
+                    <p className="text-charcoal leading-relaxed">
                       We cannot accept returns on opened products or products that have been used,
                       as this compromises product integrity and safety.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-accent-gray mb-2">Defective Products</h3>
-                    <p className="text-text-gray leading-relaxed">
+                    <h3 className="font-semibold text-charcoal mb-2">Defective Products</h3>
+                    <p className="text-charcoal leading-relaxed">
                       If you receive a defective product, please contact us within 3 business days of
                       delivery. We will require written notice and may request photos or documentation.
                       If the defect is confirmed, we will replace the product at no additional cost.
@@ -185,15 +185,15 @@ export default function ShippingPage() {
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-accent-gray mb-2">Unopened Products</h3>
-                    <p className="text-text-gray leading-relaxed">
+                    <h3 className="font-semibold text-charcoal mb-2">Unopened Products</h3>
+                    <p className="text-charcoal leading-relaxed">
                       Unopened products in original packaging may be eligible for return within 14 days
                       of delivery, subject to a restocking fee. Contact us before returning any product.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-accent-gray mb-2">Return Shipping</h3>
-                    <p className="text-text-gray leading-relaxed">
+                    <h3 className="font-semibold text-charcoal mb-2">Return Shipping</h3>
+                    <p className="text-charcoal leading-relaxed">
                       All return shipping costs are the responsibility of the customer, unless the return
                       is due to our error or a defective product.
                     </p>
@@ -204,10 +204,10 @@ export default function ShippingPage() {
 
             {/* Lost or Damaged Packages */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Lost or Damaged Packages
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 If your package is lost or damaged during shipping, please contact us immediately. We will
                 work with the shipping carrier to resolve the issue. In most cases, we will replace lost
                 or damaged items at no additional cost to you.
@@ -216,12 +216,12 @@ export default function ShippingPage() {
 
             {/* Contact */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Questions About Shipping
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 If you have questions about shipping, delivery, or returns, please contact us through our{' '}
-                <Link href="/contact" className="text-primary hover:text-primary-dark">
+                <Link href="/contact" className="text-charcoal hover:text-charcoal/80 underline underline-offset-2">
                   contact page
                 </Link>
                 .
@@ -229,8 +229,8 @@ export default function ShippingPage() {
             </section>
 
             {/* Last Updated */}
-            <section className="pt-8 border-t border-gray-200">
-              <p className="text-sm text-text-gray">Last updated: December 2025</p>
+            <section className="pt-8 border-t border-taupe">
+              <p className="text-sm text-stone">Last updated: December 2025</p>
             </section>
           </div>
         </div>

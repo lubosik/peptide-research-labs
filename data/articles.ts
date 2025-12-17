@@ -35,8 +35,8 @@ export const articles: Article[] = [
     thumbnail: '/images/blog/peptide-structure-thumb.jpg',
     headerImage: '/images/blog/peptide-structure-header.jpg',
     category: 'Research Basics',
-    author: 'Dr. Sarah Chen',
-    publishedDate: '2025-12-01',
+    author: 'Vici Peptides',
+    publishedDate: '2025-12-17',
     readTime: '8 min read',
     content: [
       'Peptides are short chains of amino acids connected by peptide bonds, forming the building blocks of proteins and playing crucial roles in biological systems. In laboratory research, synthetic peptides serve as valuable tools for investigating cellular mechanisms, signaling pathways, and experimental applications.',
@@ -67,8 +67,8 @@ export const articles: Article[] = [
     thumbnail: '/images/blog/growth-hormone-thumb.jpg',
     headerImage: '/images/blog/growth-hormone-header.jpg',
     category: 'Research Applications',
-    author: 'Dr. Michael Rodriguez',
-    publishedDate: '2025-11-28',
+    author: 'Vici Peptides',
+    publishedDate: '2025-12-17',
     readTime: '10 min read',
     content: [
       'Growth hormone-releasing peptides (GHRPs) are synthetic compounds studied in laboratory research for their potential role in growth hormone secretion mechanisms. These peptides interact with specific receptors in experimental models to investigate hormone release patterns and metabolic processes.',
@@ -98,8 +98,8 @@ export const articles: Article[] = [
     thumbnail: '/images/blog/quality-control-thumb.jpg',
     headerImage: '/images/blog/quality-control-header.jpg',
     category: 'Quality Assurance',
-    author: 'Dr. Emily Watson',
-    publishedDate: '2025-11-25',
+    author: 'Vici Peptides',
+    publishedDate: '2025-12-17',
     readTime: '7 min read',
     content: [
       'Quality control is essential in peptide research to ensure that experimental materials meet the purity and identity standards required for reliable scientific investigations. Researchers depend on rigorous analytical testing to verify the quality of peptides used in laboratory studies.',

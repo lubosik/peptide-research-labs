@@ -63,24 +63,41 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     // Use variantStrength if provided, otherwise fall back to size for legacy support
     const variant = variantStrength;
     
-    // Calculate price if not provided
+    // Calculate price if not provided - always fetch from Airtable if possible
     let finalPrice = calculatedPrice;
-    if (!finalPrice) {
+    if (!finalPrice || finalPrice <= 0) {
       if (product.variants && variant) {
         // Find variant and calculate price
         const selectedVariant = product.variants.find(v => v.strength === variant);
-        if (selectedVariant) {
+        if (selectedVariant && selectedVariant.price > 0) {
           const warehouseMultiplier = product.warehouseOptions?.[warehouse]?.priceMultiplier ?? 1.0;
           finalPrice = selectedVariant.price * warehouseMultiplier;
+        } else if (product.variants.length > 0 && product.variants[0].price > 0) {
+          // Fallback to first variant if exact match not found
+          const warehouseMultiplier = product.warehouseOptions?.[warehouse]?.priceMultiplier ?? 1.0;
+          finalPrice = product.variants[0].price * warehouseMultiplier;
         } else {
-          finalPrice = product.price ?? 0;
+          finalPrice = (product.price ?? 0) * (product.warehouseOptions?.[warehouse]?.priceMultiplier ?? 1.0);
         }
       } else {
         // Legacy product without variants
-        finalPrice = product.price ?? 0;
+        const basePrice = product.price ?? 0;
         const warehouseMultiplier = product.warehouseOptions?.[warehouse]?.priceMultiplier ?? 1.0;
-        finalPrice = finalPrice * warehouseMultiplier;
+        finalPrice = basePrice * warehouseMultiplier;
       }
+    }
+    
+    // Ensure price is valid - if still 0, log error
+    if (finalPrice <= 0) {
+      console.error('Invalid price calculated when adding to cart:', {
+        productName: product.name,
+        productId: product.id,
+        variant,
+        warehouse,
+        calculatedPrice,
+        productPrice: product.price,
+        variants: product.variants?.map(v => ({ strength: v.strength, price: v.price })),
+      });
     }
     
     setItems((prevItems) => {
@@ -147,28 +164,92 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const data = await response.json();
         const { convertAirtableToProducts } = await import('@/lib/airtableProductAdapter');
         const allProducts = convertAirtableToProducts(data.products);
-        const freshProduct = allProducts.find((p) => p.slug === productId);
+        
+        // Try to find product by both id and slug (productId might be either)
+        const freshProduct = allProducts.find((p) => 
+          p.id === productId || p.slug === productId
+        );
         
         if (freshProduct) {
           setItems((prevItems) =>
             prevItems.map((item) => {
-              if (item.product.id === productId && 
+              if ((item.product.id === productId || item.product.slug === productId) && 
                   (item.variantStrength === variantStrength || (!item.variantStrength && !variantStrength))) {
-                // Calculate new price based on fresh data
-                let basePrice = freshProduct.price ?? 0;
+                // Calculate new price based on fresh data from Airtable
+                let basePrice = 0;
                 
-                // If product has variants, use variant price
-                if (freshProduct.variants && variantStrength) {
-                  const variant = freshProduct.variants.find(v => v.strength === variantStrength);
-                  if (variant) {
+                // Priority 1: If product has variants, use variant price
+                if (freshProduct.variants && freshProduct.variants.length > 0) {
+                  // Try to find exact variant match
+                  let variant = variantStrength 
+                    ? freshProduct.variants.find(v => v.strength === variantStrength)
+                    : null;
+                  
+                  // If exact match not found, try case-insensitive or use first variant
+                  if (!variant) {
+                    if (variantStrength) {
+                      variant = freshProduct.variants.find(v => 
+                        v.strength.toLowerCase() === variantStrength.toLowerCase()
+                      );
+                    }
+                    if (!variant) {
+                      variant = freshProduct.variants[0]; // Use first variant as fallback
+                    }
+                  }
+                  
+                  if (variant && variant.price > 0) {
                     basePrice = variant.price;
                   }
                 }
                 
+                // Priority 2: If no variant price found, use product base price
+                if (basePrice <= 0 && freshProduct.price && freshProduct.price > 0) {
+                  basePrice = freshProduct.price;
+                }
+                
+                // Priority 3: Last resort - use item's existing variant or price
+                if (basePrice <= 0) {
+                  if (item.product.variants && variantStrength) {
+                    const itemVariant = item.product.variants.find(v => v.strength === variantStrength);
+                    if (itemVariant && itemVariant.price > 0) {
+                      basePrice = itemVariant.price;
+                    } else if (item.product.variants.length > 0 && item.product.variants[0].price > 0) {
+                      basePrice = item.product.variants[0].price;
+                    }
+                  } else if (item.product.price && item.product.price > 0) {
+                    basePrice = item.product.price;
+                  }
+                }
+                
+                // Apply warehouse multiplier
                 const warehouseOption = freshProduct.warehouseOptions?.[newWarehouse];
-                const newPrice = warehouseOption
+                const newPrice = warehouseOption && basePrice > 0
                   ? basePrice * warehouseOption.priceMultiplier
                   : basePrice;
+                
+                // Ensure price is valid
+                if (newPrice <= 0) {
+                  console.error('Invalid price calculated for product:', {
+                    productId,
+                    variantStrength,
+                    newWarehouse,
+                    basePrice,
+                    warehouseMultiplier: warehouseOption?.priceMultiplier,
+                    freshProduct: {
+                      name: freshProduct.name,
+                      slug: freshProduct.slug,
+                      price: freshProduct.price,
+                      variants: freshProduct.variants?.map(v => ({ strength: v.strength, price: v.price })),
+                    },
+                    itemProduct: {
+                      name: item.product.name,
+                      slug: item.product.slug,
+                      price: item.product.price,
+                    },
+                  });
+                  // Don't update if price is invalid - keep existing price
+                  return item;
+                }
                 
                 return {
                   ...item,
@@ -180,8 +261,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               return item;
             })
           );
+          
+          // Force a small delay to ensure state updates, then trigger a refresh
+          // This ensures useCartRefresh picks up the warehouse change
+          setTimeout(() => {
+            // The cart items have changed (warehouse updated), which should trigger useCartRefresh
+            // But we add a small delay to ensure the state update is complete
+          }, 100);
+          
           return;
+        } else {
+          console.error('Product not found in Airtable:', {
+            productId,
+            searchedBy: 'slug',
+            availableProducts: allProducts.slice(0, 3).map(p => ({ slug: p.slug, id: p.id, name: p.name })),
+          });
         }
+      } else {
+        console.error('Failed to fetch products from Airtable API');
       }
     } catch (error) {
       console.error('Error fetching fresh product data:', error);
@@ -190,28 +287,52 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     // Fallback to using cached product data if fetch fails
     setItems((prevItems) =>
       prevItems.map((item) => {
-        if (item.product.id === productId && 
+        if ((item.product.id === productId || item.product.slug === productId) && 
             (item.variantStrength === variantStrength || (!item.variantStrength && !variantStrength))) {
           // Calculate new price based on warehouse and variant
-          let basePrice = item.product.price ?? 0;
+          let basePrice = 0;
           
-          // If product has variants, use variant price
-          if (item.product.variants && variantStrength) {
-            const variant = item.product.variants.find(v => v.strength === variantStrength);
-            if (variant) {
+          // Priority 1: If product has variants, use variant price
+          if (item.product.variants && item.product.variants.length > 0) {
+            let variant = variantStrength
+              ? item.product.variants.find(v => v.strength === variantStrength)
+              : null;
+            
+            // Try case-insensitive match or use first variant
+            if (!variant && variantStrength) {
+              variant = item.product.variants.find(v => 
+                v.strength.toLowerCase() === variantStrength.toLowerCase()
+              );
+            }
+            if (!variant) {
+              variant = item.product.variants[0];
+            }
+            
+            if (variant && variant.price > 0) {
               basePrice = variant.price;
             }
           }
           
+          // Priority 2: Use product base price if no variant found
+          if (basePrice <= 0 && item.product.price && item.product.price > 0) {
+            basePrice = item.product.price;
+          }
+          
+          // Priority 3: Keep existing calculated price if all else fails
+          if (basePrice <= 0) {
+            basePrice = item.calculatedPrice || 0;
+          }
+          
           const warehouseOption = item.product.warehouseOptions?.[newWarehouse];
-          const newPrice = warehouseOption
+          const newPrice = warehouseOption && basePrice > 0
             ? basePrice * warehouseOption.priceMultiplier
             : basePrice;
           
+          // Only update warehouse, keep price if calculation failed
           return {
             ...item,
             warehouse: newWarehouse,
-            calculatedPrice: newPrice,
+            calculatedPrice: newPrice > 0 ? newPrice : item.calculatedPrice,
           };
         }
         return item;

@@ -127,9 +127,9 @@ export default function SearchBar({
           onFocus={handleInputFocus}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full px-4 py-2 pl-10 pr-10 border border-luxury-gold/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:border-luxury-gold text-pure-white bg-secondary-charcoal placeholder:text-neutral-gray"
+          className="w-full px-4 py-2 pl-10 pr-10 border border-taupe rounded-lg focus:outline-none focus:ring-2 focus:ring-charcoal/20 focus:border-charcoal text-charcoal bg-ivory placeholder:text-stone font-serif"
         />
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-gray">
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-stone">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -142,7 +142,7 @@ export default function SearchBar({
         {isLoading && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
             <svg
-              className="animate-spin h-5 w-5 text-neutral-gray"
+              className="animate-spin h-5 w-5 text-stone"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -167,14 +167,14 @@ export default function SearchBar({
 
       {/* Search Results Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-primary-black border border-luxury-gold/30 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto" style={{ boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5), 0 0 12px rgba(212, 175, 55, 0.2)' }}>
+        <div className="absolute top-full left-0 right-0 mt-2 bg-ivory border border-taupe rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto" style={{ boxShadow: '0 4px 12px rgba(43, 43, 43, 0.15)' }}>
           {results.length > 0 ? (
             <div className="py-2">
               {results.map((result) => (
                 <button
                   key={`${result.type}-${result.id}`}
                   onClick={() => handleResultClick(result)}
-                  className="w-full px-4 py-3 text-left hover:bg-secondary-charcoal transition-colors border-b border-luxury-gold/10 last:border-b-0"
+                  className="w-full px-4 py-3 text-left hover:bg-taupe transition-colors border-b border-taupe last:border-b-0"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
@@ -182,27 +182,27 @@ export default function SearchBar({
                         <span
                           className={`text-xs font-semibold px-2 py-0.5 rounded ${
                             result.type === 'product'
-                              ? 'bg-luxury-gold/20 text-accent-gold-light'
-                              : 'bg-luxury-gold/10 text-accent-gold-light'
+                              ? 'bg-taupe text-charcoal'
+                              : 'bg-taupe text-charcoal'
                           }`}
                         >
                           {result.type === 'product' ? 'Product' : 'Article'}
                         </span>
                         {result.category && (
-                          <span className="text-xs text-neutral-gray truncate">
+                          <span className="text-xs text-stone truncate">
                             {result.category}
                           </span>
                         )}
                         {result.type === 'product' && result.description.includes('Available in:') && (
-                          <span className="text-xs bg-luxury-gold/10 text-accent-gold-light px-2 py-0.5 rounded border border-luxury-gold/30">
+                          <span className="text-xs bg-taupe text-charcoal px-2 py-0.5 rounded border border-stone">
                             Multiple Strengths
                           </span>
                         )}
                       </div>
-                      <h3 className="font-semibold text-accent-gold-light mb-1 truncate">
+                      <h3 className="font-semibold text-charcoal mb-1 truncate">
                         {result.title}
                       </h3>
-                      <p className="text-sm text-pure-white line-clamp-2">
+                      <p className="text-sm text-charcoal line-clamp-2">
                         {result.description}
                       </p>
                     </div>
@@ -210,13 +210,13 @@ export default function SearchBar({
                       <div className="flex-shrink-0 text-right">
                         {result.type === 'product' && result.description.includes('Available in:') ? (
                           <div>
-                            <span className="text-xs text-neutral-gray block">from</span>
-                            <span className="text-lg font-bold text-luxury-gold">
+                            <span className="text-xs text-stone block">from</span>
+                            <span className="text-lg font-bold text-charcoal">
                               ${result.price.toFixed(2)}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-lg font-bold text-luxury-gold">
+                          <span className="text-lg font-bold text-charcoal">
                             ${result.price.toFixed(2)}
                           </span>
                         )}
@@ -227,9 +227,9 @@ export default function SearchBar({
               ))}
             </div>
           ) : (
-            <div className="px-4 py-8 text-center text-pure-white">
+            <div className="px-4 py-8 text-center text-charcoal">
               <p className="text-sm">No results found</p>
-              <p className="text-xs text-neutral-gray mt-1">
+              <p className="text-xs text-stone mt-1">
                 Try different keywords or browse our categories
               </p>
             </div>

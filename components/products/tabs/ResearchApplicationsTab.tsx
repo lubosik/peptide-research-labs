@@ -8,18 +8,18 @@ interface ResearchApplicationsTabProps {
 export default function ResearchApplicationsTab({ product }: ResearchApplicationsTabProps) {
   return (
     <div>
-      <h3 className="text-heading text-2xl font-bold text-white mb-6">
+      <h3 className="text-heading text-2xl font-bold text-charcoal mb-6">
         Research Applications
       </h3>
-      <p className="text-gray-300 leading-relaxed mb-6">
+      <p className="text-charcoal leading-relaxed mb-6">
         {product.researchApplications ||
           'Research applications information will be displayed here.'}
       </p>
-      <div className="p-4 bg-yellow-500/10 border-l-4 border-yellow-500 rounded">
-        <p className="text-sm text-yellow-300 font-semibold mb-2">
+      <div className="p-4 bg-taupe border-l-4 border-stone rounded">
+        <p className="text-sm text-charcoal font-semibold mb-2">
           Important Research Note:
         </p>
-        <p className="text-sm text-yellow-200">
+        <p className="text-sm text-charcoal">
           {getComplianceText('NO_MEDICAL_ADVICE')}
         </p>
       </div>

@@ -9,37 +9,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Vici Peptides Luxury Black-Gold Palette
-        'primary-black': '#000000',
-        'secondary-charcoal': '#1A1A1A',
-        'luxury-gold': '#D4AF37',
-        'accent-gold-light': '#F5D67B',
-        'accent-gold-dark': '#B58C1B',
-        'pure-white': '#FFFFFF',
-        'neutral-gray': '#888888',
-        // Legacy mappings for backward compatibility
+        // Vici Peptides Clinical Luxury Palette - Ivory, Charcoal, Taupe
+        'ivory': '#F6F1EB', // Primary background - soft ivory
+        'charcoal': '#2B2B2B', // Primary text - dark charcoal
+        'stone': '#CFC7BC', // Secondary neutral - muted stone
+        'taupe': '#E6DED4', // Light taupe - hover states, shadows, dividers
+        // Legacy mappings for backward compatibility (mapped to new palette)
+        'primary-black': '#2B2B2B', // Now charcoal
+        'secondary-charcoal': '#CFC7BC', // Now stone
+        'luxury-gold': '#2B2B2B', // Now charcoal
+        'accent-gold-light': '#2B2B2B', // Now charcoal
+        'accent-gold-dark': '#2B2B2B', // Now charcoal
+        'pure-white': '#F6F1EB', // Now ivory
+        'neutral-gray': '#CFC7BC', // Now stone
         primary: {
-          DEFAULT: '#D4AF37', // luxury-gold
-          light: '#F5D67B', // accent-gold-light
-          dark: '#B58C1B', // accent-gold-dark
+          DEFAULT: '#2B2B2B', // charcoal
+          light: '#CFC7BC', // stone
+          dark: '#2B2B2B', // charcoal
         },
         secondary: {
-          DEFAULT: '#1A1A1A', // secondary-charcoal
-          light: '#2A2A2A',
-          dark: '#000000', // primary-black
+          DEFAULT: '#CFC7BC', // stone
+          light: '#E6DED4', // taupe
+          dark: '#2B2B2B', // charcoal
         },
-        'neutral-light': '#FFFFFF',
-        'accent-gray': '#1A1A1A',
-        'text-gray': '#888888',
+        'neutral-light': '#F6F1EB', // ivory
+        'accent-gray': '#CFC7BC', // stone
+        'text-gray': '#2B2B2B', // charcoal
         warning: {
-          50: '#F5D67B',
-          400: '#D4AF37',
-          800: '#B58C1B',
+          50: '#E6DED4', // taupe
+          400: '#CFC7BC', // stone
+          800: '#2B2B2B', // charcoal
         },
       },
       fontFamily: {
-        sans: ['Lato', 'sans-serif'],
-        heading: ['Montserrat', 'sans-serif'],
+        sans: ['Times New Roman', 'Times', 'serif'],
+        serif: ['Times New Roman', 'Times', 'serif'],
+        heading: ['Times New Roman', 'Times', 'serif'],
       },
       spacing: {
         '30': '120px', // 120px spacing for section breathing room
@@ -108,11 +113,13 @@ const config: Config = {
         },
       },
       boxShadow: {
-        'glow-sm': '0 0 10px rgba(245, 214, 123, 0.3)',
-        'glow-md': '0 0 20px rgba(245, 214, 123, 0.4)',
-        'glow-lg': '0 0 30px rgba(245, 214, 123, 0.5)',
-        'glow-xl': '0 0 40px rgba(245, 214, 123, 0.6)',
-        'golden-glow': '0 0 12px rgba(245, 214, 123, 0.4)',
+        'glow-sm': '0 2px 8px rgba(43, 43, 43, 0.1)',
+        'glow-md': '0 4px 12px rgba(43, 43, 43, 0.15)',
+        'glow-lg': '0 6px 16px rgba(43, 43, 43, 0.2)',
+        'glow-xl': '0 8px 24px rgba(43, 43, 43, 0.25)',
+        'golden-glow': '0 2px 8px rgba(230, 222, 212, 0.3)',
+        'taupe': '0 2px 8px rgba(230, 222, 212, 0.3)',
+        'stone': '0 4px 12px rgba(207, 199, 188, 0.2)',
       },
     },
   },

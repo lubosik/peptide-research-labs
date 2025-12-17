@@ -29,10 +29,23 @@ export function useAirtableProducts() {
       // Convert Airtable products to our Product interface
       const convertedProducts = convertAirtableToProducts(data.products);
       
+      // Helper function to generate slug from product name (same as in airtableClient)
+      const generateSlugFromName = (name: string): string => {
+        if (!name) return '';
+        const baseName = name.split('(')[0].trim();
+        return baseName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      };
+
       // Map to include Airtable-specific fields
       const productsWithAirtableData: AirtableProductData[] = convertedProducts.map((product) => {
-        // Find all variants for this product to get accurate stock/discontinued status
-        const productVariants = data.products.filter((ap: any) => ap.productSlug === product.slug);
+        // Find all variants for this product by matching slug (handle both explicit and generated slugs)
+        const productVariants = data.products.filter((ap: any) => {
+          const apSlug = ap.productSlug || generateSlugFromName(ap.productName || '');
+          return apSlug === product.slug;
+        });
         
         // Use the first variant's status, or check if any variant is in stock
         const firstVariant = productVariants[0];
@@ -92,9 +105,23 @@ export function useAirtableProductsByCategory(category: string) {
       // Convert Airtable products to our Product interface
       const convertedProducts = convertAirtableToProducts(data.products);
       
+      // Helper function to generate slug from product name (same as in airtableClient)
+      const generateSlugFromName = (name: string): string => {
+        if (!name) return '';
+        const baseName = name.split('(')[0].trim();
+        return baseName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      };
+
       // Map to include Airtable-specific fields
       const productsWithAirtableData: AirtableProductData[] = convertedProducts.map((product) => {
-        const productVariants = data.products.filter((ap: any) => ap.productSlug === product.slug);
+        // Find all variants for this product by matching slug (handle both explicit and generated slugs)
+        const productVariants = data.products.filter((ap: any) => {
+          const apSlug = ap.productSlug || generateSlugFromName(ap.productName || '');
+          return apSlug === product.slug;
+        });
         const firstVariant = productVariants[0];
         const hasInStockVariant = productVariants.some((ap: any) => ap.inStock === true);
         const hasDiscontinuedVariant = productVariants.some((ap: any) => ap.isDiscontinued === true);

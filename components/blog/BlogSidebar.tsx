@@ -44,11 +44,11 @@ export default function BlogSidebar({
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden w-full bg-secondary-charcoal border-2 border-luxury-gold/30 rounded-lg px-4 py-3 mb-4 flex items-center justify-between text-pure-white hover:border-luxury-gold transition-all duration-400"
+        className="lg:hidden w-full bg-ivory border-2 border-taupe rounded-lg px-4 py-3 mb-4 flex items-center justify-between text-charcoal hover:border-charcoal transition-all duration-400"
       >
         <span className="font-semibold">Blog Sidebar</span>
         <svg
-          className={`w-5 h-5 text-luxury-gold transition-transform duration-400 ${isMobileOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 text-charcoal transition-transform duration-400 ${isMobileOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -69,8 +69,8 @@ export default function BlogSidebar({
         } lg:block space-y-6`}
       >
         {/* Search Bar */}
-        <div className="bg-secondary-charcoal border border-luxury-gold/30 rounded-lg p-4">
-          <h3 className="text-heading font-semibold text-accent-gold-light mb-3">
+        <div className="bg-ivory border border-taupe rounded-lg p-4">
+          <h3 className="text-heading font-semibold text-charcoal mb-3">
             Search Articles
           </h3>
           <SearchBar
@@ -80,17 +80,17 @@ export default function BlogSidebar({
         </div>
 
         {/* Category Filters */}
-        <div className="bg-secondary-charcoal border border-luxury-gold/30 rounded-lg p-4">
-          <h3 className="text-heading font-semibold text-accent-gold-light mb-3">
+        <div className="bg-ivory border border-taupe rounded-lg p-4">
+          <h3 className="text-heading font-semibold text-charcoal mb-3">
             Filter by Category
           </h3>
           <div className="space-y-2">
             <button
               onClick={() => onCategoryChange('All Articles')}
-              className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-400 ${
+              className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-400 font-serif ${
                 selectedCategory === 'All Articles'
-                  ? 'bg-luxury-gold/20 text-luxury-gold border border-luxury-gold/50'
-                  : 'text-pure-white hover:bg-luxury-gold/10 hover:text-luxury-gold'
+                  ? 'bg-taupe text-charcoal border border-stone'
+                  : 'text-charcoal hover:bg-taupe'
               }`}
             >
               All Articles
@@ -99,10 +99,10 @@ export default function BlogSidebar({
               <button
                 key={category}
                 onClick={() => onCategoryChange(category)}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-400 ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-400 font-serif ${
                   selectedCategory === category
-                    ? 'bg-luxury-gold/20 text-luxury-gold border border-luxury-gold/50'
-                    : 'text-pure-white hover:bg-luxury-gold/10 hover:text-luxury-gold'
+                    ? 'bg-taupe text-charcoal border border-stone'
+                    : 'text-charcoal hover:bg-taupe'
                 }`}
               >
                 {category}
@@ -112,8 +112,8 @@ export default function BlogSidebar({
         </div>
 
         {/* Most Read Articles */}
-        <div className="bg-secondary-charcoal border border-luxury-gold/30 rounded-lg p-4">
-          <h3 className="text-heading font-semibold text-accent-gold-light mb-3">
+        <div className="bg-ivory border border-taupe rounded-lg p-4">
+          <h3 className="text-heading font-semibold text-charcoal mb-3">
             Most Read Articles
           </h3>
           <ul className="space-y-3">
@@ -124,21 +124,21 @@ export default function BlogSidebar({
                   className="block group"
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-luxury-gold font-bold text-sm min-w-[24px]">
+                    <span className="text-charcoal font-bold text-sm min-w-[24px]">
                       {index + 1}
                     </span>
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-pure-white group-hover:text-luxury-gold transition-colors duration-400 line-clamp-2">
+                      <h4 className="text-sm font-semibold text-charcoal group-hover:text-charcoal/80 transition-colors duration-400 line-clamp-2">
                         {article.title}
                       </h4>
-                      <p className="text-xs text-neutral-gray mt-1">
+                      <p className="text-xs text-stone mt-1">
                         {article.readTime}
                       </p>
                     </div>
                   </div>
                 </Link>
                 {index < mostReadArticles.length - 1 && (
-                  <div className="mt-3 border-b border-luxury-gold/10"></div>
+                  <div className="mt-3 border-b border-taupe"></div>
                 )}
               </li>
             ))}
@@ -146,8 +146,8 @@ export default function BlogSidebar({
         </div>
 
         {/* Recent Updates */}
-        <div className="bg-secondary-charcoal border border-luxury-gold/30 rounded-lg p-4">
-          <h3 className="text-heading font-semibold text-accent-gold-light mb-3">
+        <div className="bg-ivory border border-taupe rounded-lg p-4">
+          <h3 className="text-heading font-semibold text-charcoal mb-3">
             Recent Updates
           </h3>
           <ul className="space-y-3">
@@ -159,17 +159,17 @@ export default function BlogSidebar({
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-1">
-                      <h4 className="text-sm font-semibold text-pure-white group-hover:text-luxury-gold transition-colors duration-400 line-clamp-2">
+                      <h4 className="text-sm font-semibold text-charcoal group-hover:text-charcoal/80 transition-colors duration-400 line-clamp-2">
                         {article.title}
                       </h4>
-                      <p className="text-xs text-neutral-gray mt-1">
+                      <p className="text-xs text-stone mt-1">
                         {formatDate(article.publishedDate)}
                       </p>
                     </div>
                   </div>
                 </Link>
                 {index < recentUpdates.length - 1 && (
-                  <div className="mt-3 border-b border-luxury-gold/10"></div>
+                  <div className="mt-3 border-b border-taupe"></div>
                 )}
               </li>
             ))}

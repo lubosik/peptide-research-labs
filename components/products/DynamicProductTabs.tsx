@@ -24,16 +24,16 @@ export default function DynamicProductTabs({ product }: DynamicProductTabsProps)
   return (
     <div className="mt-12">
       {/* Tab Navigation */}
-      <div className="border-b border-gray-700 mb-8">
+      <div className="border-b border-taupe mb-8">
         <div className="flex space-x-8 overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
+              className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap font-serif ${
                 activeTab === tab.id
-                  ? 'border-primary text-primary font-semibold'
-                  : 'border-transparent text-gray-400 hover:text-white'
+                  ? 'border-charcoal text-charcoal font-semibold'
+                  : 'border-transparent text-stone hover:text-charcoal'
               }`}
             >
               {tab.label}
@@ -43,11 +43,11 @@ export default function DynamicProductTabs({ product }: DynamicProductTabsProps)
       </div>
 
       {/* Tab Content with Suspense for code-split loading */}
-      <div className="bg-slate-800 rounded-lg p-8">
+      <div className="bg-ivory border border-taupe rounded-lg p-8">
         <Suspense
           fallback={
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-charcoal"></div>
             </div>
           }
         >

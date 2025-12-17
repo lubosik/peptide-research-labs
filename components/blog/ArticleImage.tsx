@@ -39,6 +39,9 @@ export default function ArticleImage({
         className="object-cover"
         loading="lazy"
         sizes={type === 'header' ? '100vw' : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
+        style={{
+          filter: type === 'header' ? 'drop-shadow(0 8px 24px rgba(230, 222, 212, 0.4))' : 'none',
+        }}
       />
     </div>
   );

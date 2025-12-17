@@ -30,10 +30,10 @@ export default function ScrollToTop() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-6 right-6 z-50 p-3 bg-luxury-gold text-primary-black rounded-full shadow-lg hover:bg-accent-gold-light transition-all duration-400 hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center"
+      className="fixed bottom-6 right-6 z-50 p-3 bg-ivory border-2 border-charcoal text-charcoal rounded-full shadow-lg hover:bg-charcoal hover:text-ivory transition-all duration-400 hover:scale-110 min-h-[44px] min-w-[44px] flex items-center justify-center"
       aria-label="Scroll to top"
       style={{
-        boxShadow: '0 4px 12px rgba(245, 214, 123, 0.4)',
+        boxShadow: '0 4px 12px rgba(43, 43, 43, 0.2)',
       }}
     >
       <svg

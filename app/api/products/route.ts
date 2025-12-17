@@ -6,10 +6,24 @@ export const dynamic = 'force-dynamic'; // Force dynamic rendering
 
 export async function GET(request: Request) {
   try {
-    // Add cache control headers to prevent caching
-    const products = await getAllProducts();
+    // Fetch all products from Airtable (no pre-filtering)
+    const allProducts = await getAllProducts();
+    
+    // Apply explicit filtering at the API level
+    // A product should display if: inStock === true && isDiscontinued !== true && apiVisibilityStatus === 'LIVE'
+    const filteredProducts = allProducts.filter((product) => {
+      return (
+        product.inStock === true &&
+        product.isDiscontinued !== true &&
+        product.apiVisibilityStatus === 'LIVE'
+      );
+    });
+    
+    console.log(`[API] Total products fetched: ${allProducts.length}`);
+    console.log(`[API] Products after filtering (inStock=true, !isDiscontinued, LIVE): ${filteredProducts.length}`);
+    
     return NextResponse.json(
-      { products, timestamp: new Date().toISOString() },
+      { products: filteredProducts, timestamp: new Date().toISOString() },
       {
         status: 200,
         headers: {

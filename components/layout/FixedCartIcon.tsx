@@ -28,10 +28,10 @@ export default function FixedCartIcon() {
   return (
     <Link
       href="/cart"
-      className="fixed top-24 right-6 z-50 p-3 bg-luxury-gold text-primary-black rounded-full shadow-lg hover:bg-accent-gold-light transition-all duration-400 hover:scale-110"
+      className="fixed top-24 right-6 z-50 p-3 bg-ivory border-2 border-charcoal text-charcoal rounded-full shadow-lg hover:bg-charcoal hover:text-ivory transition-all duration-400 hover:scale-110"
       aria-label="Shopping cart"
       style={{
-        boxShadow: '0 4px 12px rgba(245, 214, 123, 0.4)',
+        boxShadow: '0 4px 12px rgba(43, 43, 43, 0.2)',
       }}
     >
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@ export default function FixedCartIcon() {
         />
       </svg>
       {itemCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-primary-black text-luxury-gold text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-luxury-gold">
+        <span className="absolute -top-1 -right-1 bg-charcoal text-ivory text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border-2 border-charcoal">
           {itemCount > 9 ? '9+' : itemCount}
         </span>
       )}

@@ -1,3 +1,5 @@
+
+
 import Airtable from 'airtable';
 
 // Initialize Airtable base connection
@@ -84,6 +86,25 @@ function normalizeSynonyms(synonyms: any): string[] {
 }
 
 /**
+ * Generate a URL-friendly slug from a product name
+ * Handles product names with variants like "5-amino-1mq (10mg × 10 vials)"
+ */
+function generateSlugFromName(productName: string): string {
+  if (!productName) return '';
+  
+  // Extract base name (remove variant info in parentheses)
+  let baseName = productName.split('(')[0].trim();
+  
+  // Convert to lowercase and replace spaces/special chars with hyphens
+  const slug = baseName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  
+  return slug;
+}
+
+/**
  * Map Airtable record to AirtableProduct interface
  */
 function mapRecordToProduct(record: any): AirtableProduct {
@@ -120,7 +141,7 @@ function mapRecordToProduct(record: any): AirtableProduct {
     storageRequirements: record.get('Storage_Requirements') || undefined,
     handlingGuidelines: record.get('Handling_Guidelines') || undefined,
     notes: record.get('Notes') || undefined,
-    productSlug: record.get('Product_Slug') || '',
+    productSlug: (record.get('Product_Slug') as string) || generateSlugFromName((record.get('Product_Name') as string) || ''),
     apiVisibilityStatus: record.get('API_Visibility_Status') || 'LIVE',
     recordId: record.id,
   };
@@ -128,18 +149,27 @@ function mapRecordToProduct(record: any): AirtableProduct {
 
 /**
  * Fetch all products from Airtable
- * Filters out products where API_Visibility_Status is not "LIVE"
+ * Returns all records without pre-filtering - filtering should be done at the page level
  */
 export async function getAllProducts(): Promise<AirtableProduct[]> {
   try {
+    // Fetch all records without filtering - let the page level handle filtering
     const records = await base(TABLE_NAME)
       .select({
-        filterByFormula: '{API_Visibility_Status} = "LIVE"',
+        view: 'Grid view',
         sort: [{ field: 'Product_Name', direction: 'asc' }],
       })
       .all();
 
-    return records.map(mapRecordToProduct);
+    const products = records.map(mapRecordToProduct);
+    
+    // Log for diagnostic purposes
+    console.log(`[Airtable] Fetched ${products.length} total records from Airtable`);
+    console.log(`[Airtable] Records with In_Stock=true: ${products.filter(p => p.inStock === true).length}`);
+    console.log(`[Airtable] Records with Is_Discontinued=false: ${products.filter(p => p.isDiscontinued === false).length}`);
+    console.log(`[Airtable] Records with API_Visibility_Status=LIVE: ${products.filter(p => p.apiVisibilityStatus === 'LIVE').length}`);
+    
+    return products;
   } catch (error) {
     console.error('Error fetching products from Airtable:', error);
     throw error;
@@ -149,12 +179,13 @@ export async function getAllProducts(): Promise<AirtableProduct[]> {
 /**
  * Fetch a single product by slug
  * Returns the first matching variant (or product if no variants)
+ * Note: Filtering by visibility status should be done at the page level
  */
 export async function getProductBySlug(slug: string): Promise<AirtableProduct | null> {
   try {
     const records = await base(TABLE_NAME)
       .select({
-        filterByFormula: `AND({Product_Slug} = "${slug}", {API_Visibility_Status} = "LIVE")`,
+        filterByFormula: `{Product_Slug} = "${slug}"`,
         sort: [{ field: 'Variant_Strength', direction: 'asc' }],
       })
       .firstPage();
@@ -173,31 +204,48 @@ export async function getProductBySlug(slug: string): Promise<AirtableProduct | 
 
 /**
  * Fetch all variants for a product by slug
+ * Note: Filtering by visibility status should be done at the page level
  */
 export async function getProductVariantsBySlug(slug: string): Promise<AirtableProduct[]> {
   try {
-    const records = await base(TABLE_NAME)
+    // Since Product_Slug field might be empty, we'll fetch all records and filter by generated slug
+    // This is more reliable than trying to query by Product_Slug which may not exist
+    const allRecords = await base(TABLE_NAME)
       .select({
-        filterByFormula: `AND({Product_Slug} = "${slug}", {API_Visibility_Status} = "LIVE")`,
+        view: 'Grid view',
         sort: [{ field: 'Variant_Strength', direction: 'asc' }],
       })
       .all();
+    
+    // Filter records by matching slug (either from Product_Slug field or generated from Product_Name)
+    const records = allRecords.filter(record => {
+      const productSlug = (record.get('Product_Slug') as string) || '';
+      const productName = (record.get('Product_Name') as string) || '';
+      const generatedSlug = generateSlugFromName(productName);
+      
+      // Match if either the Product_Slug field matches, or the generated slug matches
+      return (productSlug && productSlug === slug) || generatedSlug === slug;
+    });
 
     return records.map(mapRecordToProduct);
   } catch (error) {
     console.error(`Error fetching product variants by slug "${slug}" from Airtable:`, error);
+    if (error instanceof Error) {
+      console.error(`Error details: ${error.message}`);
+    }
     return [];
   }
 }
 
 /**
  * Fetch products by category
+ * Note: Filtering by visibility status should be done at the page level
  */
 export async function getProductsByCategory(category: string): Promise<AirtableProduct[]> {
   try {
     const records = await base(TABLE_NAME)
       .select({
-        filterByFormula: `AND({Category} = "${category}", {API_Visibility_Status} = "LIVE")`,
+        filterByFormula: `{Category} = "${category}"`,
         sort: [{ field: 'Product_Name', direction: 'asc' }],
       })
       .all();

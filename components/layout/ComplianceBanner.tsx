@@ -13,28 +13,28 @@ export default function ComplianceBanner() {
 
   return (
     <div 
-      className="border-b border-luxury-gold/20 py-3 overflow-hidden relative"
+      className="border-b border-taupe py-3 overflow-hidden relative bg-ivory"
       style={{
-        background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(245, 214, 123, 0.05) 50%, rgba(212, 175, 55, 0.1) 100%)',
+        background: 'linear-gradient(90deg, rgba(207, 199, 188, 0.15) 0%, rgba(230, 222, 212, 0.1) 50%, rgba(207, 199, 188, 0.15) 100%)',
         backgroundSize: '200% 100%',
         animation: 'gradientShift 6s linear infinite',
       }}
     >
       <div className="flex whitespace-nowrap animate-scroll-left">
         {/* Animated scrolling text - multiple copies for seamless infinite loop */}
-        <span className="text-sm text-accent-gold-light font-semibold mx-8">
+        <span className="text-sm text-charcoal font-semibold mx-8">
           {complianceText}
         </span>
-        <span className="text-sm text-accent-gold-light font-semibold mx-8">
+        <span className="text-sm text-charcoal font-semibold mx-8">
           {complianceText}
         </span>
-        <span className="text-sm text-accent-gold-light font-semibold mx-8">
+        <span className="text-sm text-charcoal font-semibold mx-8">
           {complianceText}
         </span>
-        <span className="text-sm text-accent-gold-light font-semibold mx-8">
+        <span className="text-sm text-charcoal font-semibold mx-8">
           {complianceText}
         </span>
-        <span className="text-sm text-accent-gold-light font-semibold mx-8">
+        <span className="text-sm text-charcoal font-semibold mx-8">
           {complianceText}
         </span>
       </div>

@@ -43,17 +43,8 @@ export default function VariantSelector({
   };
 
   return (
-    <div 
-      className="mb-6"
-      style={{
-        border: showInitialGlow ? '2px solid #D4AF37' : 'none',
-        borderRadius: '0.5rem',
-        padding: showInitialGlow ? '0.75rem' : '0',
-        boxShadow: showInitialGlow ? '0 0 10px rgba(212, 175, 55, 0.3)' : 'none',
-        transition: 'all 0.4s ease-out',
-      }}
-    >
-      <label className="block text-sm font-semibold text-accent-gold-light mb-3">
+    <div className="mb-6">
+      <label className="block text-sm font-semibold text-charcoal mb-3">
         SELECT STRENGTH
       </label>
       
@@ -70,17 +61,17 @@ export default function VariantSelector({
               onClick={() => onVariantChange(variant)}
               disabled={!variant.inStock}
               className={`
-                relative px-4 py-3 rounded-lg border-2 transition-all duration-400 text-sm font-semibold
+                relative px-4 py-3 rounded-lg border-2 transition-all duration-400 text-sm font-semibold font-serif
                 ${
                   isSelected
-                    ? 'border-luxury-gold bg-luxury-gold/20 text-accent-gold-light'
+                    ? 'border-charcoal bg-taupe text-charcoal'
                     : variant.inStock
-                    ? 'border-luxury-gold/30 bg-secondary-charcoal text-pure-white hover:border-luxury-gold hover:bg-luxury-gold/10'
-                    : 'border-neutral-gray/30 bg-primary-black/50 text-neutral-gray cursor-not-allowed opacity-50'
+                    ? 'border-taupe bg-ivory text-charcoal hover:border-charcoal hover:bg-taupe'
+                    : 'border-stone bg-ivory text-stone cursor-not-allowed opacity-50'
                 }
               `}
               style={{
-                boxShadow: isSelected ? '0 0 10px rgba(245, 214, 123, 0.25)' : 'none',
+                boxShadow: isSelected ? '0 2px 8px rgba(43, 43, 43, 0.15)' : 'none',
               }}
             >
               <div className="flex flex-col items-center">
@@ -89,15 +80,15 @@ export default function VariantSelector({
                   ${variantPrice.toFixed(2)}
                 </span>
                 {!variant.inStock && (
-                  <span className="text-xs text-red-400 mt-1">Out of Stock</span>
+                  <span className="text-xs text-red-600 mt-1">Out of Stock</span>
                 )}
               </div>
               
               {/* Selected indicator */}
               {isSelected && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-luxury-gold rounded-full flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-charcoal rounded-full flex items-center justify-center">
                   <svg
-                    className="w-2.5 h-2.5 text-primary-black"
+                    className="w-2.5 h-2.5 text-ivory"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -118,20 +109,20 @@ export default function VariantSelector({
       {selectedVariant && (
         <div 
           key={selectedVariant.strength}
-          className="mt-4 p-3 bg-luxury-gold/5 border border-luxury-gold/20 rounded-lg animate-fade-in"
+          className="mt-4 p-3 bg-taupe border border-stone rounded-lg animate-fade-in"
         >
           {(() => {
             const description = getVariantDescription(product.name, selectedVariant.strength);
             if (description) {
               return (
-                <p className="text-sm text-pure-white leading-relaxed">
+                <p className="text-sm text-charcoal leading-relaxed">
                   {description}
                 </p>
               );
             }
             // Fallback description if no specific description exists
             return (
-              <p className="text-sm text-pure-white leading-relaxed">
+              <p className="text-sm text-charcoal leading-relaxed">
                 The {selectedVariant.strength} strength provides a {selectedVariant.strength.includes('mg') && parseFloat(selectedVariant.strength) >= 10 ? 'higher' : 'standard'} peptide concentration suitable for laboratory research protocols.
               </p>
             );
@@ -140,7 +131,7 @@ export default function VariantSelector({
       )}
 
       {/* Info Line */}
-      <p className="text-xs text-neutral-gray mt-3 italic">
+      <p className="text-xs text-stone mt-3 italic">
         Each unit corresponds to one research vial. For laboratory use only.
       </p>
     </div>

@@ -72,14 +72,24 @@ export default function ShopPage() {
   const filteredAndSortedProducts = useMemo(() => {
     const warehouseMultiplier = selectedWarehouse === 'us' ? 1.25 : 1.0;
     
-    // Filter products (exclude discontinued)
+    // Filter products with explicit visibility checks
+    // A product should display if: inStock === true && isDiscontinued !== true && apiVisibilityStatus === 'LIVE'
     let filtered = airtableProducts.filter((item) => {
       const product = item.product;
       
-      // Exclude discontinued products
-      if (item.isDiscontinued) {
+      // Explicit visibility filtering
+      // Check inStock status
+      if (item.airtableInStock !== true) {
         return false;
       }
+      
+      // Exclude discontinued products
+      if (item.isDiscontinued === true) {
+        return false;
+      }
+      
+      // Note: API_Visibility_Status is already checked at the API level
+      // but we ensure inStock and !isDiscontinued here for safety
       
       // Category filter
       if (selectedCategory !== 'all' && product.category !== categories.find(c => c.slug === selectedCategory)?.name) {
@@ -124,16 +134,16 @@ export default function ShopPage() {
   }, [sortBy, selectedWarehouse, selectedCategory, priceRange, airtableProducts]);
 
   return (
-    <div className="bg-primary-black min-h-screen">
+    <div className="bg-ivory min-h-screen">
       {/* Page Header with Persistent Search */}
-      <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-8 sticky top-20 z-40">
+      <section className="bg-ivory border-b border-taupe py-8 sticky top-20 z-40">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-heading text-3xl md:text-4xl font-bold text-accent-gold-light">
+              <h1 className="text-heading text-3xl md:text-4xl font-bold text-charcoal">
                 SHOP ALL
               </h1>
-              <p className="text-sm text-neutral-gray">
+              <p className="text-sm text-charcoal">
                 {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'RESULT' : 'RESULTS'}
               </p>
             </div>
@@ -156,20 +166,20 @@ export default function ShopPage() {
       />
 
       {/* Sort Bar - Right Aligned */}
-      <section className="bg-primary-black border-b border-luxury-gold/20 py-4">
+      <section className="bg-ivory border-b border-taupe py-4">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto flex justify-end">
             <div className="flex items-center space-x-4">
-              <span className="text-pure-white font-medium text-sm">SORT BY:</span>
+              <span className="text-charcoal font-medium text-sm">SORT BY:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="border border-luxury-gold/30 rounded-lg px-4 py-2 text-pure-white bg-secondary-charcoal focus:outline-none focus:border-luxury-gold transition-all duration-400 text-sm"
+                className="border border-taupe rounded-lg px-4 py-2 text-charcoal bg-ivory focus:outline-none focus:border-charcoal transition-all duration-400 text-sm font-serif"
               >
-                <option value="default" className="bg-secondary-charcoal">DEFAULT</option>
-                <option value="price-low" className="bg-secondary-charcoal">PRICE: LOW TO HIGH</option>
-                <option value="price-high" className="bg-secondary-charcoal">PRICE: HIGH TO LOW</option>
-                <option value="newest" className="bg-secondary-charcoal">NEWEST</option>
+                <option value="default" className="bg-ivory">DEFAULT</option>
+                <option value="price-low" className="bg-ivory">PRICE: LOW TO HIGH</option>
+                <option value="price-high" className="bg-ivory">PRICE: HIGH TO LOW</option>
+                <option value="newest" className="bg-ivory">NEWEST</option>
               </select>
             </div>
           </div>
@@ -177,17 +187,17 @@ export default function ShopPage() {
       </section>
 
       {/* All Peptides Grid - 3 Columns Desktop */}
-      <section className="py-12 md:py-16 bg-primary-black">
+      <section className="py-12 md:py-16 bg-ivory">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             {loading && (
               <div className="text-center py-16">
-                <p className="text-pure-white text-lg">Loading products...</p>
+                <p className="text-charcoal text-lg">Loading products...</p>
               </div>
             )}
             {error && (
               <div className="text-center py-16">
-                <p className="text-red-500 text-lg">Error loading products: {error}</p>
+                <p className="text-red-600 text-lg">Error loading products: {error}</p>
               </div>
             )}
             {!loading && !error && (
@@ -204,13 +214,13 @@ export default function ShopPage() {
                 </div>
                 {filteredAndSortedProducts.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-pure-white text-lg">No products found matching your filters.</p>
+                <p className="text-charcoal text-lg">No products found matching your filters.</p>
                 <button
                   onClick={() => {
                     setSelectedCategory('all');
                     setPriceRange([priceBounds.min, priceBounds.max]);
                   }}
-                  className="mt-4 text-luxury-gold hover:text-accent-gold-light transition-colors duration-400"
+                  className="mt-4 text-charcoal hover:text-charcoal/80 underline transition-colors duration-400"
                 >
                   Clear all filters
                 </button>
@@ -225,12 +235,12 @@ export default function ShopPage() {
       {/* Scroll to Top Button */}
       <ScrollToTop />
 
-      {/* Glowing Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
+      {/* Divider */}
+      <div className="h-px bg-taupe"></div>
 
       {/* Best-Selling Compounds Section */}
-      <section className="bg-secondary-charcoal py-12 md:py-16 relative">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
+      <section className="bg-taupe py-12 md:py-16 relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-taupe"></div>
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <ProductCarousel title="Best-Selling Research Compounds" products={bestSelling} />
@@ -238,12 +248,12 @@ export default function ShopPage() {
         </div>
       </section>
 
-      {/* Glowing Divider */}
-      <div className="h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
+      {/* Divider */}
+      <div className="h-px bg-taupe"></div>
 
       {/* Newest Additions Section */}
-      <section className="bg-primary-black py-12 md:py-16 relative">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
+      <section className="bg-ivory py-12 md:py-16 relative">
+        <div className="absolute top-0 left-0 right-0 h-px bg-taupe"></div>
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <ProductCarousel title="Newest Additions" products={newest} />

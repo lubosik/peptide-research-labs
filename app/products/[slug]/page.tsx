@@ -23,10 +23,19 @@ export const dynamic = 'force-dynamic';
 export async function generateStaticParams() {
   // Fetch products from Airtable for static generation
   const { getAllProducts } = await import('@/lib/airtableClient');
+  const { convertAirtableToProducts } = await import('@/lib/airtableProductAdapter');
   try {
     const airtableProducts = await getAllProducts();
-    // Get unique slugs
-    const slugs = [...new Set(airtableProducts.map(p => p.productSlug))];
+    // Filter to only visible products
+    const visibleProducts = airtableProducts.filter(p => 
+      p.inStock === true && 
+      p.isDiscontinued !== true && 
+      p.apiVisibilityStatus === 'LIVE'
+    );
+    // Convert to Product format (this will generate slugs if missing)
+    const products = convertAirtableToProducts(visibleProducts);
+    // Get unique slugs from converted products
+    const slugs = [...new Set(products.map(p => p.slug).filter(Boolean))];
     return slugs.map((slug) => ({
       slug,
     }));
@@ -86,11 +95,19 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       notFound();
     }
     
-    const product = convertAirtableToProduct(variants[0]);
+    // Convert all variants to a single Product (this groups variants properly)
+    const { convertAirtableToProducts } = await import('@/lib/airtableProductAdapter');
+    const products = convertAirtableToProducts(variants);
+    
+    if (products.length === 0) {
+      notFound();
+    }
+    
+    const product = products[0]; // Should only be one product after grouping
     const productSchema = generateProductSchema(product);
 
   return (
-    <div className="bg-primary-black min-h-screen">
+    <div className="bg-ivory min-h-screen">
       {/* Structured Data */}
       <script
         type="application/ld+json"
@@ -98,25 +115,25 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       />
       
       {/* Product Header Section */}
-      <section className="bg-secondary-charcoal border-b border-luxury-gold/20 py-8">
+      <section className="bg-ivory border-b border-taupe py-8">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             {/* Breadcrumbs */}
             <nav className="mb-6 text-sm">
-              <ol className="flex items-center space-x-2 text-neutral-gray">
+              <ol className="flex items-center space-x-2 text-stone">
                 <li>
-                  <Link href="/" className="hover:text-luxury-gold transition-colors">
+                  <Link href="/" className="hover:text-charcoal transition-colors">
                     Home
                   </Link>
                 </li>
                 <li>/</li>
                 <li>
-                  <Link href="/shop" className="hover:text-luxury-gold transition-colors">
+                  <Link href="/shop" className="hover:text-charcoal transition-colors">
                     Shop
                   </Link>
                 </li>
                 <li>/</li>
-                <li className="text-pure-white font-medium">{product.name}</li>
+                <li className="text-charcoal font-medium">{product.name}</li>
               </ol>
             </nav>
           </div>
@@ -124,7 +141,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </section>
 
       {/* Main Product Section - Reduced Padding for Above Fold */}
-      <section className="py-8 md:py-12">
+      <section className="py-8 md:py-12 bg-ivory">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -139,14 +156,14 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
       </section>
 
       {/* Product Tabs Section */}
-      <section className="container mx-auto px-4 py-12 md:py-16">
+      <section className="container mx-auto px-4 py-12 md:py-16 bg-ivory">
         <div className="max-w-7xl mx-auto">
           <DynamicProductTabs product={product} />
         </div>
       </section>
 
       {/* Related Products Accordion */}
-      <section className="container mx-auto px-4 py-12 md:py-16">
+      <section className="container mx-auto px-4 py-12 md:py-16 bg-ivory">
         <div className="max-w-7xl mx-auto">
           <RelatedProductsAccordion
             currentProductId={product.id}

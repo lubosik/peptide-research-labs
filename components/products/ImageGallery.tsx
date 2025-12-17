@@ -22,14 +22,19 @@ export default function ImageGallery({ productName, productSlug }: ImageGalleryP
   return (
     <div>
       {/* Main Image */}
-      <div className="relative w-full h-96 md:h-[500px] rounded-lg overflow-hidden mb-4 bg-slate-800">
+      <div 
+        className="relative w-full h-96 md:h-[500px] rounded-lg overflow-hidden mb-4 bg-taupe"
+        style={{
+          filter: 'drop-shadow(0 8px 24px rgba(230, 222, 212, 0.4))',
+        }}
+      >
         {selectedImage === 0 ? (
           <StockImage
             imageType={galleryImages[0].type}
             context={productName}
             fill
             priority
-            className="rounded-lg"
+            className="rounded-lg object-contain"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
         ) : (
@@ -37,7 +42,7 @@ export default function ImageGallery({ productName, productSlug }: ImageGalleryP
             imageType={galleryImages[selectedImage].type}
             context={productName}
             fill
-            className="rounded-lg"
+            className="rounded-lg object-contain"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
         )}
@@ -51,15 +56,18 @@ export default function ImageGallery({ productName, productSlug }: ImageGalleryP
             onClick={() => setSelectedImage(index)}
             className={`relative w-full h-20 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 border-2 ${
               selectedImage === index
-                ? 'border-primary shadow-glow-sm'
-                : 'border-gray-300 hover:border-primary/50'
+                ? 'border-charcoal shadow-md'
+                : 'border-taupe hover:border-stone'
             }`}
+            style={{
+              backgroundColor: selectedImage === index ? '#E6DED4' : '#F6F1EB',
+            }}
           >
             <StockImage
               imageType={image.type}
               context={productName}
               fill
-              className="rounded-lg"
+              className="rounded-lg object-contain"
               sizes="100px"
             />
           </button>

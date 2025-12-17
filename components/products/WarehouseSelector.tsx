@@ -14,7 +14,7 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <label className="block text-sm font-semibold text-accent-gold-light mb-2">
+      <label className="block text-sm font-semibold text-charcoal mb-2">
         CHOOSE WAREHOUSE
       </label>
       
@@ -23,13 +23,13 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         <button
           type="button"
           onClick={() => setSelectedWarehouse('overseas')}
-          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-400 ${
+          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-400 font-serif ${
             selectedWarehouse === 'overseas'
-              ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white'
-              : 'border-luxury-gold/30 bg-secondary-charcoal text-pure-white hover:border-luxury-gold/50'
+              ? 'border-charcoal bg-taupe text-charcoal'
+              : 'border-taupe bg-ivory text-charcoal hover:border-charcoal hover:bg-taupe'
           }`}
           style={{
-            boxShadow: selectedWarehouse === 'overseas' ? '0 0 10px rgba(212, 175, 55, 0.25)' : 'none',
+            boxShadow: selectedWarehouse === 'overseas' ? '0 2px 8px rgba(43, 43, 43, 0.15)' : 'none',
           }}
         >
           <div className="flex items-center justify-center gap-2">
@@ -45,13 +45,13 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         <button
           type="button"
           onClick={() => setSelectedWarehouse('us')}
-          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-400 ${
+          className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all duration-400 font-serif ${
             selectedWarehouse === 'us'
-              ? 'border-luxury-gold bg-luxury-gold/10 text-pure-white'
-              : 'border-luxury-gold/30 bg-secondary-charcoal text-pure-white hover:border-luxury-gold/50'
+              ? 'border-charcoal bg-taupe text-charcoal'
+              : 'border-taupe bg-ivory text-charcoal hover:border-charcoal hover:bg-taupe'
           }`}
           style={{
-            boxShadow: selectedWarehouse === 'us' ? '0 0 10px rgba(212, 175, 55, 0.25)' : 'none',
+            boxShadow: selectedWarehouse === 'us' ? '0 2px 8px rgba(43, 43, 43, 0.15)' : 'none',
           }}
         >
           <div className="flex items-center justify-center gap-2">
@@ -69,7 +69,7 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         <button
           type="button"
           onClick={() => setShowInfo(!showInfo)}
-          className="text-xs text-neutral-gray hover:text-luxury-gold transition-colors duration-400 flex items-center gap-1 w-full"
+          className="text-xs text-stone hover:text-charcoal transition-colors duration-400 flex items-center gap-1 w-full"
           aria-label="Warehouse information"
         >
           <span>ℹ️</span>
@@ -85,20 +85,20 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
         </button>
         
         {showInfo && (
-          <div className="mt-2 p-4 bg-slate-800 border border-gray-700 rounded-lg text-sm text-gray-300 space-y-3">
+          <div className="mt-2 p-4 bg-taupe border border-stone rounded-lg text-sm text-charcoal space-y-3">
             <div>
-              <strong className="text-white flex items-center gap-2 mb-1">
+              <strong className="text-charcoal flex items-center gap-2 mb-1">
                 <span>🌍</span> Overseas Warehouse
               </strong>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-charcoal">
                 Shipped directly from our verified international partner facilities. This option offers the most cost-effective pricing with standard international shipping times. Products are sourced from our trusted overseas manufacturing partners and shipped directly to your location.
               </p>
             </div>
             <div>
-              <strong className="text-white flex items-center gap-2 mb-1">
+              <strong className="text-charcoal flex items-center gap-2 mb-1">
                 <span>🇺🇸</span> U.S. Warehouse
               </strong>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-charcoal">
                 Re-tested and quality-verified in U.S. laboratories prior to domestic shipment. This option includes expedited U.S. re-test handling, ensuring additional quality verification steps are completed in domestic facilities. Products undergo additional quality control testing in the United States before shipment, with faster domestic delivery times. A $10 expedited handling fee applies.
               </p>
             </div>
@@ -107,9 +107,9 @@ export default function WarehouseSelector({ showTooltip = true, className = '' }
       </div>
 
       {/* Current Selection Description */}
-      <div className="mt-2 p-3 bg-luxury-gold/5 border border-luxury-gold/20 rounded-lg text-xs text-neutral-gray">
-        <p className="font-semibold text-pure-white mb-1">Selected: {selectedWarehouse === 'us' ? 'U.S. Warehouse' : 'Overseas Warehouse'}</p>
-        <p className="text-pure-white">{getWarehouseDescription()}</p>
+      <div className="mt-2 p-3 bg-taupe border border-stone rounded-lg text-xs text-charcoal">
+        <p className="font-semibold text-charcoal mb-1">Selected: {selectedWarehouse === 'us' ? 'U.S. Warehouse' : 'Overseas Warehouse'}</p>
+        <p className="text-charcoal">{getWarehouseDescription()}</p>
       </div>
     </div>
   );

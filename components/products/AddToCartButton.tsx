@@ -47,15 +47,15 @@ export default function AddToCartButton({
     const variantName = variant.strength ? `${product.name} (${variant.strength})` : product.name;
     showToast(`${variantName} added to cart!`, 'success');
 
-    // Gold pulse glow feedback at button location
+    // Subtle shadow feedback at button location
     if (buttonRef.current) {
       const originalStyle = buttonRef.current.style.boxShadow;
-      buttonRef.current.style.boxShadow = '0 0 20px rgba(245, 214, 123, 0.5)';
+      buttonRef.current.style.boxShadow = '0 4px 12px rgba(43, 43, 43, 0.2)';
       buttonRef.current.style.transition = 'box-shadow 0.3s ease-out';
       
       setTimeout(() => {
         if (buttonRef.current) {
-          buttonRef.current.style.boxShadow = originalStyle || '0 4px 12px rgba(245, 214, 123, 0.25)';
+          buttonRef.current.style.boxShadow = originalStyle || '0 2px 8px rgba(43, 43, 43, 0.1)';
         }
       }, 500);
     }
@@ -75,7 +75,7 @@ export default function AddToCartButton({
     return (
       <button
         disabled
-        className={`w-full bg-neutral-gray/30 text-neutral-gray py-4 px-6 rounded-lg font-semibold text-lg cursor-not-allowed min-h-[44px] flex items-center justify-center ${className}`}
+        className={`w-full bg-stone/30 text-stone py-4 px-6 rounded-lg font-semibold text-lg cursor-not-allowed min-h-[44px] flex items-center justify-center uppercase tracking-wide ${className}`}
       >
         OUT OF STOCK
       </button>
@@ -87,12 +87,11 @@ export default function AddToCartButton({
       ref={buttonRef}
       onClick={handleAddToCart}
       disabled={isAdding || !isButtonReady}
-      className={`w-full bg-luxury-gold text-primary-black py-4 px-6 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg hover:shadow-xl min-h-[44px] flex items-center justify-center ${className} ${
+      className={`w-full bg-ivory border-2 border-charcoal text-charcoal py-4 px-6 rounded-lg font-semibold text-lg hover:bg-charcoal hover:text-ivory transition-all duration-400 min-h-[44px] flex items-center justify-center uppercase tracking-wide ${className} ${
         isAdding ? 'opacity-75 cursor-wait' : ''
       } ${!isButtonReady ? 'opacity-50 cursor-not-allowed' : ''}`}
       style={{
-        boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
-        backgroundColor: '#E5C047', // 10% brighter gold for better visibility
+        boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)',
       }}
     >
       {isAdding ? 'ADDING...' : 'ADD TO CART'}

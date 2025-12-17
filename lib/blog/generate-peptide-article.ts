@@ -203,8 +203,8 @@ Researchers working with ${baseName} should follow established laboratory protoc
     metaDescription,
     keywords,
     category: product.category,
-    author: 'Vici Peptides Editorial',
-    publishedDate: new Date().toISOString().split('T')[0],
+    author: 'Vici Peptides',
+    publishedDate: '2025-12-17',
     readTime: '8 min read',
     content: {
       introduction,

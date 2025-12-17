@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Lato, Montserrat } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -11,20 +10,6 @@ import { ToastProvider } from '@/components/ui/ToastProvider';
 import AgeGateModal from '@/components/compliance/AgeGateModal';
 import MarketingPopup from '@/components/compliance/MarketingPopup';
 import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/seo/structured-data';
-
-const lato = Lato({
-  weight: ['300', '400', '700'],
-  subsets: ['latin'],
-  variable: '--font-lato',
-  display: 'swap',
-});
-
-const montserrat = Montserrat({
-  weight: ['600', '700'],
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -44,16 +29,28 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: 'Vici Peptides',
+    images: [
+      {
+        url: '/images/vici-logo-new.png',
+        width: 1200,
+        height: 630,
+        alt: 'Vici Peptides',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: ['/images/vici-logo-new.png'],
   },
   icons: {
     icon: [
-      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/images/vici-favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/vici-favicon-new.png', sizes: '32x32', type: 'image/png' },
+      { url: '/images/vici-favicon-new.png', sizes: '16x16', type: 'image/png' },
     ],
     apple: [
-      { url: '/images/vici-favicon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/images/vici-favicon-new.png', sizes: '180x180', type: 'image/png' },
     ],
-    shortcut: '/favicon.png',
+    shortcut: '/images/vici-favicon-new.png',
   },
 };
 
@@ -66,7 +63,7 @@ export default function RootLayout({
   const websiteSchema = generateWebSiteSchema();
 
   return (
-    <html lang="en" className={`${lato.variable} ${montserrat.variable}`}>
+    <html lang="en" className="font-serif">
       <head>
         {/* Structured Data - Organization */}
         <script

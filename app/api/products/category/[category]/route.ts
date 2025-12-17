@@ -11,9 +11,21 @@ export async function GET(
   try {
     const { category } = await params;
     const decodedCategory = decodeURIComponent(category);
-    const products = await getProductsByCategory(decodedCategory);
+    const allProducts = await getProductsByCategory(decodedCategory);
     
-    return NextResponse.json({ products }, { status: 200 });
+    // Apply explicit filtering at the API level
+    // A product should display if: inStock === true && isDiscontinued !== true && apiVisibilityStatus === 'LIVE'
+    const filteredProducts = allProducts.filter((product) => {
+      return (
+        product.inStock === true &&
+        product.isDiscontinued !== true &&
+        product.apiVisibilityStatus === 'LIVE'
+      );
+    });
+    
+    console.log(`[API Category] Category: ${decodedCategory}, Total: ${allProducts.length}, Filtered: ${filteredProducts.length}`);
+    
+    return NextResponse.json({ products: filteredProducts }, { status: 200 });
   } catch (error) {
     console.error('Error fetching products by category:', error);
     return NextResponse.json(

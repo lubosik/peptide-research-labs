@@ -5,127 +5,188 @@ import Image from 'next/image';
 import FadeInOnScroll from '@/components/animations/FadeInOnScroll';
 import ParallaxSection from '@/components/animations/ParallaxSection';
 import ProductCarousel from '@/components/homepage/ProductCarousel';
-import { products } from '@/data/products';
+import CategoryGrid from '@/components/homepage/CategoryGrid';
+import { useAirtableProducts } from '@/lib/hooks/useAirtableProducts';
+import { getProductMinPrice } from '@/data/products';
+import { useWarehouse } from '@/lib/context/WarehouseContext';
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
-  // Get best-selling and newest products (for demo, using first 6 products)
-  const bestSelling = products.slice(0, 6);
-  const newest = products.slice(-6).reverse();
+  const { products: airtableProducts, loading } = useAirtableProducts();
+  const { selectedWarehouse } = useWarehouse();
+
+  // Get best-selling products (top 8 by price as proxy for popularity)
+  const bestSelling = useMemo(() => {
+    if (loading || airtableProducts.length === 0) return [];
+    return [...airtableProducts]
+      .filter(item => !item.isDiscontinued && item.airtableInStock)
+      .sort((a, b) => {
+        const priceA = getProductMinPrice(a.product);
+        const priceB = getProductMinPrice(b.product);
+        const warehouseMultiplier = selectedWarehouse === 'us' ? 1.25 : 1.0;
+        return (priceB * warehouseMultiplier) - (priceA * warehouseMultiplier);
+      })
+      .slice(0, 8)
+      .map(item => item.product);
+  }, [airtableProducts, selectedWarehouse, loading]);
+
+  // Get newest additions (last 8 products, reversed)
+  const newest = useMemo(() => {
+    if (loading || airtableProducts.length === 0) return [];
+    return [...airtableProducts]
+      .filter(item => !item.isDiscontinued && item.airtableInStock)
+      .slice(-8)
+      .reverse()
+      .map(item => item.product);
+  }, [airtableProducts, loading]);
 
   return (
-    <div className="bg-primary-black bg-primary-gradient">
+    <div className="bg-ivory">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 md:py-32 relative mb-30">
-        {/* Subtle radial light gradient behind vial */}
-        <div 
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-10 pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(245, 214, 123, 0.05) 0%, transparent 70%)',
-          }}
-        />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
-            {/* Left Column - Headline & CTA (60%) - Stacks First on Mobile */}
-            <div className="lg:col-span-3 space-y-6 order-1 lg:order-1">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.1, delay: 0.2, ease: 'easeOut' }}
-                className="text-heading text-4xl md:text-5xl lg:text-6xl font-bold text-accent-gold-light leading-tight"
-              >
-                Premium Research Peptides
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.1, delay: 0.3, ease: 'easeOut' }}
-                className="text-lg md:text-xl text-pure-white leading-relaxed max-w-2xl"
-              >
-                Simple to Explore, Simple to Order. High-purity biochemical reagents for laboratory research use only.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1.1, delay: 0.4, ease: 'easeOut' }}
-                className="pt-4"
-              >
-                <Link
-                  href="/shop"
-                  className="inline-block bg-luxury-gold text-primary-black px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-gold-light transition-all duration-400 shadow-lg hover:shadow-xl text-center min-h-[44px] flex items-center justify-center"
+      <section className="min-h-[90vh] flex items-center justify-center relative mb-30 bg-ivory">
+        <div className="container mx-auto px-4 py-24 md:py-40">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+              {/* Left Column - Brand Name & CTA */}
+              <div className="text-center lg:text-left space-y-10 order-1 lg:order-1">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, delay: 0.2, ease: 'easeOut' }}
+                  className="space-y-3"
                   style={{
-                    boxShadow: '0 4px 12px rgba(245, 214, 123, 0.25)',
+                    transform: 'perspective(1000px)',
                   }}
                 >
-                  Shop Research Peptides
-                </Link>
-              </motion.div>
-            </div>
+                  {/* VICI - Larger */}
+                  <h1 
+                    className="text-heading text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-charcoal leading-none tracking-tight"
+                    style={{
+                      textShadow: '2px 2px 4px rgba(43, 43, 43, 0.1), 0 0 20px rgba(230, 222, 212, 0.2)',
+                      transform: 'perspective(1000px) rotateX(2deg)',
+                    }}
+                  >
+                    VICI
+                  </h1>
+                  {/* PEPTIDES - Smaller, uppercase */}
+                  <h2 
+                    className="text-heading text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal text-charcoal uppercase tracking-wider"
+                    style={{
+                      textShadow: '1px 1px 3px rgba(43, 43, 43, 0.1), 0 0 15px rgba(230, 222, 212, 0.15)',
+                      transform: 'perspective(1000px) rotateX(-1deg)',
+                    }}
+                  >
+                    PEPTIDES
+                  </h2>
+                </motion.div>
+                
+                {/* CTA Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, delay: 0.4, ease: 'easeOut' }}
+                  className="pt-6"
+                >
+                  <Link
+                    href="/shop"
+                    className="inline-block bg-ivory border-2 border-charcoal text-charcoal px-10 py-5 font-semibold text-xl hover:bg-charcoal hover:text-ivory transition-all duration-400 text-center min-h-[56px] flex items-center justify-center uppercase tracking-wide"
+                    style={{
+                      boxShadow: '0 4px 12px rgba(43, 43, 43, 0.15), 0 0 20px rgba(230, 222, 212, 0.2)',
+                      transform: 'perspective(1000px)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'perspective(1000px) translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 6px 16px rgba(43, 43, 43, 0.2), 0 0 25px rgba(230, 222, 212, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'perspective(1000px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(43, 43, 43, 0.15), 0 0 20px rgba(230, 222, 212, 0.2)';
+                    }}
+                  >
+                    SHOP PEPTIDES
+                  </Link>
+                </motion.div>
+              </div>
 
-            {/* Right Column - Hero Image (40%) - Stacks Second on Mobile */}
-            <div className="lg:col-span-2 order-2 lg:order-2">
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.1, delay: 0.3, ease: 'easeOut' }}
-                className="relative w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden"
-                style={{
-                  background: 'radial-gradient(circle at center, rgba(245, 214, 123, 0.05) 0%, transparent 70%)',
-                }}
-              >
-                <Image
-                  src="/images/peptide-vial-hero.jpg"
-                  alt="Research peptide vials for laboratory use"
-                  fill
-                  priority
-                  className="object-contain rounded-lg"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </motion.div>
+              {/* Right Column - Hero Vials Image */}
+              <div className="order-2 lg:order-2 flex justify-center lg:justify-end">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1.1, delay: 0.3, ease: 'easeOut' }}
+                  className="relative w-full max-w-2xl h-auto"
+                  style={{
+                    transform: 'perspective(1200px) rotateY(-5deg) rotateX(3deg)',
+                    filter: 'drop-shadow(0 12px 32px rgba(230, 222, 212, 0.5)) drop-shadow(0 4px 12px rgba(43, 43, 43, 0.15))',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'perspective(1200px) rotateY(-3deg) rotateX(2deg) scale(1.02)';
+                    e.currentTarget.style.filter = 'drop-shadow(0 16px 40px rgba(230, 222, 212, 0.6)) drop-shadow(0 6px 16px rgba(43, 43, 43, 0.2))';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'perspective(1200px) rotateY(-5deg) rotateX(3deg)';
+                    e.currentTarget.style.filter = 'drop-shadow(0 12px 32px rgba(230, 222, 212, 0.5)) drop-shadow(0 4px 12px rgba(43, 43, 43, 0.15))';
+                  }}
+                >
+                  <Image
+                    src="/images/vici-hero-vials.png"
+                    alt="Vici Peptides research vials"
+                    width={1000}
+                    height={750}
+                    priority
+                    className="object-contain w-full h-auto"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
+                </motion.div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Category Grid Section */}
+      <CategoryGrid />
+
       {/* Best-Selling Research Compounds - Above the Fold */}
-      <section className="bg-primary-black py-12 md:py-16 relative mb-30">
+      <section className="bg-ivory py-12 md:py-16 relative mb-30">
         <FadeInOnScroll direction="up" delay={0.1}>
           <ProductCarousel title="Best-Selling Research Compounds" products={bestSelling} />
         </FadeInOnScroll>
       </section>
 
       {/* Newest Additions Carousel */}
-      <section className="bg-primary-black py-12 md:py-16 relative mb-30">
+      <section className="bg-ivory py-12 md:py-16 relative mb-30">
         <FadeInOnScroll direction="up" delay={0.1}>
           <ProductCarousel title="Newest Additions" products={newest} />
         </FadeInOnScroll>
       </section>
 
       {/* Feature Cards Section */}
-      <section className="bg-secondary-charcoal py-16 md:py-24 relative">
-        {/* Glowing divider line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent"></div>
+      <section className="bg-taupe py-16 md:py-24 relative">
+        {/* Subtle divider line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-stone to-transparent"></div>
         
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               {/* Card 1: Purity & Verification */}
               <FadeInOnScroll direction="up" delay={0.1}>
-                <div className="bg-primary-black rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-luxury-gold/30"
+                <div className="bg-ivory rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-taupe"
                   style={{
-                    boxShadow: '0 0 0 rgba(245, 214, 123, 0)',
+                    boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(245, 214, 123, 0.25)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(43, 43, 43, 0.15)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(43, 43, 43, 0.1)';
                   }}
                 >
                 <div className="mb-6">
-                  <div className="w-16 h-16 bg-luxury-gold/10 rounded-lg flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-taupe rounded-lg flex items-center justify-center mb-4">
                     <svg
-                      className="w-8 h-8 text-luxury-gold"
+                      className="w-8 h-8 text-charcoal"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -138,10 +199,10 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h2 className="text-heading text-2xl font-bold text-accent-gold-light mb-4">
+                  <h2 className="text-heading text-2xl font-bold text-charcoal mb-4">
                     Purity & Verification
                   </h2>
-                  <p className="text-pure-white leading-relaxed">
+                  <p className="text-charcoal leading-relaxed">
                     Every batch undergoes rigorous third-party testing to verify purity and identity. 
                     Certificates of Analysis (CoA) are available for all products, ensuring researchers 
                     receive laboratory-grade materials that meet strict quality standards.
@@ -149,7 +210,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/shop"
-                  className="text-luxury-gold font-semibold hover:text-accent-gold-light transition-all duration-400 inline-flex items-center"
+                  className="text-charcoal font-semibold hover:text-charcoal/80 transition-all duration-400 inline-flex items-center"
                 >
                   Learn More
                   <svg
@@ -171,21 +232,21 @@ export default function Home() {
 
               {/* Card 2: Regulatory Compliance */}
               <FadeInOnScroll direction="up" delay={0.2}>
-                <div className="bg-slate-800 rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-slate-700"
+                <div className="bg-ivory rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-taupe"
                   style={{
-                    boxShadow: '0 0 0 rgba(245, 214, 123, 0)',
+                    boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(245, 214, 123, 0.25)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(43, 43, 43, 0.15)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(43, 43, 43, 0.1)';
                   }}
                 >
                 <div className="mb-6">
-                  <div className="w-16 h-16 bg-luxury-gold/10 rounded-lg flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-taupe rounded-lg flex items-center justify-center mb-4">
                     <svg
-                      className="w-8 h-8 text-luxury-gold"
+                      className="w-8 h-8 text-charcoal"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -198,10 +259,10 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h2 className="text-heading text-2xl font-bold text-accent-gold-light mb-4">
+                  <h2 className="text-heading text-2xl font-bold text-charcoal mb-4">
                     Regulatory Compliance
                   </h2>
-                  <p className="text-pure-white leading-relaxed">
+                  <p className="text-charcoal leading-relaxed">
                     All products are sold strictly for laboratory research use only. We maintain full 
                     compliance with FDA regulations and state-level requirements, ensuring proper 
                     labeling, documentation, and adherence to research-only classification standards.
@@ -209,7 +270,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/terms"
-                  className="text-luxury-gold font-semibold hover:text-accent-gold-light transition-all duration-300 inline-flex items-center glow-on-hover"
+                  className="text-charcoal font-semibold hover:text-charcoal/80 transition-all duration-300 inline-flex items-center glow-on-hover"
                 >
                   View Policies
                   <svg
@@ -231,21 +292,21 @@ export default function Home() {
 
               {/* Card 3: Trusted Supply Chain */}
               <FadeInOnScroll direction="up" delay={0.3}>
-                <div className="bg-primary-black rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-luxury-gold/30"
+                <div className="bg-ivory rounded-xl p-8 md:p-10 shadow-md transition-all duration-400 border border-taupe"
                   style={{
-                    boxShadow: '0 0 0 rgba(245, 214, 123, 0)',
+                    boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(245, 214, 123, 0.25)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(43, 43, 43, 0.15)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = '';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(43, 43, 43, 0.1)';
                   }}
                 >
                 <div className="mb-6">
-                  <div className="w-16 h-16 bg-luxury-gold/10 rounded-lg flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-taupe rounded-lg flex items-center justify-center mb-4">
                     <svg
-                      className="w-8 h-8 text-luxury-gold"
+                      className="w-8 h-8 text-charcoal"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -258,10 +319,10 @@ export default function Home() {
                       />
                     </svg>
                   </div>
-                  <h2 className="text-heading text-2xl font-bold text-accent-gold-light mb-4">
+                  <h2 className="text-heading text-2xl font-bold text-charcoal mb-4">
                     Trusted Supply Chain
                   </h2>
-                  <p className="text-pure-white leading-relaxed">
+                  <p className="text-charcoal leading-relaxed">
                     We partner exclusively with FDA-registered API manufacturers and maintain 
                     comprehensive batch tracking. Our supply chain is transparent, with full 
                     documentation available for every product, from manufacturing to delivery.
@@ -269,7 +330,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/about"
-                  className="text-luxury-gold font-semibold hover:text-accent-gold-light transition-all duration-300 inline-flex items-center glow-on-hover"
+                  className="text-charcoal font-semibold hover:text-charcoal/80 transition-all duration-300 inline-flex items-center glow-on-hover"
                 >
                   Our Process
                   <svg

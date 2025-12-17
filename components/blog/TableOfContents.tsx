@@ -60,8 +60,8 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
   }
 
   return (
-    <div className="bg-secondary-charcoal rounded-lg border border-luxury-gold/20 p-6 sticky top-24" style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3), 0 0 8px rgba(212, 175, 55, 0.1)' }}>
-      <h3 className="text-heading text-lg font-semibold text-accent-gold-light mb-4">
+    <div className="bg-ivory rounded-lg border border-taupe p-6 sticky top-24" style={{ boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)' }}>
+      <h3 className="text-heading text-lg font-semibold text-charcoal mb-4">
         Table of Contents
       </h3>
       <nav>
@@ -70,10 +70,10 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
             <li key={item.id}>
               <button
                 onClick={() => scrollToSection(item.id)}
-                className={`text-left text-sm transition-colors w-full ${
+                className={`text-left text-sm transition-colors w-full font-serif ${
                   activeId === item.id
-                    ? 'text-luxury-gold font-semibold'
-                    : 'text-pure-white hover:text-luxury-gold'
+                    ? 'text-charcoal font-semibold'
+                    : 'text-stone hover:text-charcoal'
                 }`}
                 style={{ paddingLeft: `${(item.level - 2) * 16}px` }}
               >

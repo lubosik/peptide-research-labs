@@ -10,17 +10,17 @@ export const metadata: Metadata = generateSEOMetadata({
 
 export default function PrivacyPage() {
   return (
-    <div className="bg-neutral-light min-h-screen py-12 md:py-16">
+    <div className="bg-ivory min-h-screen py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-heading text-4xl font-bold text-accent-gray mb-8">
+          <h1 className="text-heading text-4xl font-bold text-charcoal mb-8">
             Privacy Policy
           </h1>
 
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8 md:p-12 space-y-8">
+          <div className="bg-ivory rounded-lg border border-taupe shadow-md p-8 md:p-12 space-y-8" style={{ boxShadow: '0 2px 8px rgba(43, 43, 43, 0.1)' }}>
             {/* Introduction */}
             <section>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 Vici Peptides ("we," "our," or "us") is committed to protecting your privacy.
                 This Privacy Policy explains how we collect, use, disclose, and safeguard your
                 information when you visit our website or make a purchase.
@@ -29,18 +29,18 @@ export default function PrivacyPage() {
 
             {/* Information We Collect */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Information We Collect
               </h2>
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-heading text-lg font-semibold text-accent-gray mb-2">
+                  <h3 className="text-heading text-lg font-semibold text-charcoal mb-2">
                     Personal Information
                   </h3>
-                  <p className="text-text-gray leading-relaxed">
+                  <p className="text-charcoal leading-relaxed">
                     We collect information that you provide directly to us, including:
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-text-gray mt-2 ml-4">
+                  <ul className="list-disc list-inside space-y-1 text-charcoal mt-2 ml-4">
                     <li>Name and contact information (email, phone, address)</li>
                     <li>Payment information (processed securely through third-party processors)</li>
                     <li>Order history and purchase preferences</li>
@@ -48,14 +48,14 @@ export default function PrivacyPage() {
                   </ul>
                 </div>
                 <div>
-                  <h3 className="text-heading text-lg font-semibold text-accent-gray mb-2">
+                  <h3 className="text-heading text-lg font-semibold text-charcoal mb-2">
                     Automatically Collected Information
                   </h3>
-                  <p className="text-text-gray leading-relaxed">
+                  <p className="text-charcoal leading-relaxed">
                     When you visit our website, we automatically collect certain information about your
                     device and browsing behavior, including:
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-text-gray mt-2 ml-4">
+                  <ul className="list-disc list-inside space-y-1 text-charcoal mt-2 ml-4">
                     <li>IP address and location data</li>
                     <li>Browser type and version</li>
                     <li>Pages visited and time spent on pages</li>
@@ -67,13 +67,13 @@ export default function PrivacyPage() {
 
             {/* How We Use Your Information */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 How We Use Your Information
               </h2>
               <p className="text-text-gray leading-relaxed mb-4">
                 We use the information we collect to:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-text-gray ml-4">
+              <ul className="list-disc list-inside space-y-2 text-charcoal ml-4">
                 <li>Process and fulfill your orders</li>
                 <li>Communicate with you about your orders and account</li>
                 <li>Send you marketing communications (with your consent)</li>
@@ -85,7 +85,7 @@ export default function PrivacyPage() {
 
             {/* Cookies and Tracking Technologies */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Cookies and Tracking Technologies
               </h2>
               <p className="text-text-gray leading-relaxed mb-4">
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
               </p>
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-heading text-lg font-semibold text-accent-gray mb-2">
+                  <h3 className="text-heading text-lg font-semibold text-charcoal mb-2">
                     Types of Cookies We Use
                   </h3>
                   <ul className="list-disc list-inside space-y-1 text-text-gray ml-4">
@@ -121,10 +121,10 @@ export default function PrivacyPage() {
 
             {/* Analytics */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Analytics
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 We use analytics services, such as Google Analytics, to help us understand how visitors
                 interact with our website. These services may use cookies and other tracking technologies
                 to collect information about your use of our website. This information is used to
@@ -137,7 +137,7 @@ export default function PrivacyPage() {
                   href="https://tools.google.com/dlpage/gaoptout"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:text-primary-dark"
+                  className="text-charcoal hover:text-charcoal/80 underline underline-offset-2"
                 >
                   https://tools.google.com/dlpage/gaoptout
                 </a>
@@ -147,14 +147,14 @@ export default function PrivacyPage() {
 
             {/* GDPR Compliance */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 GDPR Compliance (European Users)
               </h2>
               <p className="text-text-gray leading-relaxed mb-4">
                 If you are located in the European Economic Area (EEA), you have certain data protection
                 rights under the General Data Protection Regulation (GDPR):
               </p>
-              <ul className="list-disc list-inside space-y-2 text-text-gray ml-4">
+              <ul className="list-disc list-inside space-y-2 text-charcoal ml-4">
                 <li>
                   <strong>Right to Access:</strong> You can request copies of your personal data
                 </li>
@@ -177,7 +177,7 @@ export default function PrivacyPage() {
               </ul>
               <p className="text-text-gray leading-relaxed mt-4">
                 To exercise these rights, please contact us through our{' '}
-                <Link href="/contact" className="text-primary hover:text-primary-dark">
+                <Link href="/contact" className="text-charcoal hover:text-charcoal/80 underline underline-offset-2">
                   contact page
                 </Link>
                 .
@@ -186,13 +186,13 @@ export default function PrivacyPage() {
 
             {/* Data Sharing */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Data Sharing and Disclosure
               </h2>
               <p className="text-text-gray leading-relaxed mb-4">
                 We do not sell your personal information. We may share your information with:
               </p>
-              <ul className="list-disc list-inside space-y-2 text-text-gray ml-4">
+              <ul className="list-disc list-inside space-y-2 text-charcoal ml-4">
                 <li>
                   <strong>Service Providers:</strong> Third-party companies that help us operate our
                   website and process orders (e.g., payment processors, shipping companies)
@@ -209,10 +209,10 @@ export default function PrivacyPage() {
 
             {/* Data Security */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Data Security
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 We implement appropriate technical and organizational measures to protect your personal
                 information. However, no method of transmission over the Internet or electronic storage
                 is 100% secure. While we strive to protect your data, we cannot guarantee absolute
@@ -222,10 +222,10 @@ export default function PrivacyPage() {
 
             {/* Children's Privacy */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Children's Privacy
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 Our website is not intended for individuals under 18 years of age. We do not knowingly
                 collect personal information from children. If you are a parent or guardian and believe
                 your child has provided us with personal information, please contact us immediately.
@@ -234,10 +234,10 @@ export default function PrivacyPage() {
 
             {/* Changes to Privacy Policy */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Changes to This Privacy Policy
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 We may update this Privacy Policy from time to time. We will notify you of any changes
                 by posting the new Privacy Policy on this page and updating the "Last updated" date.
               </p>
@@ -245,12 +245,12 @@ export default function PrivacyPage() {
 
             {/* Contact */}
             <section>
-              <h2 className="text-heading text-2xl font-bold text-accent-gray mb-4">
+              <h2 className="text-heading text-2xl font-bold text-charcoal mb-4 border-b border-taupe pb-3">
                 Contact Us
               </h2>
-              <p className="text-text-gray leading-relaxed">
+              <p className="text-charcoal leading-relaxed">
                 If you have questions about this Privacy Policy, please contact us through our{' '}
-                <Link href="/contact" className="text-primary hover:text-primary-dark">
+                <Link href="/contact" className="text-charcoal hover:text-charcoal/80 underline underline-offset-2">
                   contact page
                 </Link>
                 .
@@ -258,8 +258,8 @@ export default function PrivacyPage() {
             </section>
 
             {/* Last Updated */}
-            <section className="pt-8 border-t border-gray-200">
-              <p className="text-sm text-text-gray">Last updated: December 2025</p>
+            <section className="pt-8 border-t border-taupe">
+              <p className="text-sm text-stone">Last updated: December 2025</p>
             </section>
           </div>
         </div>
