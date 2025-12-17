@@ -64,19 +64,17 @@ export function useCartRefresh(cartItems: CartItem[]) {
     setError(null);
 
     // Safety timeout to ensure loading state clears even if something goes wrong
-    let safetyTimeout: NodeJS.Timeout;
-    let fetchTimeoutId: NodeJS.Timeout;
-    
-    try {
-      // Safety timeout to ensure loading state clears even if something goes wrong
-      safetyTimeout = setTimeout(() => {
-        if (isRefreshingRef.current) {
-          console.warn('Cart refresh taking too long, clearing loading state');
-          setLoading(false);
-          isRefreshingRef.current = false;
-        }
-      }, 15000); // 15 second safety timeout
+    const safetyTimeout = setTimeout(() => {
+      if (isRefreshingRef.current) {
+        console.warn('Cart refresh taking too long, clearing loading state');
+        setLoading(false);
+        isRefreshingRef.current = false;
+      }
+    }, 15000); // 15 second safety timeout
 
+    let fetchTimeoutId: NodeJS.Timeout;
+
+    try {
       // Fetch all products from Airtable with timeout
       const controller = new AbortController();
       fetchTimeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -154,10 +152,10 @@ export function useCartRefresh(cartItems: CartItem[]) {
           );
           
           // If exact match not found, try case-insensitive or partial match
-          if (!variant && freshProduct.variants) {
+          if (!variant && freshProduct.variants && item.variantStrength) {
             variant = freshProduct.variants.find(
-              (v) => v.strength.toLowerCase() === item.variantStrength.toLowerCase() ||
-                     v.strength === item.variantStrength.trim()
+              (v) => v.strength.toLowerCase() === item.variantStrength!.toLowerCase() ||
+                     v.strength === item.variantStrength!.trim()
             );
           }
           
