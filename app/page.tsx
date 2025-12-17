@@ -45,23 +45,23 @@ export default function Home() {
     <div className="bg-ivory">
       {/* Hero Section */}
       <section className="min-h-[90vh] flex items-center justify-center relative mb-30 bg-ivory">
-        <div className="container mx-auto px-4 py-24 md:py-40">
+        <div className="container mx-auto px-4 py-12 sm:py-16 md:py-24 lg:py-40">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+            <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-12 lg:gap-20 items-center">
               {/* Left Column - Brand Name & CTA */}
-              <div className="text-center lg:text-left space-y-10 order-1 lg:order-1">
+              <div className="text-left space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.1, delay: 0.2, ease: 'easeOut' }}
-                  className="space-y-3"
+                  className="space-y-1 sm:space-y-2 md:space-y-3"
                   style={{
                     transform: 'perspective(1000px)',
                   }}
                 >
                   {/* VICI - Larger */}
                   <h1 
-                    className="text-heading text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-charcoal leading-none tracking-tight"
+                    className="text-heading text-2xl sm:text-4xl md:text-6xl lg:text-8xl xl:text-9xl font-bold text-charcoal leading-none tracking-tight"
                     style={{
                       textShadow: '2px 2px 4px rgba(43, 43, 43, 0.1), 0 0 20px rgba(230, 222, 212, 0.2)',
                       transform: 'perspective(1000px) rotateX(2deg)',
@@ -71,7 +71,7 @@ export default function Home() {
                   </h1>
                   {/* PEPTIDES - Smaller, uppercase */}
                   <h2 
-                    className="text-heading text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal text-charcoal uppercase tracking-wider"
+                    className="text-heading text-xs sm:text-lg md:text-3xl lg:text-5xl xl:text-6xl font-normal text-charcoal uppercase tracking-wider"
                     style={{
                       textShadow: '1px 1px 3px rgba(43, 43, 43, 0.1), 0 0 15px rgba(230, 222, 212, 0.15)',
                       transform: 'perspective(1000px) rotateX(-1deg)',
@@ -86,11 +86,11 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.1, delay: 0.4, ease: 'easeOut' }}
-                  className="pt-6"
+                  className="pt-2 sm:pt-4 md:pt-6"
                 >
                   <Link
                     href="/shop"
-                    className="inline-block bg-ivory border-2 border-charcoal text-charcoal px-10 py-5 font-semibold text-xl hover:bg-charcoal hover:text-ivory transition-all duration-400 text-center min-h-[56px] flex items-center justify-center uppercase tracking-wide"
+                    className="inline-block bg-ivory border-2 border-charcoal text-charcoal px-3 py-2 sm:px-6 sm:py-3 md:px-10 md:py-5 font-semibold text-xs sm:text-base md:text-xl hover:bg-charcoal hover:text-ivory transition-all duration-400 text-center min-h-[32px] sm:min-h-[40px] md:min-h-[56px] flex items-center justify-center uppercase tracking-wide"
                     style={{
                       boxShadow: '0 4px 12px rgba(43, 43, 43, 0.15), 0 0 20px rgba(230, 222, 212, 0.2)',
                       transform: 'perspective(1000px)',
@@ -110,12 +110,12 @@ export default function Home() {
               </div>
 
               {/* Right Column - Hero Vials Image */}
-              <div className="order-2 lg:order-2 flex justify-center lg:justify-end">
+              <div className="flex justify-end">
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.1, delay: 0.3, ease: 'easeOut' }}
-                  className="relative w-full max-w-2xl h-auto"
+                  className="relative w-full h-auto"
                   style={{
                     transform: 'perspective(1200px) rotateY(-5deg) rotateX(3deg)',
                     filter: 'drop-shadow(0 12px 32px rgba(230, 222, 212, 0.5)) drop-shadow(0 4px 12px rgba(43, 43, 43, 0.15))',
@@ -136,7 +136,7 @@ export default function Home() {
                     height={750}
                     priority
                     className="object-contain w-full h-auto"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 50vw"
                   />
                 </motion.div>
               </div>
