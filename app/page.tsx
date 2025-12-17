@@ -44,24 +44,24 @@ export default function Home() {
   return (
     <div className="bg-ivory">
       {/* Hero Section */}
-      <section className="min-h-[90vh] flex items-center justify-center relative mb-30 bg-ivory">
-        <div className="container mx-auto px-4 py-12 sm:py-16 md:py-24 lg:py-40">
+      <section className="min-h-[95vh] sm:min-h-[90vh] flex items-center justify-center relative mb-30 bg-ivory">
+        <div className="container mx-auto px-4 py-16 sm:py-16 md:py-24 lg:py-40">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-12 lg:gap-20 items-center">
+            <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-20 items-center">
               {/* Left Column - Brand Name & CTA */}
-              <div className="text-left space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10">
+              <div className="text-left space-y-6 sm:space-y-6 md:space-y-8 lg:space-y-10">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.1, delay: 0.2, ease: 'easeOut' }}
-                  className="space-y-1 sm:space-y-2 md:space-y-3"
+                  className="space-y-2 sm:space-y-2 md:space-y-3"
                   style={{
                     transform: 'perspective(1000px)',
                   }}
                 >
-                  {/* VICI - Larger */}
+                  {/* VICI - Larger - Mobile optimized */}
                   <h1 
-                    className="text-heading text-2xl sm:text-4xl md:text-6xl lg:text-8xl xl:text-9xl font-bold text-charcoal leading-none tracking-tight"
+                    className="text-heading text-5xl sm:text-4xl md:text-6xl lg:text-8xl xl:text-9xl font-bold text-charcoal leading-none tracking-tight"
                     style={{
                       textShadow: '2px 2px 4px rgba(43, 43, 43, 0.1), 0 0 20px rgba(230, 222, 212, 0.2)',
                       transform: 'perspective(1000px) rotateX(2deg)',
@@ -69,9 +69,9 @@ export default function Home() {
                   >
                     VICI
                   </h1>
-                  {/* PEPTIDES - Smaller, uppercase */}
+                  {/* PEPTIDES - Smaller, uppercase - Mobile optimized */}
                   <h2 
-                    className="text-heading text-xs sm:text-lg md:text-3xl lg:text-5xl xl:text-6xl font-normal text-charcoal uppercase tracking-wider"
+                    className="text-heading text-xl sm:text-lg md:text-3xl lg:text-5xl xl:text-6xl font-normal text-charcoal uppercase tracking-wider"
                     style={{
                       textShadow: '1px 1px 3px rgba(43, 43, 43, 0.1), 0 0 15px rgba(230, 222, 212, 0.15)',
                       transform: 'perspective(1000px) rotateX(-1deg)',
@@ -81,16 +81,16 @@ export default function Home() {
                   </h2>
                 </motion.div>
                 
-                {/* CTA Button */}
+                {/* CTA Button - Mobile optimized */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.1, delay: 0.4, ease: 'easeOut' }}
-                  className="pt-2 sm:pt-4 md:pt-6"
+                  className="pt-4 sm:pt-4 md:pt-6"
                 >
                   <Link
                     href="/shop"
-                    className="inline-block bg-ivory border-2 border-charcoal text-charcoal px-3 py-2 sm:px-6 sm:py-3 md:px-10 md:py-5 font-semibold text-xs sm:text-base md:text-xl hover:bg-charcoal hover:text-ivory transition-all duration-400 text-center min-h-[32px] sm:min-h-[40px] md:min-h-[56px] flex items-center justify-center uppercase tracking-wide"
+                    className="inline-block bg-ivory border-2 border-charcoal text-charcoal px-6 py-3 sm:px-6 sm:py-3 md:px-10 md:py-5 font-semibold text-sm sm:text-base md:text-xl hover:bg-charcoal hover:text-ivory transition-all duration-400 text-center min-h-[44px] sm:min-h-[40px] md:min-h-[56px] flex items-center justify-center uppercase tracking-wide"
                     style={{
                       boxShadow: '0 4px 12px rgba(43, 43, 43, 0.15), 0 0 20px rgba(230, 222, 212, 0.2)',
                       transform: 'perspective(1000px)',
@@ -109,7 +109,7 @@ export default function Home() {
                 </motion.div>
               </div>
 
-              {/* Right Column - Hero Vials Image */}
+              {/* Right Column - Hero Vials Image - Mobile optimized */}
               <div className="flex justify-end">
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
