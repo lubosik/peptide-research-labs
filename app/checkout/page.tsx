@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useCart } from '@/lib/context/CartContext';
 import Link from 'next/link';
-import StockImage from '@/components/images/StockImage';
+import { getProductImage } from '@/lib/products/get-product-image';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 import { useCartRefresh } from '@/lib/hooks/useCartRefresh';
-import { useRef } from 'react';
 
 export default function CheckoutPage() {
   const { items, getTotal, clearCart, updateItemPrice, updateItemProduct, updateWarehouse } = useCart();
@@ -542,28 +542,13 @@ export default function CheckoutPage() {
                       return (
                       <div key={itemKey} className="flex gap-4 pb-4 border-b border-taupe last:border-b-0 last:pb-0">
                         <div className="relative w-16 h-16 bg-taupe rounded overflow-hidden flex-shrink-0 border border-stone">
-                          <StockImage
-                            imageType="product-placeholder"
-                            context={item.product.name}
-                            productImageUrl={(() => {
-                              // FORCE local images for the 4 specific products
-                              const name = item.product.name.toUpperCase();
-                              if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
-                                return '/images/products/vici-5-amino-1mq.png';
-                              }
-                              if (name.includes('ACETIC ACID')) {
-                                return '/images/products/vici-acetic-acid.png';
-                              }
-                              if (name.includes('ADIPOTIDE')) {
-                                return '/images/products/vici-adipotide.png';
-                              }
-                              if (name.includes('AICAR')) {
-                                return '/images/products/vici-aicar.png';
-                              }
-                              return item.product.image;
-                            })()}
+                          <Image
+                            src={getProductImage(item.product.name)}
+                            alt={item.product.name}
                             fill
+                            className="object-cover rounded"
                             sizes="64px"
+                            loading="lazy"
                           />
                         </div>
                         <div className="flex-grow">

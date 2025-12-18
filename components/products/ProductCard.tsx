@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Product, hasVariants, getProductMinPrice, isProductInStock } from '@/data/products';
-import StockImage from '@/components/images/StockImage';
+import { getProductImage } from '@/lib/products/get-product-image';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 import { useCart } from '@/lib/context/CartContext';
 import { useWarehouse } from '@/lib/context/WarehouseContext';
@@ -139,37 +140,13 @@ export default function ProductCard({ product, className = '', isDiscontinued = 
       {/* Product Image - Larger Thumbnail */}
       <Link href={`/products/${product.slug}`} className={`block ${isDiscontinued ? 'pointer-events-none' : ''}`}>
         <div className="relative w-full h-80 overflow-hidden bg-taupe">
-          <StockImage
-            imageType="product-placeholder"
-            context={product.name}
-            productImageUrl={(() => {
-              // FORCE local images for the 4 specific products
-              // Check both product.name and product.slug to catch all variations
-              const name = product.name.toUpperCase();
-              const slug = product.slug?.toUpperCase() || '';
-              
-              if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ') || slug.includes('5-AMINO-1MQ') || slug.includes('5AMINO-1MQ')) {
-                console.log(`[ProductCard] ✓ FORCING local image for 5-amino-1mq (name: "${product.name}", slug: "${product.slug}")`);
-                return '/images/products/vici-5-amino-1mq.png';
-              }
-              if (name.includes('ACETIC ACID') || name.startsWith('ACETIC ACID') || slug.includes('ACETIC-ACID') || slug.includes('ACETICACID')) {
-                console.log(`[ProductCard] ✓ FORCING local image for ACETIC ACID (name: "${product.name}", slug: "${product.slug}")`);
-                return '/images/products/vici-acetic-acid.png';
-              }
-              if (name.includes('ADIPOTIDE') || name.startsWith('ADIPOTIDE') || slug.includes('ADIPOTIDE')) {
-                console.log(`[ProductCard] ✓ FORCING local image for Adipotide (name: "${product.name}", slug: "${product.slug}")`);
-                return '/images/products/vici-adipotide.png';
-              }
-              if (name.includes('AICAR') || name.startsWith('AICAR') || slug.includes('AICAR')) {
-                console.log(`[ProductCard] ✓ FORCING local image for AICAR (name: "${product.name}", slug: "${product.slug}")`);
-                return '/images/products/vici-aicar.png';
-              }
-              console.log(`[ProductCard] Using product.image for "${product.name}": ${product.image}`);
-              return product.image;
-            })()}
+          <Image
+            src={getProductImage(product.name)}
+            alt={product.name}
             fill
-            className="transition-transform duration-400 hover:scale-105"
+            className="object-cover transition-transform duration-400 hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            loading="lazy"
           />
         </div>
       </Link>

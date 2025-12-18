@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product, getProductMinPrice, getDefaultVariant, hasVariants } from '@/data/products';
-import StockImage from '@/components/images/StockImage';
+import { getProductImage } from '@/lib/products/get-product-image';
 import AddToCartButton from './AddToCartButton';
 import WarehouseSelector from './WarehouseSelector';
 import RelatedProductsAccordion from './RelatedProductsAccordion';
@@ -17,7 +17,6 @@ interface ProductDetailLayoutProps {
 }
 
 export default function ProductDetailLayout({ product }: ProductDetailLayoutProps) {
-  const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('50MG');
   const [quantity, setQuantity] = useState(1);
   const { showToast } = useToast();
@@ -26,14 +25,6 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
   const displayPrice = getPrice(product);
   // Get default variant for products with variants, or null for legacy products
   const defaultVariant = hasVariants(product) ? null : getDefaultVariant(product);
-
-  // Gallery images
-  const galleryImages = [
-    { type: 'product-placeholder' as const },
-    { type: 'laboratory-vials' as const },
-    { type: 'scientific-beakers' as const },
-    { type: 'research-equipment' as const },
-  ];
 
   const sizes = ['50MG', '100MG', '250MG'];
 
@@ -68,86 +59,27 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
         </div>
       </section>
 
-      {/* Main Product Section - Three Column Layout */}
+      {/* Main Product Section - Two Column Layout */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-12 gap-8">
-              {/* Left Column - Thumbnail Gallery (10%) */}
-              <div className="col-span-12 md:col-span-1">
-                <div className="flex md:flex-col gap-4 overflow-x-auto md:overflow-x-visible">
-                  {galleryImages.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`relative w-20 h-20 md:w-full flex-shrink-0 rounded-lg overflow-hidden cursor-pointer transition-all duration-300 border-2 ${
-                        selectedImage === index
-                          ? 'border-primary shadow-glow-sm'
-                          : 'border-gray-600 hover:border-primary/50'
-                      }`}
-                    >
-                      <StockImage
-                        imageType={image.type}
-                        context={product.name}
-                        productImageUrl={index === 0 ? (() => {
-                          // FORCE local images for the 4 specific products
-                          const name = product.name.toUpperCase();
-                          if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
-                            return '/images/products/vici-5-amino-1mq.png';
-                          }
-                          if (name.includes('ACETIC ACID')) {
-                            return '/images/products/vici-acetic-acid.png';
-                          }
-                          if (name.includes('ADIPOTIDE')) {
-                            return '/images/products/vici-adipotide.png';
-                          }
-                          if (name.includes('AICAR')) {
-                            return '/images/products/vici-aicar.png';
-                          }
-                          return product.image;
-                        })() : undefined}
-                        fill
-                        className="rounded-lg"
-                        sizes="80px"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Center Column - Main Image (50%) */}
+              {/* Left Column - Main Image (50%) */}
               <div className="col-span-12 md:col-span-6">
                 <div className="relative w-full h-96 md:h-[600px] rounded-lg overflow-hidden bg-slate-800">
-                  <StockImage
-                    imageType={galleryImages[selectedImage].type}
-                    context={product.name}
-                    productImageUrl={selectedImage === 0 ? (() => {
-                      // FORCE local images for the 4 specific products
-                      const name = product.name.toUpperCase();
-                      if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
-                        return '/images/products/vici-5-amino-1mq.png';
-                      }
-                      if (name.includes('ACETIC ACID')) {
-                        return '/images/products/vici-acetic-acid.png';
-                      }
-                      if (name.includes('ADIPOTIDE')) {
-                        return '/images/products/vici-adipotide.png';
-                      }
-                      if (name.includes('AICAR')) {
-                        return '/images/products/vici-aicar.png';
-                      }
-                      return product.image;
-                    })() : undefined}
+                  <Image
+                    src={getProductImage(product.name)}
+                    alt={product.name}
                     fill
                     priority
-                    className="rounded-lg object-contain"
+                    className="object-contain rounded-lg"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                 </div>
               </div>
 
-              {/* Right Column - Product Info (40%) */}
-              <div className="col-span-12 md:col-span-5">
+              {/* Right Column - Product Info (50%) */}
+              <div className="col-span-12 md:col-span-6">
                 <h1 className="text-heading text-3xl md:text-4xl font-bold text-white mb-6">
                   {product.name}
                 </h1>

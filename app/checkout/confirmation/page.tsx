@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import StockImage from '@/components/images/StockImage';
+import Image from 'next/image';
+import { getProductImage } from '@/lib/products/get-product-image';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 
 interface OrderData {
@@ -160,28 +161,13 @@ function ConfirmationContent() {
                       className="flex gap-4 pb-4 border-b border-slate-700 last:border-b-0"
                     >
                       <div className="relative w-20 h-20 bg-slate-700 rounded overflow-hidden flex-shrink-0">
-                        <StockImage
-                          imageType="product-placeholder"
-                          context={item.product.name}
-                          productImageUrl={(() => {
-                            // FORCE local images for the 4 specific products
-                            const name = item.product.name.toUpperCase();
-                            if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
-                              return '/images/products/vici-5-amino-1mq.png';
-                            }
-                            if (name.includes('ACETIC ACID')) {
-                              return '/images/products/vici-acetic-acid.png';
-                            }
-                            if (name.includes('ADIPOTIDE')) {
-                              return '/images/products/vici-adipotide.png';
-                            }
-                            if (name.includes('AICAR')) {
-                              return '/images/products/vici-aicar.png';
-                            }
-                            return item.product.image;
-                          })()}
+                        <Image
+                          src={getProductImage(item.product.name)}
+                          alt={item.product.name}
                           fill
+                          className="object-cover rounded"
                           sizes="80px"
+                          loading="lazy"
                         />
                       </div>
                       <div className="flex-grow">

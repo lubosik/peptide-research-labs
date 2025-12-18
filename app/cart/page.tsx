@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCart } from '@/lib/context/CartContext';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import StockImage from '@/components/images/StockImage';
+import { getProductImage } from '@/lib/products/get-product-image';
 import { getComplianceText } from '@/lib/utils/compliance-text';
 import { Warehouse } from '@/lib/context/WarehouseContext';
 import { useCartRefresh } from '@/lib/hooks/useCartRefresh';
@@ -166,29 +166,13 @@ export default function CartPage() {
                       )}
                       {/* Product Image */}
                       <div className="relative w-full sm:w-32 h-32 bg-taupe rounded-lg overflow-hidden flex-shrink-0 border border-stone">
-                        <StockImage
-                          imageType="product-placeholder"
-                          context={item.product.name}
-                          productImageUrl={(() => {
-                            // FORCE local images for the 4 specific products
-                            const name = item.product.name.toUpperCase();
-                            if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
-                              return '/images/products/vici-5-amino-1mq.png';
-                            }
-                            if (name.includes('ACETIC ACID')) {
-                              return '/images/products/vici-acetic-acid.png';
-                            }
-                            if (name.includes('ADIPOTIDE')) {
-                              return '/images/products/vici-adipotide.png';
-                            }
-                            if (name.includes('AICAR')) {
-                              return '/images/products/vici-aicar.png';
-                            }
-                            return item.product.image;
-                          })()}
+                        <Image
+                          src={getProductImage(item.product.name)}
+                          alt={item.product.name}
                           fill
-                          className="rounded-lg"
+                          className="object-cover rounded-lg"
                           sizes="128px"
+                          loading="lazy"
                         />
                       </div>
 
