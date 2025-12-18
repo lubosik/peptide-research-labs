@@ -224,23 +224,27 @@ function generateSlugFromName(productName: string): string {
  */
 function mapRecordToProduct(record: any): AirtableProduct {
   const imageAttachments = record.get('Image_URL');
-  const imageURL = normalizeImageURL(imageAttachments);
-  
-  // Debug logging for products with images
   const productName = record.get('Product_Name') || '';
+  
+  // Only log first few products to avoid spam, but always process all
+  const shouldLog = Math.random() < 0.1; // Log ~10% of products
+  
   if (imageAttachments) {
     if (Array.isArray(imageAttachments) && imageAttachments.length > 0) {
-      console.log(`[Airtable] Product "${productName}" - Attachment structure:`, JSON.stringify(imageAttachments[0], null, 2));
-      if (imageURL !== '/images/products/placeholder.jpg') {
-        console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 100)}...`);
-      } else {
-        console.warn(`[Airtable] Product "${productName}" - Failed to extract image URL from attachment`);
+      if (shouldLog) {
+        console.log(`[Airtable] Product "${productName}" - Attachment structure:`, JSON.stringify(imageAttachments[0], null, 2));
       }
-    } else {
-      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments, imageAttachments);
+    } else if (shouldLog) {
+      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments);
     }
-  } else {
+  } else if (shouldLog) {
     console.warn(`[Airtable] Product "${productName}" - No Image_URL attachment found`);
+  }
+  
+  const imageURL = normalizeImageURL(imageAttachments);
+  
+  if (shouldLog && imageURL !== '/images/products/placeholder.jpg') {
+    console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 100)}...`);
   }
   
   return {

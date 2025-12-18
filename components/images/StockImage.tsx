@@ -90,7 +90,11 @@ export default function StockImage({
           unoptimized={isAirtableUrl}
           onError={(e) => {
             console.error(`[StockImage] Image failed to load for "${context || 'unknown'}":`, imageUrl);
-            console.error(`[StockImage] Error details:`, e);
+            // Check if it's a CORS or network error
+            if (imageUrl && imageUrl.startsWith('https://')) {
+              console.error(`[StockImage] External image URL failed - possible CORS issue or invalid URL`);
+              console.error(`[StockImage] Try opening this URL directly in browser: ${imageUrl}`);
+            }
             // Fallback to a gradient background if image fails
             const target = e.currentTarget;
             target.style.display = 'none';
