@@ -85,8 +85,44 @@ export default function StockImage({
     imageUrl.includes('dl.airtable.com') ||
     imageUrl.includes('airtableusercontent.com')
   );
+  
+  // Check if it's a local image (starts with /images/)
+  const isLocalImage = imageUrl && imageUrl.startsWith('/images/');
 
   if (fill) {
+    // For local images, use Next.js Image component (optimized)
+    if (isLocalImage) {
+      return (
+        <div className={`relative ${className} bg-transparent`} style={{ width: '100%', height: '100%' }}>
+          <Image
+            src={imageUrl}
+            alt={alt}
+            fill
+            className="object-contain"
+            sizes={sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
+            priority={priority}
+            unoptimized={false}
+            onError={(e) => {
+              console.error(`[StockImage] Local image failed to load for "${context || 'unknown'}":`, imageUrl);
+              const target = e.currentTarget;
+              target.style.display = 'none';
+              if (target.parentElement) {
+                target.parentElement.style.background = 'linear-gradient(to bottom right, rgba(15, 23, 42, 0.5), rgba(30, 41, 59, 0.5))';
+              }
+            }}
+            onLoad={() => {
+              setIsLoading(false);
+              if (context && ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
+                context.toUpperCase().includes(name.toUpperCase())
+              )) {
+                console.log(`[StockImage] ✓ Successfully loaded LOCAL image for "${context}": ${imageUrl}`);
+              }
+            }}
+          />
+        </div>
+      );
+    }
+    
     // For Airtable URLs, use regular img tag to avoid Next.js Image optimization issues
     if (isAirtableUrl) {
       return (
@@ -147,6 +183,40 @@ export default function StockImage({
     );
   }
 
+  // For local images, use Next.js Image component (optimized)
+  if (isLocalImage) {
+    return (
+      <div className={`relative ${className}`} style={{ width: width || 800, height: height || 600 }}>
+        <Image
+          src={imageUrl}
+          alt={alt}
+          width={width || 800}
+          height={height || 600}
+          className="object-cover"
+          priority={priority}
+          unoptimized={false}
+          onError={(e) => {
+            console.error(`[StockImage] Local image failed to load for "${context || 'unknown'}":`, imageUrl);
+            const target = e.currentTarget;
+            target.style.display = 'none';
+            if (target.parentElement) {
+              target.parentElement.style.background = 'linear-gradient(to bottom right, #f3f4f6, #e5e7eb)';
+            }
+          }}
+          onLoad={() => {
+            setIsLoading(false);
+            if (context && ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
+              context.toUpperCase().includes(name.toUpperCase())
+            )) {
+              console.log(`[StockImage] ✓ Successfully loaded LOCAL image for "${context}": ${imageUrl}`);
+            }
+          }}
+          sizes={sizes}
+        />
+      </div>
+    );
+  }
+  
   // For Airtable URLs, use regular img tag
   if (isAirtableUrl) {
     return (
@@ -177,7 +247,7 @@ export default function StockImage({
     );
   }
   
-  // For non-Airtable URLs, use Next.js Image component
+  // For other URLs (fallback images), use Next.js Image component
   return (
     <div className={`relative ${className}`}>
       <Image
