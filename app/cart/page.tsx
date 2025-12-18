@@ -169,6 +169,7 @@ export default function CartPage() {
                         <StockImage
                           imageType="product-placeholder"
                           context={item.product.name}
+                          productImageUrl={item.product.image}
                           fill
                           className="rounded-lg"
                           sizes="128px"

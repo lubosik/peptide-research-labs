@@ -89,6 +89,7 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                       <StockImage
                         imageType={image.type}
                         context={product.name}
+                        productImageUrl={index === 0 ? product.image : undefined}
                         fill
                         className="rounded-lg"
                         sizes="80px"
@@ -104,6 +105,7 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                   <StockImage
                     imageType={galleryImages[selectedImage].type}
                     context={product.name}
+                    productImageUrl={selectedImage === 0 ? product.image : undefined}
                     fill
                     priority
                     className="rounded-lg object-contain"

@@ -545,6 +545,7 @@ export default function CheckoutPage() {
                           <StockImage
                             imageType="product-placeholder"
                             context={item.product.name}
+                            productImageUrl={item.product.image}
                             fill
                             sizes="64px"
                           />

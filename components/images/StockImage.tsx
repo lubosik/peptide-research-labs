@@ -7,6 +7,7 @@ import { generateImageAlt } from '@/lib/api/image-fetcher';
 interface StockImageProps {
   imageType: 'laboratory-vials' | 'peptide-molecule' | 'scientific-beakers' | 'research-equipment' | 'product-placeholder';
   context?: string;
+  productImageUrl?: string; // Optional product-specific image URL (from Airtable)
   className?: string;
   width?: number;
   height?: number;
@@ -29,6 +30,7 @@ const FALLBACK_IMAGES: Record<string, string> = {
 export default function StockImage({
   imageType,
   context,
+  productImageUrl,
   className = '',
   width,
   height,
@@ -36,17 +38,23 @@ export default function StockImage({
   fill = false,
   sizes,
 }: StockImageProps) {
-  const [imageUrl, setImageUrl] = useState<string>(FALLBACK_IMAGES[imageType]);
+  // Use product image if provided, otherwise use fallback
+  const defaultUrl = productImageUrl && productImageUrl !== '/images/products/placeholder.jpg' 
+    ? productImageUrl 
+    : FALLBACK_IMAGES[imageType];
+  const [imageUrl, setImageUrl] = useState<string>(defaultUrl);
   const [isLoading, setIsLoading] = useState(true);
   const alt = generateImageAlt(imageType, context);
 
   useEffect(() => {
-    // In a production environment, you would fetch from the API here
-    // For now, we'll use the fallback Unsplash URLs
-    // These are direct Unsplash URLs that work without API keys
-    setImageUrl(FALLBACK_IMAGES[imageType]);
+    // Use product image if provided, otherwise use fallback
+    if (productImageUrl && productImageUrl !== '/images/products/placeholder.jpg') {
+      setImageUrl(productImageUrl);
+    } else {
+      setImageUrl(FALLBACK_IMAGES[imageType]);
+    }
     setIsLoading(false);
-  }, [imageType]);
+  }, [imageType, productImageUrl]);
 
   if (fill) {
     return (

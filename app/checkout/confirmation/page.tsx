@@ -163,6 +163,7 @@ function ConfirmationContent() {
                         <StockImage
                           imageType="product-placeholder"
                           context={item.product.name}
+                          productImageUrl={item.product.image}
                           fill
                           sizes="80px"
                         />

@@ -142,6 +142,7 @@ export default function ProductCard({ product, className = '', isDiscontinued = 
           <StockImage
             imageType="product-placeholder"
             context={product.name}
+            productImageUrl={product.image}
             fill
             className="transition-transform duration-400 hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
