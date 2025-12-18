@@ -85,6 +85,7 @@ export default function StockImage({
   }, [imageType, productImageUrl, context]);
 
   if (fill) {
+    // For Airtable URLs, use unoptimized and add referrerPolicy
     return (
       <div className={`relative ${className} bg-transparent`}>
         <Image
@@ -95,12 +96,14 @@ export default function StockImage({
           sizes={sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
           priority={priority}
           unoptimized={isAirtableUrl}
+          referrerPolicy="no-referrer"
           onError={(e) => {
             console.error(`[StockImage] Image failed to load for "${context || 'unknown'}":`, imageUrl);
             // Check if it's a CORS or network error
             if (imageUrl && imageUrl.startsWith('https://')) {
               console.error(`[StockImage] External image URL failed - possible CORS issue or invalid URL`);
               console.error(`[StockImage] Try opening this URL directly in browser: ${imageUrl}`);
+              console.error(`[StockImage] Is Airtable URL: ${isAirtableUrl}`);
             }
             // Fallback to a gradient background if image fails
             const target = e.currentTarget;
@@ -111,6 +114,11 @@ export default function StockImage({
           }}
           onLoad={() => {
             setIsLoading(false);
+            if (isAirtableUrl && context && ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
+              context.toUpperCase().includes(name.toUpperCase())
+            )) {
+              console.log(`[StockImage] Successfully loaded Airtable image for "${context}"`);
+            }
           }}
         />
       </div>
@@ -127,15 +135,21 @@ export default function StockImage({
         className="object-cover"
         priority={priority}
         unoptimized={isAirtableUrl}
+        referrerPolicy="no-referrer"
         onError={(e) => {
-          console.error('Image failed to load:', imageUrl);
+          console.error(`[StockImage] Image failed to load for "${context || 'unknown'}":`, imageUrl);
           const target = e.currentTarget;
           target.style.display = 'none';
           if (target.parentElement) {
             target.parentElement.style.background = 'linear-gradient(to bottom right, #f3f4f6, #e5e7eb)';
           }
         }}
-        onLoad={() => setIsLoading(false)}
+        onLoad={() => {
+          setIsLoading(false);
+          if (isAirtableUrl && context) {
+            console.log(`[StockImage] Successfully loaded Airtable image for "${context}"`);
+          }
+        }}
         sizes={sizes}
       />
     </div>
