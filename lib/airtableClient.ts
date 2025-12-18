@@ -52,19 +52,45 @@ export interface AirtableProduct {
 }
 
 /**
+ * Convert Airtable page URL to actual image URL
+ * Airtable page URLs look like: https://airtable.com/app.../att...?blocks=hide
+ * We need to extract the attachment ID and construct the proper image URL
+ */
+function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
+  try {
+    // Extract attachment ID from URL pattern: .../att[ID]?...
+    const match = pageUrl.match(/\/att([^/?]+)/);
+    if (match && match[1]) {
+      const attachmentId = match[1];
+      // Construct the actual image URL
+      // Format: https://dl.airtable.com/.attachments/[attachmentId]/[filename]
+      // Since we don't have the filename, we'll try to get it from the API response
+      // For now, return null and let the API response handle it
+      return null;
+    }
+  } catch (e) {
+    console.error('[normalizeImageURL] Error converting Airtable page URL:', e);
+  }
+  return null;
+}
+
+/**
  * Normalize Airtable attachment field to URL string
  * Handles Airtable attachment objects which have a 'url' property
  * Airtable attachments are returned as: [{ url: "https://dl.airtable.com/...", filename: "...", ... }]
  * 
- * Airtable attachment format:
+ * Airtable attachment format from API:
  * [{
  *   id: "att...",
- *   url: "https://dl.airtable.com/.attachments/...",
+ *   url: "https://dl.airtable.com/.attachments/[id]/[filename]",
  *   filename: "image.png",
  *   size: 12345,
  *   type: "image/png",
  *   thumbnails: { small: {...}, large: {...}, full: {...} }
  * }]
+ * 
+ * NOTE: Sometimes Airtable returns page URLs instead of direct image URLs.
+ * The API should return the direct image URL in the 'url' property.
  */
 function normalizeImageURL(attachments: any): string {
   // Handle null/undefined
@@ -80,32 +106,76 @@ function normalizeImageURL(attachments: any): string {
     
     const firstAttachment = attachments[0];
     
-    // If it's already a string URL, return it (for backward compatibility)
+    // If it's already a string URL, check if it's an Airtable page URL
     if (typeof firstAttachment === 'string') {
-      return firstAttachment;
+      // Check if it's an Airtable page URL (not an image URL)
+      if (firstAttachment.includes('airtable.com/app') && firstAttachment.includes('/att')) {
+        console.warn('[normalizeImageURL] Received Airtable page URL instead of image URL:', firstAttachment);
+        // Try to extract attachment info - but we need the actual API response
+        return '/images/products/placeholder.jpg';
+      }
+      // If it's already a valid image URL, return it
+      if (firstAttachment.startsWith('http://') || firstAttachment.startsWith('https://')) {
+        return firstAttachment;
+      }
+      return '/images/products/placeholder.jpg';
     }
     
     // Airtable attachment objects have a 'url' property
-    // This is the primary way attachments are returned from Airtable
-    // Use the main 'url' property which is the full-size image
+    // This is the primary way attachments are returned from Airtable API
     if (firstAttachment?.url && typeof firstAttachment.url === 'string') {
-      // Ensure it's a valid HTTPS URL
-      if (firstAttachment.url.startsWith('http://') || firstAttachment.url.startsWith('https://')) {
-        return firstAttachment.url;
+      const url = firstAttachment.url;
+      
+      // Check if it's an Airtable page URL (shouldn't happen from API, but handle it)
+      if (url.includes('airtable.com/app') && url.includes('/att')) {
+        console.warn('[normalizeImageURL] Attachment object has Airtable page URL:', url);
+        // The API should return the direct image URL, but if it doesn't, try thumbnails
+        if (firstAttachment?.thumbnails?.full?.url) {
+          return firstAttachment.thumbnails.full.url;
+        }
+        if (firstAttachment?.thumbnails?.large?.url) {
+          return firstAttachment.thumbnails.large.url;
+        }
+        return '/images/products/placeholder.jpg';
+      }
+      
+      // Ensure it's a valid HTTPS URL pointing to dl.airtable.com
+      if (url.startsWith('https://dl.airtable.com/') || url.startsWith('https://v5.airtableusercontent.com/')) {
+        return url;
+      }
+      
+      // Also accept other HTTPS URLs (for flexibility)
+      if (url.startsWith('https://')) {
+        return url;
       }
     }
     
-    // Fallback: try thumbnails.full if main URL is missing
+    // Fallback: try thumbnails.full if main URL is missing or invalid
     if (firstAttachment?.thumbnails?.full?.url) {
-      return firstAttachment.thumbnails.full.url;
+      const thumbUrl = firstAttachment.thumbnails.full.url;
+      if (thumbUrl.startsWith('https://')) {
+        return thumbUrl;
+      }
     }
+    
+    // Try large thumbnail
+    if (firstAttachment?.thumbnails?.large?.url) {
+      const thumbUrl = firstAttachment.thumbnails.large.url;
+      if (thumbUrl.startsWith('https://')) {
+        return thumbUrl;
+      }
+    }
+    
+    // Log the attachment structure for debugging
+    console.warn('[normalizeImageURL] Could not extract valid image URL from attachment:', JSON.stringify(firstAttachment, null, 2));
   }
   
   // Handle single attachment object (not in array)
   if (typeof attachments === 'object' && !Array.isArray(attachments)) {
     if (attachments.url && typeof attachments.url === 'string') {
-      if (attachments.url.startsWith('http://') || attachments.url.startsWith('https://')) {
-        return attachments.url;
+      const url = attachments.url;
+      if (url.startsWith('https://dl.airtable.com/') || url.startsWith('https://v5.airtableusercontent.com/') || url.startsWith('https://')) {
+        return url;
       }
     }
     // Try thumbnails
@@ -156,10 +226,21 @@ function mapRecordToProduct(record: any): AirtableProduct {
   const imageAttachments = record.get('Image_URL');
   const imageURL = normalizeImageURL(imageAttachments);
   
-  // Debug logging for products with images (only log first few to avoid spam)
+  // Debug logging for products with images
   const productName = record.get('Product_Name') || '';
-  if (imageAttachments && imageAttachments.length > 0 && imageURL !== '/images/products/placeholder.jpg') {
-    console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 80)}...`);
+  if (imageAttachments) {
+    if (Array.isArray(imageAttachments) && imageAttachments.length > 0) {
+      console.log(`[Airtable] Product "${productName}" - Attachment structure:`, JSON.stringify(imageAttachments[0], null, 2));
+      if (imageURL !== '/images/products/placeholder.jpg') {
+        console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 100)}...`);
+      } else {
+        console.warn(`[Airtable] Product "${productName}" - Failed to extract image URL from attachment`);
+      }
+    } else {
+      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments, imageAttachments);
+    }
+  } else {
+    console.warn(`[Airtable] Product "${productName}" - No Image_URL attachment found`);
   }
   
   return {

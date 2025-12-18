@@ -55,15 +55,23 @@ export default function StockImage({
   useEffect(() => {
     // Use product image if provided, otherwise use fallback
     if (productImageUrl && productImageUrl !== '/images/products/placeholder.jpg') {
-      setImageUrl(productImageUrl);
-      // Debug: log when product image is being used
-      if (context) {
-        console.log(`[StockImage] Using product image for "${context}": ${productImageUrl.substring(0, 80)}...`);
+      // Check if it's an Airtable page URL (not an image URL)
+      if (productImageUrl.includes('airtable.com/app') && productImageUrl.includes('/att')) {
+        console.error(`[StockImage] ERROR: Received Airtable page URL instead of image URL for "${context}":`, productImageUrl);
+        console.error(`[StockImage] This means the Airtable API is not returning the correct attachment structure.`);
+        console.error(`[StockImage] The API should return: { url: "https://dl.airtable.com/..." }`);
+        setImageUrl(FALLBACK_IMAGES[imageType]);
+      } else {
+        setImageUrl(productImageUrl);
+        // Debug: log when product image is being used
+        if (context) {
+          console.log(`[StockImage] Using product image for "${context}": ${productImageUrl.substring(0, 100)}...`);
+        }
       }
     } else {
       setImageUrl(FALLBACK_IMAGES[imageType]);
       if (productImageUrl && context) {
-        console.warn(`[StockImage] No valid image URL for "${context}", using fallback`);
+        console.warn(`[StockImage] No valid image URL for "${context}", using fallback. Received:`, productImageUrl);
       }
     }
     setIsLoading(false);
