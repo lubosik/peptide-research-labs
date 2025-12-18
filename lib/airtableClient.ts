@@ -78,20 +78,25 @@ function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
  * Normalize Airtable attachment field to URL string
  * 
  * Airtable attachment format from API (per official docs):
+ * The Image_URL field returns an array of attachment objects:
+ * 
  * [{
- *   id: "att...",
- *   url: "https://v5.airtableusercontent.com/v3/u/...",
- *   filename: "image.png",
- *   size: 12345,
- *   type: "image/png",
- *   width: 2048,
- *   height: 2048,
- *   thumbnails: {
- *     small: { url: "...", width: 36, height: 36 },
- *     large: { url: "...", width: 512, height: 512 },
- *     full: { url: "...", width: 2048, height: 2048 }
+ *   id: "attrDRXarlBSmxIq5",           // Always present
+ *   url: "https://v5.airtableusercontent.com/v3/u/...",  // Always present (expires in 2 hours)
+ *   filename: "Vici Peptides Site-Epitalon.jpg",  // Always present
+ *   size: 380063,                      // May be present
+ *   type: "image/jpeg",                // May be present
+ *   width: 1736,                       // May be present (for images)
+ *   height: 2278,                      // May be present (for images)
+ *   thumbnails: {                      // May be present (for images/documents)
+ *     small: { url: "...", width: 27, height: 35 },
+ *     large: { url: "...", width: 512, height: 672 },
+ *     full: { url: "...", width: 1736, height: 2278 }
  *   }
  * }]
+ * 
+ * According to Airtable docs: "only id, url, and filename are always returned"
+ * Other properties (size, type, width, height, thumbnails) may not be included.
  * 
  * Priority: Use main 'url' first (full resolution), fallback to thumbnails.full.url
  * Note: URLs expire after 2 hours, but that's handled by Airtable's CDN
