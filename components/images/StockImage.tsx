@@ -45,6 +45,12 @@ export default function StockImage({
   const [imageUrl, setImageUrl] = useState<string>(defaultUrl);
   const [isLoading, setIsLoading] = useState(true);
   const alt = generateImageAlt(imageType, context);
+  
+  // Check if image is from Airtable (external URL) - recalculate when imageUrl changes
+  const isAirtableUrl = imageUrl && (
+    imageUrl.includes('airtable.com') || 
+    imageUrl.includes('airtableusercontent.com')
+  );
 
   useEffect(() => {
     // Use product image if provided, otherwise use fallback
@@ -73,7 +79,7 @@ export default function StockImage({
           className="object-contain"
           sizes={sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
           priority={priority}
-          unoptimized={false}
+          unoptimized={isAirtableUrl}
           onError={(e) => {
             console.error(`[StockImage] Image failed to load for "${context || 'unknown'}":`, imageUrl);
             console.error(`[StockImage] Error details:`, e);
@@ -101,7 +107,7 @@ export default function StockImage({
         height={height || 600}
         className="object-cover"
         priority={priority}
-        unoptimized={false}
+        unoptimized={isAirtableUrl}
         onError={(e) => {
           console.error('Image failed to load:', imageUrl);
           const target = e.currentTarget;
