@@ -52,25 +52,27 @@ export default function StockImage({
       // Check if it's an Airtable page URL (not an image URL)
       if (productImageUrl.includes('airtable.com/app') && productImageUrl.includes('/att')) {
         console.error(`[StockImage] ERROR: Received Airtable page URL instead of image URL for "${context}":`, productImageUrl);
-        console.error(`[StockImage] This means the Airtable API is not returning the correct attachment structure.`);
-        console.error(`[StockImage] The API should return: { url: "https://v5.airtableusercontent.com/..." }`);
         setImageUrl(FALLBACK_IMAGES[imageType]);
       } else {
         setImageUrl(productImageUrl);
-        // Debug: log when product image is being used (only for first few products)
+        // Always log for the 4 specific products
         if (context && ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
           context.toUpperCase().includes(name.toUpperCase())
         )) {
-          console.log(`[StockImage] Using product image for "${context}": ${productImageUrl.substring(0, 150)}...`);
-          console.log(`[StockImage] Full URL: ${productImageUrl}`);
+          console.log(`[StockImage] ✓ Setting image URL for "${context}"`);
+          console.log(`[StockImage] URL: ${productImageUrl}`);
+          console.log(`[StockImage] Is local image: ${productImageUrl.startsWith('/images/products/vici-')}`);
+          console.log(`[StockImage] Is Airtable URL: ${productImageUrl.includes('airtableusercontent.com')}`);
         }
       }
     } else {
       setImageUrl(FALLBACK_IMAGES[imageType]);
-      if (productImageUrl && context && ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
+      if (context && ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
         context.toUpperCase().includes(name.toUpperCase())
       )) {
-        console.warn(`[StockImage] No valid image URL for "${context}", using fallback. Received:`, productImageUrl);
+        console.error(`[StockImage] ✗ No valid image URL for "${context}"!`);
+        console.error(`[StockImage] Received productImageUrl:`, productImageUrl);
+        console.error(`[StockImage] Using fallback: ${FALLBACK_IMAGES[imageType]}`);
       }
     }
     setIsLoading(false);

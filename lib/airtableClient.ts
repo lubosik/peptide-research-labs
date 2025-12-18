@@ -76,19 +76,25 @@ function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
 
 /**
  * Map product names to local image files (fallback when Airtable URLs don't work)
+ * ALWAYS use local images for these 4 products to ensure they work
  */
 function getLocalImagePath(productName: string): string | null {
   const name = productName.toUpperCase();
-  if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
+  // Match various formats of product names
+  if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ') || name.includes('5 AMINO 1MQ')) {
+    console.log(`[getLocalImagePath] Matched 5-amino-1mq, using local image`);
     return '/images/products/vici-5-amino-1mq.png';
   }
-  if (name.includes('ACETIC ACID')) {
+  if (name.includes('ACETIC ACID') || name.startsWith('ACETIC ACID')) {
+    console.log(`[getLocalImagePath] Matched ACETIC ACID, using local image`);
     return '/images/products/vici-acetic-acid.png';
   }
-  if (name.includes('ADIPOTIDE')) {
+  if (name.includes('ADIPOTIDE') || name.startsWith('ADIPOTIDE')) {
+    console.log(`[getLocalImagePath] Matched Adipotide, using local image`);
     return '/images/products/vici-adipotide.png';
   }
-  if (name.includes('AICAR')) {
+  if (name.includes('AICAR') || name.startsWith('AICAR')) {
+    console.log(`[getLocalImagePath] Matched AICAR, using local image`);
     return '/images/products/vici-aicar.png';
   }
   return null;
@@ -124,17 +130,20 @@ function getLocalImagePath(productName: string): string | null {
  * FALLBACK: For specific products with local images, use local path instead
  */
 function normalizeImageURL(attachments: any, productName?: string): string {
-  // First, check if we have a local image for this product (fallback)
+  // ALWAYS use local images for the 4 specific products (guaranteed to work)
   if (productName) {
     const localPath = getLocalImagePath(productName);
     if (localPath) {
-      // Prefer local image for known products
+      console.log(`[normalizeImageURL] Using LOCAL image for "${productName}": ${localPath}`);
       return localPath;
     }
   }
   
-  // Handle null/undefined
+  // Handle null/undefined - return placeholder
   if (!attachments) {
+    if (productName) {
+      console.warn(`[normalizeImageURL] No attachments for "${productName}", using placeholder`);
+    }
     return '/images/products/placeholder.jpg';
   }
   
@@ -254,10 +263,21 @@ function mapRecordToProduct(record: any): AirtableProduct {
   const imageAttachments = record.get('Image_URL');
   const productName = record.get('Product_Name') || '';
   
-  // Always log first 3 products with images for debugging
+  // Check if this is one of the 4 products with local images
+  const hasLocalImage = getLocalImagePath(productName) !== null;
+  
+  // Always log for the 4 specific products
   const isFirstFew = ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
     productName.toUpperCase().includes(name.toUpperCase())
   );
+  
+  if (isFirstFew) {
+    console.log(`[Airtable] Processing product: "${productName}"`);
+    console.log(`[Airtable] Has local image: ${hasLocalImage}`);
+    if (hasLocalImage) {
+      console.log(`[Airtable] Local image path: ${getLocalImagePath(productName)}`);
+    }
+  }
   
   if (imageAttachments) {
     if (Array.isArray(imageAttachments) && imageAttachments.length > 0) {
@@ -265,7 +285,7 @@ function mapRecordToProduct(record: any): AirtableProduct {
         console.log(`[Airtable] Product "${productName}" - Attachment structure:`, JSON.stringify(imageAttachments[0], null, 2));
       }
     } else if (isFirstFew) {
-      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments, imageAttachments);
+      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments);
     }
   } else if (isFirstFew) {
     console.warn(`[Airtable] Product "${productName}" - No Image_URL attachment found`);
@@ -274,10 +294,13 @@ function mapRecordToProduct(record: any): AirtableProduct {
   const imageURL = normalizeImageURL(imageAttachments, productName);
   
   if (isFirstFew) {
-    if (imageURL !== '/images/products/placeholder.jpg') {
-      console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 150)}...`);
+    console.log(`[Airtable] Product "${productName}" - FINAL Image URL: ${imageURL}`);
+    if (imageURL.startsWith('/images/products/vici-')) {
+      console.log(`[Airtable] ✓ Using LOCAL image for "${productName}"`);
+    } else if (imageURL.includes('airtableusercontent.com')) {
+      console.log(`[Airtable] ⚠ Using Airtable URL for "${productName}" (may expire)`);
     } else {
-      console.error(`[Airtable] Product "${productName}" - FAILED to extract image URL!`);
+      console.warn(`[Airtable] ✗ Using placeholder for "${productName}"`);
     }
   }
   
