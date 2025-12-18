@@ -89,7 +89,23 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                       <StockImage
                         imageType={image.type}
                         context={product.name}
-                        productImageUrl={index === 0 ? product.image : undefined}
+                        productImageUrl={index === 0 ? (() => {
+                          // FORCE local images for the 4 specific products
+                          const name = product.name.toUpperCase();
+                          if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
+                            return '/images/products/vici-5-amino-1mq.png';
+                          }
+                          if (name.includes('ACETIC ACID')) {
+                            return '/images/products/vici-acetic-acid.png';
+                          }
+                          if (name.includes('ADIPOTIDE')) {
+                            return '/images/products/vici-adipotide.png';
+                          }
+                          if (name.includes('AICAR')) {
+                            return '/images/products/vici-aicar.png';
+                          }
+                          return product.image;
+                        })() : undefined}
                         fill
                         className="rounded-lg"
                         sizes="80px"
@@ -105,7 +121,23 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
                   <StockImage
                     imageType={galleryImages[selectedImage].type}
                     context={product.name}
-                    productImageUrl={selectedImage === 0 ? product.image : undefined}
+                    productImageUrl={selectedImage === 0 ? (() => {
+                      // FORCE local images for the 4 specific products
+                      const name = product.name.toUpperCase();
+                      if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
+                        return '/images/products/vici-5-amino-1mq.png';
+                      }
+                      if (name.includes('ACETIC ACID')) {
+                        return '/images/products/vici-acetic-acid.png';
+                      }
+                      if (name.includes('ADIPOTIDE')) {
+                        return '/images/products/vici-adipotide.png';
+                      }
+                      if (name.includes('AICAR')) {
+                        return '/images/products/vici-aicar.png';
+                      }
+                      return product.image;
+                    })() : undefined}
                     fill
                     priority
                     className="rounded-lg object-contain"

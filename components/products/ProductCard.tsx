@@ -142,7 +142,27 @@ export default function ProductCard({ product, className = '', isDiscontinued = 
           <StockImage
             imageType="product-placeholder"
             context={product.name}
-            productImageUrl={product.image}
+            productImageUrl={(() => {
+              // FORCE local images for the 4 specific products
+              const name = product.name.toUpperCase();
+              if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
+                console.log(`[ProductCard] FORCING local image for 5-amino-1mq`);
+                return '/images/products/vici-5-amino-1mq.png';
+              }
+              if (name.includes('ACETIC ACID')) {
+                console.log(`[ProductCard] FORCING local image for ACETIC ACID`);
+                return '/images/products/vici-acetic-acid.png';
+              }
+              if (name.includes('ADIPOTIDE')) {
+                console.log(`[ProductCard] FORCING local image for Adipotide`);
+                return '/images/products/vici-adipotide.png';
+              }
+              if (name.includes('AICAR')) {
+                console.log(`[ProductCard] FORCING local image for AICAR`);
+                return '/images/products/vici-aicar.png';
+              }
+              return product.image;
+            })()}
             fill
             className="transition-transform duration-400 hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"

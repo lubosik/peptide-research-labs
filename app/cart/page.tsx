@@ -169,7 +169,23 @@ export default function CartPage() {
                         <StockImage
                           imageType="product-placeholder"
                           context={item.product.name}
-                          productImageUrl={item.product.image}
+                          productImageUrl={(() => {
+                            // FORCE local images for the 4 specific products
+                            const name = item.product.name.toUpperCase();
+                            if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
+                              return '/images/products/vici-5-amino-1mq.png';
+                            }
+                            if (name.includes('ACETIC ACID')) {
+                              return '/images/products/vici-acetic-acid.png';
+                            }
+                            if (name.includes('ADIPOTIDE')) {
+                              return '/images/products/vici-adipotide.png';
+                            }
+                            if (name.includes('AICAR')) {
+                              return '/images/products/vici-aicar.png';
+                            }
+                            return item.product.image;
+                          })()}
                           fill
                           className="rounded-lg"
                           sizes="128px"
