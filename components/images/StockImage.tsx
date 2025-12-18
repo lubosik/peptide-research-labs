@@ -50,11 +50,18 @@ export default function StockImage({
     // Use product image if provided, otherwise use fallback
     if (productImageUrl && productImageUrl !== '/images/products/placeholder.jpg') {
       setImageUrl(productImageUrl);
+      // Debug: log when product image is being used
+      if (context) {
+        console.log(`[StockImage] Using product image for "${context}": ${productImageUrl.substring(0, 80)}...`);
+      }
     } else {
       setImageUrl(FALLBACK_IMAGES[imageType]);
+      if (productImageUrl && context) {
+        console.warn(`[StockImage] No valid image URL for "${context}", using fallback`);
+      }
     }
     setIsLoading(false);
-  }, [imageType, productImageUrl]);
+  }, [imageType, productImageUrl, context]);
 
   if (fill) {
     return (
@@ -68,7 +75,8 @@ export default function StockImage({
           priority={priority}
           unoptimized={false}
           onError={(e) => {
-            console.error('Image failed to load:', imageUrl);
+            console.error(`[StockImage] Image failed to load for "${context || 'unknown'}":`, imageUrl);
+            console.error(`[StockImage] Error details:`, e);
             // Fallback to a gradient background if image fails
             const target = e.currentTarget;
             target.style.display = 'none';

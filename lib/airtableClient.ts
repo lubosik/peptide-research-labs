@@ -55,21 +55,63 @@ export interface AirtableProduct {
  * Normalize Airtable attachment field to URL string
  * Handles Airtable attachment objects which have a 'url' property
  * Airtable attachments are returned as: [{ url: "https://dl.airtable.com/...", filename: "...", ... }]
+ * 
+ * Airtable attachment format:
+ * [{
+ *   id: "att...",
+ *   url: "https://dl.airtable.com/.attachments/...",
+ *   filename: "image.png",
+ *   size: 12345,
+ *   type: "image/png",
+ *   thumbnails: { small: {...}, large: {...}, full: {...} }
+ * }]
  */
-function normalizeImageURL(attachments: any[]): string {
-  if (!attachments || attachments.length === 0) {
+function normalizeImageURL(attachments: any): string {
+  // Handle null/undefined
+  if (!attachments) {
     return '/images/products/placeholder.jpg';
   }
   
-  // If it's already a string URL, return it (for backward compatibility)
-  if (typeof attachments[0] === 'string') {
-    return attachments[0];
+  // Handle array of attachments
+  if (Array.isArray(attachments)) {
+    if (attachments.length === 0) {
+      return '/images/products/placeholder.jpg';
+    }
+    
+    const firstAttachment = attachments[0];
+    
+    // If it's already a string URL, return it (for backward compatibility)
+    if (typeof firstAttachment === 'string') {
+      return firstAttachment;
+    }
+    
+    // Airtable attachment objects have a 'url' property
+    // This is the primary way attachments are returned from Airtable
+    // Use the main 'url' property which is the full-size image
+    if (firstAttachment?.url && typeof firstAttachment.url === 'string') {
+      // Ensure it's a valid HTTPS URL
+      if (firstAttachment.url.startsWith('http://') || firstAttachment.url.startsWith('https://')) {
+        return firstAttachment.url;
+      }
+    }
+    
+    // Fallback: try thumbnails.full if main URL is missing
+    if (firstAttachment?.thumbnails?.full?.url) {
+      return firstAttachment.thumbnails.full.url;
+    }
   }
   
-  // Airtable attachment objects have a 'url' property
-  // This is the primary way attachments are returned from Airtable
-  if (attachments[0]?.url && typeof attachments[0].url === 'string') {
-    return attachments[0].url;
+  // Handle single attachment object (not in array)
+  if (typeof attachments === 'object' && !Array.isArray(attachments)) {
+    if (attachments.url && typeof attachments.url === 'string') {
+      if (attachments.url.startsWith('http://') || attachments.url.startsWith('https://')) {
+        return attachments.url;
+      }
+    }
+    // Try thumbnails
+    if (attachments.thumbnails?.full?.url) {
+      return attachments.thumbnails.full.url;
+    }
   }
   
   return '/images/products/placeholder.jpg';
@@ -111,9 +153,18 @@ function generateSlugFromName(productName: string): string {
  * Map Airtable record to AirtableProduct interface
  */
 function mapRecordToProduct(record: any): AirtableProduct {
+  const imageAttachments = record.get('Image_URL');
+  const imageURL = normalizeImageURL(imageAttachments);
+  
+  // Debug logging for products with images (only log first few to avoid spam)
+  const productName = record.get('Product_Name') || '';
+  if (imageAttachments && imageAttachments.length > 0 && imageURL !== '/images/products/placeholder.jpg') {
+    console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 80)}...`);
+  }
+  
   return {
     productId: record.get('Product_ID')?.toString() || '',
-    productName: record.get('Product_Name') || '',
+    productName: productName,
     variantStrength: record.get('Variant_Strength') || '',
     category: record.get('Category') || '',
     priceUSD: record.get('Price_USD') || 0,
@@ -127,7 +178,7 @@ function mapRecordToProduct(record: any): AirtableProduct {
     casNumber: record.get('CAS_Number') || undefined,
     synonyms: normalizeSynonyms(record.get('Synonyms')),
     pubchemId: record.get('PubChem_ID') || undefined,
-    imageURL: normalizeImageURL(record.get('Image_URL')),
+    imageURL: imageURL,
     certificateOfAnalysisURL: record.get('Certificate_of_Analysis_URL') || undefined,
     seoTitle: record.get('SEO_Title') || '',
     seoDescription: record.get('SEO_Description') || '',
