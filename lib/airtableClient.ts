@@ -52,175 +52,44 @@ export interface AirtableProduct {
 }
 
 /**
- * Convert Airtable page URL to actual image URL
- * Airtable page URLs look like: https://airtable.com/app.../att...?blocks=hide
- * We need to extract the attachment ID and construct the proper image URL
- */
-function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
-  try {
-    // Extract attachment ID from URL pattern: .../att[ID]?...
-    const match = pageUrl.match(/\/att([^/?]+)/);
-    if (match && match[1]) {
-      const attachmentId = match[1];
-      // Construct the actual image URL
-      // Format: https://dl.airtable.com/.attachments/[attachmentId]/[filename]
-      // Since we don't have the filename, we'll try to get it from the API response
-      // For now, return null and let the API response handle it
-      return null;
-    }
-  } catch (e) {
-    console.error('[normalizeImageURL] Error converting Airtable page URL:', e);
-  }
-  return null;
-}
-
-/**
- * Map product names to local image files (fallback when Airtable URLs don't work)
- * ALWAYS use local images for these 4 products to ensure they work
+ * Map product names to local image files
+ * Uses images from /public/images/products/ directory
+ * All images are stored locally, no Airtable API needed
  */
 function getLocalImagePath(productName: string): string | null {
   const name = productName.toUpperCase();
   // Match various formats of product names
   if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ') || name.includes('5 AMINO 1MQ')) {
-    console.log(`[getLocalImagePath] Matched 5-amino-1mq, using local image`);
     return '/images/products/vici-5-amino-1mq.png';
   }
   if (name.includes('ACETIC ACID') || name.startsWith('ACETIC ACID')) {
-    console.log(`[getLocalImagePath] Matched ACETIC ACID, using local image`);
     return '/images/products/vici-acetic-acid.png';
   }
   if (name.includes('ADIPOTIDE') || name.startsWith('ADIPOTIDE')) {
-    console.log(`[getLocalImagePath] Matched Adipotide, using local image`);
     return '/images/products/vici-adipotide.png';
   }
   if (name.includes('AICAR') || name.startsWith('AICAR')) {
-    console.log(`[getLocalImagePath] Matched AICAR, using local image`);
     return '/images/products/vici-aicar.png';
   }
   return null;
 }
 
 /**
- * Normalize Airtable attachment field to URL string
- * 
- * Airtable attachment format from API (per official docs):
- * The Image_URL field returns an array of attachment objects:
- * 
- * [{
- *   id: "attrDRXarlBSmxIq5",           // Always present
- *   url: "https://v5.airtableusercontent.com/v3/u/...",  // Always present (expires in 2 hours)
- *   filename: "Vici Peptides Site-Epitalon.jpg",  // Always present
- *   size: 380063,                      // May be present
- *   type: "image/jpeg",                // May be present
- *   width: 1736,                       // May be present (for images)
- *   height: 2278,                      // May be present (for images)
- *   thumbnails: {                      // May be present (for images/documents)
- *     small: { url: "...", width: 27, height: 35 },
- *     large: { url: "...", width: 512, height: 672 },
- *     full: { url: "...", width: 1736, height: 2278 }
- *   }
- * }]
- * 
- * According to Airtable docs: "only id, url, and filename are always returned"
- * Other properties (size, type, width, height, thumbnails) may not be included.
- * 
- * Priority: Use main 'url' first (full resolution), fallback to thumbnails.full.url
- * Note: URLs expire after 2 hours, but that's handled by Airtable's CDN
- * 
- * FALLBACK: For specific products with local images, use local path instead
+ * Get image URL for a product - uses LOCAL images only (no Airtable)
+ * Returns local image path if available, otherwise placeholder
+ * All images are stored in /public/images/products/ directory
  */
 function normalizeImageURL(attachments: any, productName?: string): string {
-  // ALWAYS use local images for the 4 specific products (guaranteed to work)
+  // Always use local images for products that have them
   if (productName) {
     const localPath = getLocalImagePath(productName);
     if (localPath) {
-      console.log(`[normalizeImageURL] Using LOCAL image for "${productName}": ${localPath}`);
       return localPath;
     }
   }
   
-  // Handle null/undefined - return placeholder
-  if (!attachments) {
-    if (productName) {
-      console.warn(`[normalizeImageURL] No attachments for "${productName}", using placeholder`);
-    }
-    return '/images/products/placeholder.jpg';
-  }
-  
-  // Handle array of attachments (standard Airtable format)
-  if (Array.isArray(attachments)) {
-    if (attachments.length === 0) {
-      return '/images/products/placeholder.jpg';
-    }
-    
-    const firstAttachment = attachments[0];
-    
-    // If it's already a string URL (unlikely but handle it)
-    if (typeof firstAttachment === 'string') {
-      // Check if it's an Airtable page URL (not an image URL)
-      if (firstAttachment.includes('airtable.com/app') && firstAttachment.includes('/att')) {
-        console.warn('[normalizeImageURL] Received Airtable page URL instead of image URL');
-        return '/images/products/placeholder.jpg';
-      }
-      // If it's already a valid image URL, return it
-      if (firstAttachment.startsWith('https://')) {
-        return firstAttachment;
-      }
-      return '/images/products/placeholder.jpg';
-    }
-    
-    // Airtable attachment object - use the main 'url' property (full resolution)
-    if (firstAttachment?.url && typeof firstAttachment.url === 'string') {
-      const url = firstAttachment.url;
-      
-      // Validate it's a proper Airtable image URL
-      if (url.startsWith('https://v5.airtableusercontent.com/') || 
-          url.startsWith('https://dl.airtable.com/') ||
-          url.startsWith('https://')) {
-        return url;
-      }
-    }
-    
-    // Fallback: Use thumbnails.full.url (full-size thumbnail, same resolution as main URL)
-    if (firstAttachment?.thumbnails?.full?.url) {
-      const thumbUrl = firstAttachment.thumbnails.full.url;
-      if (thumbUrl.startsWith('https://')) {
-        return thumbUrl;
-      }
-    }
-    
-    // Fallback: Use thumbnails.large.url (512px)
-    if (firstAttachment?.thumbnails?.large?.url) {
-      const thumbUrl = firstAttachment.thumbnails.large.url;
-      if (thumbUrl.startsWith('https://')) {
-        return thumbUrl;
-      }
-    }
-    
-    // Log the attachment structure for debugging if we couldn't extract URL
-    console.warn('[normalizeImageURL] Could not extract valid image URL from attachment:', JSON.stringify({
-      hasUrl: !!firstAttachment?.url,
-      urlType: typeof firstAttachment?.url,
-      hasThumbnails: !!firstAttachment?.thumbnails,
-      hasFullThumbnail: !!firstAttachment?.thumbnails?.full?.url,
-      attachmentKeys: Object.keys(firstAttachment || {})
-    }, null, 2));
-  }
-  
-  // Handle single attachment object (not in array - less common)
-  if (typeof attachments === 'object' && !Array.isArray(attachments)) {
-    if (attachments.url && typeof attachments.url === 'string') {
-      const url = attachments.url;
-      if (url.startsWith('https://')) {
-        return url;
-      }
-    }
-    // Try thumbnails
-    if (attachments.thumbnails?.full?.url) {
-      return attachments.thumbnails.full.url;
-    }
-  }
-  
+  // For all other products, use placeholder
+  // (Airtable image URLs are no longer used - all images are local)
   return '/images/products/placeholder.jpg';
 }
 
