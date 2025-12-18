@@ -24,6 +24,16 @@ const nextConfig = {
         hostname: '**.pexels.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'dl.airtable.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.airtableusercontent.com',
+        pathname: '/**',
+      },
     ],
   },
   // Performance optimizations

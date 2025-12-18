@@ -53,19 +53,22 @@ export interface AirtableProduct {
 
 /**
  * Normalize Airtable attachment field to URL string
+ * Handles Airtable attachment objects which have a 'url' property
+ * Airtable attachments are returned as: [{ url: "https://dl.airtable.com/...", filename: "...", ... }]
  */
 function normalizeImageURL(attachments: any[]): string {
   if (!attachments || attachments.length === 0) {
     return '/images/products/placeholder.jpg';
   }
   
-  // If it's already a string URL, return it
+  // If it's already a string URL, return it (for backward compatibility)
   if (typeof attachments[0] === 'string') {
     return attachments[0];
   }
   
-  // If it's an object with url property
-  if (attachments[0]?.url) {
+  // Airtable attachment objects have a 'url' property
+  // This is the primary way attachments are returned from Airtable
+  if (attachments[0]?.url && typeof attachments[0].url === 'string') {
     return attachments[0].url;
   }
   
