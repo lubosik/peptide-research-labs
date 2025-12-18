@@ -76,21 +76,25 @@ function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
 
 /**
  * Normalize Airtable attachment field to URL string
- * Handles Airtable attachment objects which have a 'url' property
- * Airtable attachments are returned as: [{ url: "https://dl.airtable.com/...", filename: "...", ... }]
  * 
- * Airtable attachment format from API:
+ * Airtable attachment format from API (per official docs):
  * [{
  *   id: "att...",
- *   url: "https://dl.airtable.com/.attachments/[id]/[filename]",
+ *   url: "https://v5.airtableusercontent.com/v3/u/...",
  *   filename: "image.png",
  *   size: 12345,
  *   type: "image/png",
- *   thumbnails: { small: {...}, large: {...}, full: {...} }
+ *   width: 2048,
+ *   height: 2048,
+ *   thumbnails: {
+ *     small: { url: "...", width: 36, height: 36 },
+ *     large: { url: "...", width: 512, height: 512 },
+ *     full: { url: "...", width: 2048, height: 2048 }
+ *   }
  * }]
  * 
- * NOTE: Sometimes Airtable returns page URLs instead of direct image URLs.
- * The API should return the direct image URL in the 'url' property.
+ * Priority: Use main 'url' first (full resolution), fallback to thumbnails.full.url
+ * Note: URLs expire after 2 hours, but that's handled by Airtable's CDN
  */
 function normalizeImageURL(attachments: any): string {
   // Handle null/undefined
@@ -98,7 +102,7 @@ function normalizeImageURL(attachments: any): string {
     return '/images/products/placeholder.jpg';
   }
   
-  // Handle array of attachments
+  // Handle array of attachments (standard Airtable format)
   if (Array.isArray(attachments)) {
     if (attachments.length === 0) {
       return '/images/products/placeholder.jpg';
@@ -106,51 +110,33 @@ function normalizeImageURL(attachments: any): string {
     
     const firstAttachment = attachments[0];
     
-    // If it's already a string URL, check if it's an Airtable page URL
+    // If it's already a string URL (unlikely but handle it)
     if (typeof firstAttachment === 'string') {
       // Check if it's an Airtable page URL (not an image URL)
       if (firstAttachment.includes('airtable.com/app') && firstAttachment.includes('/att')) {
-        console.warn('[normalizeImageURL] Received Airtable page URL instead of image URL:', firstAttachment);
-        // Try to extract attachment info - but we need the actual API response
+        console.warn('[normalizeImageURL] Received Airtable page URL instead of image URL');
         return '/images/products/placeholder.jpg';
       }
       // If it's already a valid image URL, return it
-      if (firstAttachment.startsWith('http://') || firstAttachment.startsWith('https://')) {
+      if (firstAttachment.startsWith('https://')) {
         return firstAttachment;
       }
       return '/images/products/placeholder.jpg';
     }
     
-    // Airtable attachment objects have a 'url' property
-    // This is the primary way attachments are returned from Airtable API
+    // Airtable attachment object - use the main 'url' property (full resolution)
     if (firstAttachment?.url && typeof firstAttachment.url === 'string') {
       const url = firstAttachment.url;
       
-      // Check if it's an Airtable page URL (shouldn't happen from API, but handle it)
-      if (url.includes('airtable.com/app') && url.includes('/att')) {
-        console.warn('[normalizeImageURL] Attachment object has Airtable page URL:', url);
-        // The API should return the direct image URL, but if it doesn't, try thumbnails
-        if (firstAttachment?.thumbnails?.full?.url) {
-          return firstAttachment.thumbnails.full.url;
-        }
-        if (firstAttachment?.thumbnails?.large?.url) {
-          return firstAttachment.thumbnails.large.url;
-        }
-        return '/images/products/placeholder.jpg';
-      }
-      
-      // Ensure it's a valid HTTPS URL pointing to dl.airtable.com
-      if (url.startsWith('https://dl.airtable.com/') || url.startsWith('https://v5.airtableusercontent.com/')) {
-        return url;
-      }
-      
-      // Also accept other HTTPS URLs (for flexibility)
-      if (url.startsWith('https://')) {
+      // Validate it's a proper Airtable image URL
+      if (url.startsWith('https://v5.airtableusercontent.com/') || 
+          url.startsWith('https://dl.airtable.com/') ||
+          url.startsWith('https://')) {
         return url;
       }
     }
     
-    // Fallback: try thumbnails.full if main URL is missing or invalid
+    // Fallback: Use thumbnails.full.url (full-size thumbnail, same resolution as main URL)
     if (firstAttachment?.thumbnails?.full?.url) {
       const thumbUrl = firstAttachment.thumbnails.full.url;
       if (thumbUrl.startsWith('https://')) {
@@ -158,7 +144,7 @@ function normalizeImageURL(attachments: any): string {
       }
     }
     
-    // Try large thumbnail
+    // Fallback: Use thumbnails.large.url (512px)
     if (firstAttachment?.thumbnails?.large?.url) {
       const thumbUrl = firstAttachment.thumbnails.large.url;
       if (thumbUrl.startsWith('https://')) {
@@ -166,15 +152,21 @@ function normalizeImageURL(attachments: any): string {
       }
     }
     
-    // Log the attachment structure for debugging
-    console.warn('[normalizeImageURL] Could not extract valid image URL from attachment:', JSON.stringify(firstAttachment, null, 2));
+    // Log the attachment structure for debugging if we couldn't extract URL
+    console.warn('[normalizeImageURL] Could not extract valid image URL from attachment:', JSON.stringify({
+      hasUrl: !!firstAttachment?.url,
+      urlType: typeof firstAttachment?.url,
+      hasThumbnails: !!firstAttachment?.thumbnails,
+      hasFullThumbnail: !!firstAttachment?.thumbnails?.full?.url,
+      attachmentKeys: Object.keys(firstAttachment || {})
+    }, null, 2));
   }
   
-  // Handle single attachment object (not in array)
+  // Handle single attachment object (not in array - less common)
   if (typeof attachments === 'object' && !Array.isArray(attachments)) {
     if (attachments.url && typeof attachments.url === 'string') {
       const url = attachments.url;
-      if (url.startsWith('https://dl.airtable.com/') || url.startsWith('https://v5.airtableusercontent.com/') || url.startsWith('https://')) {
+      if (url.startsWith('https://')) {
         return url;
       }
     }

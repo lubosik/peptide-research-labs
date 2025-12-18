@@ -47,8 +47,10 @@ export default function StockImage({
   const alt = generateImageAlt(imageType, context);
   
   // Check if image is from Airtable (external URL) - recalculate when imageUrl changes
+  // Airtable URLs are from v5.airtableusercontent.com or dl.airtable.com
   const isAirtableUrl = imageUrl && (
-    imageUrl.includes('airtable.com') || 
+    imageUrl.includes('v5.airtableusercontent.com') ||
+    imageUrl.includes('dl.airtable.com') ||
     imageUrl.includes('airtableusercontent.com')
   );
 
