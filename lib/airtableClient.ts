@@ -223,25 +223,31 @@ function mapRecordToProduct(record: any): AirtableProduct {
   const imageAttachments = record.get('Image_URL');
   const productName = record.get('Product_Name') || '';
   
-  // Only log first few products to avoid spam, but always process all
-  const shouldLog = Math.random() < 0.1; // Log ~10% of products
+  // Always log first 3 products with images for debugging
+  const isFirstFew = ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
+    productName.toUpperCase().includes(name.toUpperCase())
+  );
   
   if (imageAttachments) {
     if (Array.isArray(imageAttachments) && imageAttachments.length > 0) {
-      if (shouldLog) {
+      if (isFirstFew) {
         console.log(`[Airtable] Product "${productName}" - Attachment structure:`, JSON.stringify(imageAttachments[0], null, 2));
       }
-    } else if (shouldLog) {
-      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments);
+    } else if (isFirstFew) {
+      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments, imageAttachments);
     }
-  } else if (shouldLog) {
+  } else if (isFirstFew) {
     console.warn(`[Airtable] Product "${productName}" - No Image_URL attachment found`);
   }
   
   const imageURL = normalizeImageURL(imageAttachments);
   
-  if (shouldLog && imageURL !== '/images/products/placeholder.jpg') {
-    console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 100)}...`);
+  if (isFirstFew) {
+    if (imageURL !== '/images/products/placeholder.jpg') {
+      console.log(`[Airtable] Product "${productName}" - Image URL extracted: ${imageURL.substring(0, 150)}...`);
+    } else {
+      console.error(`[Airtable] Product "${productName}" - FAILED to extract image URL!`);
+    }
   }
   
   return {
