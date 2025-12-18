@@ -260,49 +260,10 @@ function generateSlugFromName(productName: string): string {
  * Map Airtable record to AirtableProduct interface
  */
 function mapRecordToProduct(record: any): AirtableProduct {
-  const imageAttachments = record.get('Image_URL');
   const productName = record.get('Product_Name') || '';
   
-  // Check if this is one of the 4 products with local images
-  const hasLocalImage = getLocalImagePath(productName) !== null;
-  
-  // Always log for the 4 specific products
-  const isFirstFew = ['5-amino-1mq', 'ACETIC ACID', 'Adipotide', 'AICAR'].some(name => 
-    productName.toUpperCase().includes(name.toUpperCase())
-  );
-  
-  if (isFirstFew) {
-    console.log(`[Airtable] Processing product: "${productName}"`);
-    console.log(`[Airtable] Has local image: ${hasLocalImage}`);
-    if (hasLocalImage) {
-      console.log(`[Airtable] Local image path: ${getLocalImagePath(productName)}`);
-    }
-  }
-  
-  if (imageAttachments) {
-    if (Array.isArray(imageAttachments) && imageAttachments.length > 0) {
-      if (isFirstFew) {
-        console.log(`[Airtable] Product "${productName}" - Attachment structure:`, JSON.stringify(imageAttachments[0], null, 2));
-      }
-    } else if (isFirstFew) {
-      console.warn(`[Airtable] Product "${productName}" - Image_URL field is not an array:`, typeof imageAttachments);
-    }
-  } else if (isFirstFew) {
-    console.warn(`[Airtable] Product "${productName}" - No Image_URL attachment found`);
-  }
-  
-  const imageURL = normalizeImageURL(imageAttachments, productName);
-  
-  if (isFirstFew) {
-    console.log(`[Airtable] Product "${productName}" - FINAL Image URL: ${imageURL}`);
-    if (imageURL.startsWith('/images/products/vici-')) {
-      console.log(`[Airtable] ✓ Using LOCAL image for "${productName}"`);
-    } else if (imageURL.includes('airtableusercontent.com')) {
-      console.log(`[Airtable] ⚠ Using Airtable URL for "${productName}" (may expire)`);
-    } else {
-      console.warn(`[Airtable] ✗ Using placeholder for "${productName}"`);
-    }
-  }
+  // Get image URL - uses LOCAL images only (no Airtable attachments)
+  const imageURL = normalizeImageURL(null, productName);
   
   return {
     productId: record.get('Product_ID')?.toString() || '',
