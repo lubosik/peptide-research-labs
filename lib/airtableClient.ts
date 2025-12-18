@@ -75,6 +75,26 @@ function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
 }
 
 /**
+ * Map product names to local image files (fallback when Airtable URLs don't work)
+ */
+function getLocalImagePath(productName: string): string | null {
+  const name = productName.toUpperCase();
+  if (name.includes('5-AMINO-1MQ') || name.includes('5AMINO-1MQ')) {
+    return '/images/products/vici-5-amino-1mq.png';
+  }
+  if (name.includes('ACETIC ACID')) {
+    return '/images/products/vici-acetic-acid.png';
+  }
+  if (name.includes('ADIPOTIDE')) {
+    return '/images/products/vici-adipotide.png';
+  }
+  if (name.includes('AICAR')) {
+    return '/images/products/vici-aicar.png';
+  }
+  return null;
+}
+
+/**
  * Normalize Airtable attachment field to URL string
  * 
  * Airtable attachment format from API (per official docs):
@@ -100,8 +120,19 @@ function convertAirtablePageUrlToImageUrl(pageUrl: string): string | null {
  * 
  * Priority: Use main 'url' first (full resolution), fallback to thumbnails.full.url
  * Note: URLs expire after 2 hours, but that's handled by Airtable's CDN
+ * 
+ * FALLBACK: For specific products with local images, use local path instead
  */
-function normalizeImageURL(attachments: any): string {
+function normalizeImageURL(attachments: any, productName?: string): string {
+  // First, check if we have a local image for this product (fallback)
+  if (productName) {
+    const localPath = getLocalImagePath(productName);
+    if (localPath) {
+      // Prefer local image for known products
+      return localPath;
+    }
+  }
+  
   // Handle null/undefined
   if (!attachments) {
     return '/images/products/placeholder.jpg';
@@ -240,7 +271,7 @@ function mapRecordToProduct(record: any): AirtableProduct {
     console.warn(`[Airtable] Product "${productName}" - No Image_URL attachment found`);
   }
   
-  const imageURL = normalizeImageURL(imageAttachments);
+  const imageURL = normalizeImageURL(imageAttachments, productName);
   
   if (isFirstFew) {
     if (imageURL !== '/images/products/placeholder.jpg') {
