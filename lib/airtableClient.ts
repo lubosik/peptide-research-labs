@@ -126,10 +126,25 @@ function generateSlugFromName(productName: string): string {
 }
 
 /**
+ * Clean product name by removing "× 10 vials" or "×10 vials" patterns
+ * 1 unit = 1 vial, not 10 vials
+ */
+function cleanProductName(productName: string): string {
+  return productName
+    .replace(/\s*×\s*10\s*vials?/gi, '')
+    .replace(/\s*×10\s*vials?/gi, '')
+    .replace(/\s*\(10\s*vials?\)/gi, '')
+    .replace(/\s*\(×\s*10\s*vials?\)/gi, '')
+    .replace(/\s*\(×10\s*vials?\)/gi, '')
+    .trim();
+}
+
+/**
  * Map Airtable record to AirtableProduct interface
  */
 function mapRecordToProduct(record: any): AirtableProduct {
-  const productName = record.get('Product_Name') || '';
+  const rawProductName = record.get('Product_Name') || '';
+  const productName = cleanProductName(rawProductName);
   
   // Get image URL - uses LOCAL images only (no Airtable attachments)
   const imageURL = normalizeImageURL(null, productName);
@@ -167,7 +182,7 @@ function mapRecordToProduct(record: any): AirtableProduct {
     storageRequirements: record.get('Storage_Requirements') || undefined,
     handlingGuidelines: record.get('Handling_Guidelines') || undefined,
     notes: record.get('Notes') || undefined,
-    productSlug: (record.get('Product_Slug') as string) || generateSlugFromName((record.get('Product_Name') as string) || ''),
+    productSlug: (record.get('Product_Slug') as string) || generateSlugFromName(productName),
     apiVisibilityStatus: record.get('API_Visibility_Status') || 'LIVE',
     recordId: record.id,
   };

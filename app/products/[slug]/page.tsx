@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { hasVariants, getProductMinPrice } from '@/data/products';
 import { Metadata } from 'next';
-import ImageGallery from '@/components/products/ImageGallery';
+import Image from 'next/image';
+import { getProductImage } from '@/lib/products/get-product-image';
 import ProductInfoPanel from '@/components/products/ProductInfoPanel';
 import DynamicProductTabs from '@/components/products/DynamicProductTabs';
 import RelatedProductsAccordion from '@/components/products/RelatedProductsAccordion';
@@ -145,8 +146,21 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-              {/* Left Column - Image Gallery */}
-              <ImageGallery productName={product.name} productSlug={product.slug} />
+              {/* Left Column - Single Product Image */}
+              <div className="relative w-full h-96 md:h-[500px] rounded-lg overflow-hidden bg-taupe"
+                style={{
+                  filter: 'drop-shadow(0 8px 24px rgba(230, 222, 212, 0.4))',
+                }}
+              >
+                <Image
+                  src={getProductImage(product.name, product.slug)}
+                  alt={product.name}
+                  fill
+                  priority
+                  className="object-contain rounded-lg"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
 
               {/* Right Column - Product Info */}
               <ProductInfoPanel product={product} />
