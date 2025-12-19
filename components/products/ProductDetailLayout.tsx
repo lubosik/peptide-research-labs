@@ -68,7 +68,7 @@ export default function ProductDetailLayout({ product }: ProductDetailLayoutProp
               <div className="col-span-12 md:col-span-6">
                 <div className="relative w-full h-96 md:h-[600px] rounded-lg overflow-hidden bg-slate-800">
                   <Image
-                    src={getProductImage(product.name)}
+                    src={getProductImage(product.name, product.slug)}
                     alt={product.name}
                     fill
                     priority

@@ -141,7 +141,7 @@ export default function ProductCard({ product, className = '', isDiscontinued = 
       <Link href={`/products/${product.slug}`} className={`block ${isDiscontinued ? 'pointer-events-none' : ''}`}>
         <div className="relative w-full h-80 overflow-hidden bg-taupe">
           <Image
-            src={getProductImage(product.name)}
+            src={getProductImage(product.name, product.slug)}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-400 hover:scale-105"

@@ -543,7 +543,7 @@ export default function CheckoutPage() {
                       <div key={itemKey} className="flex gap-4 pb-4 border-b border-taupe last:border-b-0 last:pb-0">
                         <div className="relative w-16 h-16 bg-taupe rounded overflow-hidden flex-shrink-0 border border-stone">
                           <Image
-                            src={getProductImage(item.product.name)}
+                            src={getProductImage(item.product.name, item.product.slug)}
                             alt={item.product.name}
                             fill
                             className="object-cover rounded"

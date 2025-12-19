@@ -167,7 +167,7 @@ export default function CartPage() {
                       {/* Product Image */}
                       <div className="relative w-full sm:w-32 h-32 bg-taupe rounded-lg overflow-hidden flex-shrink-0 border border-stone">
                         <Image
-                          src={getProductImage(item.product.name)}
+                          src={getProductImage(item.product.name, item.product.slug)}
                           alt={item.product.name}
                           fill
                           className="object-cover rounded-lg"

@@ -162,7 +162,7 @@ function ConfirmationContent() {
                     >
                       <div className="relative w-20 h-20 bg-slate-700 rounded overflow-hidden flex-shrink-0">
                         <Image
-                          src={getProductImage(item.product.name)}
+                          src={getProductImage(item.product.name, item.product.slug)}
                           alt={item.product.name}
                           fill
                           className="object-cover rounded"
